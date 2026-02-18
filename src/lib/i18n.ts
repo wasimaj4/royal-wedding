@@ -43,8 +43,12 @@ export interface Translations {
   companionYes: string;
   companionNo: string;
   submit: string;
+  sending: string;
   confirmationTitle: string;
   confirmationMessage: string;
+  qrEntryPass: string;
+  qrPresentAtEntrance: string;
+  saveQRCode: string;
   
   // Navigation
   invitation: string;
@@ -99,8 +103,12 @@ export const translations: Record<Locale, Translations> = {
     companionYes: "Yes",
     companionNo: "No",
     submit: "Send Response",
+    sending: "Sending...",
     confirmationTitle: "With Gratitude",
     confirmationMessage: "Your gracious response has been received. We are truly honoured and look forward to celebrating this blessed occasion with you.",
+    qrEntryPass: "Your personal entry pass \u2014 please save it",
+    qrPresentAtEntrance: "Please present this QR code at the entrance",
+    saveQRCode: "Save QR Code",
     
     invitation: "Invitation",
     rsvp: "RSVP",
@@ -151,8 +159,12 @@ export const translations: Record<Locale, Translations> = {
     companionYes: "نعم",
     companionNo: "لا",
     submit: "إرسال الرد",
+    sending: "جارٍ الإرسال...",
     confirmationTitle: "مع خالص الامتنان",
     confirmationMessage: "تم استلام ردكم الكريم. نحن ممتنون لتشريفكم ونتطلع للاحتفال بهذه المناسبة المباركة معكم.",
+    qrEntryPass: "رمز الدخول الخاص بك \u2014 يُرجى حفظه",
+    qrPresentAtEntrance: "يُرجى تقديم رمز QR هذا عند الدخول",
+    saveQRCode: "حفظ رمز QR",
 
     invitation: "الدعوة",
     rsvp: "تأكيد الحضور",

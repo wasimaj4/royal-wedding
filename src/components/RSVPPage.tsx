@@ -23,6 +23,7 @@ export default function RSVPPage({ onBack }: RSVPPageProps) {
   const { t, isRTL } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [rsvpId, setRsvpId] = useState("");
   const [qrPayload, setQrPayload] = useState("");
   const [formData, setFormData] = useState({
@@ -34,6 +35,7 @@ export default function RSVPPage({ onBack }: RSVPPageProps) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
 
     try {
       const response = await fetch("/api/rsvp", {
@@ -47,12 +49,29 @@ export default function RSVPPage({ onBack }: RSVPPageProps) {
       if (data.success) {
         setRsvpId(data.rsvpId);
         setQrPayload(data.qrPayload);
+        setSubmitted(true);
+      } else if (data.error === "duplicate") {
+        setSubmitError(
+          isRTL
+            ? "تم تسجيل حضورك مسبقاً بهذا الاسم"
+            : "An RSVP with this name has already been submitted"
+        );
+      } else {
+        setSubmitError(
+          isRTL
+            ? "حدث خطأ أثناء الإرسال. يُرجى المحاولة مرة أخرى"
+            : "Something went wrong. Please try again."
+        );
       }
     } catch (error) {
       console.error("RSVP submission error:", error);
+      setSubmitError(
+        isRTL
+          ? "تعذر الاتصال بالخادم. يُرجى المحاولة لاحقاً"
+          : "Could not reach the server. Please try again later."
+      );
     } finally {
       setIsSubmitting(false);
-      setSubmitted(true);
     }
   };
 
@@ -145,6 +164,9 @@ export default function RSVPPage({ onBack }: RSVPPageProps) {
                   <div className="flex gap-3">
                     <button
                       type="button"
+                      role="radio"
+                      aria-checked={formData.attendance === "yes"}
+                      aria-label={t.attendanceYes}
                       onClick={() => setFormData({ ...formData, attendance: "yes" })}
                       className={`flex-1 py-3 px-4 border text-sm tracking-wider transition-all duration-500
                         ${
@@ -158,6 +180,9 @@ export default function RSVPPage({ onBack }: RSVPPageProps) {
                     </button>
                     <button
                       type="button"
+                      role="radio"
+                      aria-checked={formData.attendance === "no"}
+                      aria-label={t.attendanceNo}
                       onClick={() => setFormData({ ...formData, attendance: "no" })}
                       className={`flex-1 py-3 px-4 border text-sm tracking-wider transition-all duration-500
                         ${
@@ -184,6 +209,9 @@ export default function RSVPPage({ onBack }: RSVPPageProps) {
                   <div className="flex gap-3">
                     <button
                       type="button"
+                      role="radio"
+                      aria-checked={formData.companion === "yes"}
+                      aria-label={t.companionYes}
                       onClick={() => setFormData({ ...formData, companion: "yes" })}
                       className={`flex-1 py-3 px-4 border text-sm tracking-wider transition-all duration-500
                         ${
@@ -197,6 +225,9 @@ export default function RSVPPage({ onBack }: RSVPPageProps) {
                     </button>
                     <button
                       type="button"
+                      role="radio"
+                      aria-checked={formData.companion === "no"}
+                      aria-label={t.companionNo}
                       onClick={() => setFormData({ ...formData, companion: "no" })}
                       className={`flex-1 py-3 px-4 border text-sm tracking-wider transition-all duration-500
                         ${
@@ -210,6 +241,18 @@ export default function RSVPPage({ onBack }: RSVPPageProps) {
                     </button>
                   </div>
                 </div>
+
+                {/* Error message */}
+                {submitError && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-3 border border-red-300/50 bg-red-50/30 text-red-800/80 text-sm text-center rounded"
+                    role="alert"
+                  >
+                    <p className={isRTL ? "font-arabic" : "font-body"}>{submitError}</p>
+                  </motion.div>
+                )}
 
                 {/* Submit */}
                 <motion.button
@@ -229,7 +272,7 @@ export default function RSVPPage({ onBack }: RSVPPageProps) {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
-                      {isRTL ? "جارٍ الإرسال..." : "Sending..."}
+                      {t.sending}
                     </span>
                   ) : (
                     t.submit
@@ -306,9 +349,7 @@ export default function RSVPPage({ onBack }: RSVPPageProps) {
                     <p className={`text-sm text-gold-dark/50 mb-4 tracking-wider ${
                       isRTL ? "font-arabic" : "font-serif"
                     }`}>
-                      {isRTL
-                        ? "رمز الدخول الخاص بك — يُرجى حفظه"
-                        : "Your personal entry pass — please save it"}
+                      {t.qrEntryPass}
                     </p>
 
                     <QRCodeDisplay
@@ -321,9 +362,7 @@ export default function RSVPPage({ onBack }: RSVPPageProps) {
                     <p className={`text-xs text-gold-dark/40 mt-4 leading-relaxed max-w-xs mx-auto ${
                       isRTL ? "font-arabic" : "font-body italic"
                     }`}>
-                      {isRTL
-                        ? "يُرجى تقديم رمز QR هذا عند الدخول"
-                        : "Please present this QR code at the entrance"}
+                      {t.qrPresentAtEntrance}
                     </p>
                   </motion.div>
                 )}

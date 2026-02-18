@@ -17,19 +17,23 @@ interface TimeLeft {
 
 export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
   const { t, isRTL } = useLanguage();
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => {
+    // Calculate immediately to avoid flash of "--"
+    const difference = new Date(targetDate).getTime() - Date.now();
+    if (difference > 0) {
+      return {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      };
+    }
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
   });
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const calculateTimeLeft = () => {
-      const difference = new Date(targetDate).getTime() - new Date().getTime();
-
+      const difference = new Date(targetDate).getTime() - Date.now();
       if (difference > 0) {
         return {
           days: Math.floor(difference / (1000 * 60 * 60 * 24)),
@@ -48,23 +52,6 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
 
     return () => clearInterval(timer);
   }, [targetDate]);
-
-  if (!mounted) {
-    return (
-      <div className="flex justify-center gap-4 sm:gap-8">
-        {[t.days, t.hours, t.minutes, t.seconds].map((label) => (
-          <div key={label} className="text-center">
-            <div className="w-16 sm:w-20 h-16 sm:h-20 flex items-center justify-center border border-gold/30 bg-parchment-dark/30">
-              <span className="text-2xl sm:text-3xl font-serif text-gold-dark">--</span>
-            </div>
-            <span className={`text-xs tracking-[0.2em] uppercase text-gold-dark/50 mt-2 block ${isRTL ? "font-arabic" : "font-body"}`}>
-              {label}
-            </span>
-          </div>
-        ))}
-      </div>
-    );
-  }
 
   const units = [
     { value: timeLeft.days, label: t.days },
@@ -91,6 +78,7 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
               className="text-2xl sm:text-3xl font-serif text-gold-dark relative z-10"
+              suppressHydrationWarning
             >
               {String(unit.value).padStart(2, "0")}
             </motion.span>

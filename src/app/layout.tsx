@@ -1,7 +1,51 @@
 import type { Metadata } from "next";
+import {
+  Great_Vibes,
+  Playfair_Display,
+  Cormorant_Garamond,
+  Amiri,
+  Aref_Ruqaa,
+} from "next/font/google";
 import "./globals.css";
 
+/* ── Self-hosted Google Fonts (no render-blocking @import) ─ */
+
+const greatVibes = Great_Vibes({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-great-vibes",
+  display: "swap",
+});
+
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
+const cormorantGaramond = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+
+const amiri = Amiri({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "700"],
+  variable: "--font-amiri",
+  display: "swap",
+});
+
+const arefRuqaa = Aref_Ruqaa({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "700"],
+  variable: "--font-aref-ruqaa",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://royal-wedding-nine.vercel.app"),
   title: "Wasim & Rayan — Wedding Invitation",
   description:
     "You are cordially invited to the wedding celebration of Wasim & Rayan on 17 May 2026.",
@@ -15,7 +59,7 @@ export const metadata: Metadata = {
     siteName: "Wasim & Rayan Wedding",
     images: [
       {
-        url: "/og-image.png",
+        url: "/api/og",
         width: 1200,
         height: 630,
         alt: "Wasim & Rayan Wedding Invitation",
@@ -27,7 +71,7 @@ export const metadata: Metadata = {
     title: "Wasim & Rayan — Wedding Invitation",
     description:
       "You are cordially invited to the wedding celebration of Wasim & Rayan on 17 May 2026.",
-    images: ["/og-image.png"],
+    images: ["/api/og"],
   },
   other: {
     "whatsapp:title": "Wasim & Rayan — Wedding Invitation 💍",
@@ -52,7 +96,11 @@ export default function RootLayout({
           content="black-translucent"
         />
       </head>
-      <body className="antialiased">{children}</body>
+      <body
+        className={`antialiased ${greatVibes.variable} ${playfairDisplay.variable} ${cormorantGaramond.variable} ${amiri.variable} ${arefRuqaa.variable}`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

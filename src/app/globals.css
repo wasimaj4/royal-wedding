@@ -7,8 +7,7 @@
    Victorian · Luxurious · Ceremonial
    ═══════════════════════════════════════════════════════════ */
 
-/* Google Fonts imports */
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&display=swap');
+/* Fonts are loaded via next/font in layout.tsx (self-hosted, no render-blocking) */
 
 :root {
   --antique-white: #FAF0E6;
@@ -333,24 +332,9 @@ body {
   background: linear-gradient(270deg, transparent, var(--gold), transparent);
 }
 
-/* ── Animations ─────────────────────────────────────────── */
+/* ── Animations (CSS-only — Tailwind keyframes are in tailwind.config.js) ── */
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* This variant includes translateX(-50%) for the .candle-glow pseudo-element */
 @keyframes candleFlicker {
   0%, 100% { opacity: 1; transform: translateX(-50%) scaleY(1); }
   25% { opacity: 0.8; transform: translateX(-50%) scaleY(0.95); }
@@ -358,25 +342,10 @@ body {
   75% { opacity: 0.9; transform: translateX(-50%) scaleY(0.98); }
 }
 
-@keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
+/* Used by .envelope-flap.opening CSS class */
 @keyframes envelopeOpen {
   0% { transform: rotateX(0deg); }
   100% { transform: rotateX(-180deg); }
-}
-
-@keyframes glowPulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
-@keyframes sealBreak {
-  0% { transform: scale(1) rotate(0deg); opacity: 1; }
-  50% { transform: scale(1.3) rotate(15deg); opacity: 0.7; }
-  100% { transform: scale(0) rotate(45deg); opacity: 0; }
 }
 
 /* ── Responsive ─────────────────────────────────────────── */
