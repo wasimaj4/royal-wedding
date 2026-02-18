@@ -92,6 +92,15 @@ async function sendEmailNotification(data: EmailData): Promise<boolean> {
     return false;
   }
 
+  const recipients = NOTIFICATION_EMAIL.split(",")
+    .map((email) => email.trim())
+    .filter(Boolean);
+
+  if (recipients.length === 0) {
+    console.warn("Email not configured. NOTIFICATION_EMAIL has no valid recipients");
+    return false;
+  }
+
   const attendanceText =
     data.attendance === "yes" ? "✅ Will Attend" : "❌ Will Not Attend";
   const companionText =
@@ -133,30 +142,35 @@ async function sendEmailNotification(data: EmailData): Promise<boolean> {
     </div>
   `;
 
-  try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: "Wedding RSVP <onboarding@resend.dev>",
-        to: NOTIFICATION_EMAIL,
-        subject: `💍 New RSVP: ${data.fullName} — ${attendanceText}`,
-        html: emailHTML,
-      }),
-    });
+  let successCount = 0;
 
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error("Resend API error:", errorData);
-      return false;
+  for (const recipient of recipients) {
+    try {
+      const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "Wedding RSVP <onboarding@resend.dev>",
+          to: recipient,
+          subject: `💍 New RSVP: ${data.fullName} — ${attendanceText}`,
+          html: emailHTML,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error(`Resend API error for ${recipient}:`, errorData);
+        continue;
+      }
+
+      successCount += 1;
+    } catch (error) {
+      console.error(`Email send failed for ${recipient}:`, error);
     }
-
-    return true;
-  } catch (error) {
-    console.error("Email send failed:", error);
-    return false;
   }
+
+  return successCount > 0;
 }
