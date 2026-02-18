@@ -24,11 +24,11 @@ module.exports = {
         "rich-black": "#1A1A1A",
       },
       fontFamily: {
-        script: ["Great Vibes", "cursive"],
-        serif: ["Playfair Display", "Georgia", "serif"],
-        arabic: ["Amiri", "serif"],
-        "arabic-decorative": ["Aref Ruqaa", "serif"],
-        body: ["Cormorant Garamond", "serif"],
+        script: ["var(--font-great-vibes)", "cursive"],
+        serif: ["var(--font-playfair)", "Georgia", "serif"],
+        arabic: ["var(--font-amiri)", "serif"],
+        "arabic-decorative": ["var(--font-aref-ruqaa)", "serif"],
+        body: ["var(--font-cormorant)", "serif"],
       },
       animation: {
         "fade-in": "fadeIn 2s ease-in-out forwards",

@@ -1,7 +1,9 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
 import { Locale, Translations, getTranslation } from "@/lib/i18n";
+
+const LOCALE_STORAGE_KEY = "wedding-locale";
 
 interface LanguageContextType {
   locale: Locale;
@@ -13,8 +15,21 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+function getInitialLocale(): Locale {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem(LOCALE_STORAGE_KEY);
+    if (saved === "en" || saved === "ar") return saved;
+  }
+  return "en";
+}
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+  const [locale, setLocaleState] = useState<Locale>(getInitialLocale);
+
+  // Persist to localStorage whenever locale changes
+  useEffect(() => {
+    localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+  }, [locale]);
 
   const toggleLocale = useCallback(() => {
     setLocaleState((prev) => (prev === "en" ? "ar" : "en"));
