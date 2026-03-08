@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
+import { motion, AnimatePresence } from "framer-motion";
 import HeroSection from "@/components/HeroSection";
-import QuranicVerse from "@/components/QuranicVerse";
 import EventDetails from "@/components/EventDetails";
 import RSVPSection from "@/components/RSVPSection";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -11,31 +11,103 @@ import MusicPlayer from "@/components/MusicPlayer";
 
 function WeddingApp() {
   const { locale, isRTL } = useLanguage();
+  const [currentPage, setCurrentPage] = useState(0);
+  const page2Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.documentElement.lang = locale;
     document.documentElement.dir = isRTL ? "rtl" : "ltr";
   }, [locale, isRTL]);
 
+  // Reset scroll on page 2 when entering
+  useEffect(() => {
+    if (currentPage === 1 && page2Ref.current) {
+      page2Ref.current.scrollTop = 0;
+    }
+  }, [currentPage]);
+
   return (
-    <div className="min-h-screen wedding-bg">
+    <div className="h-screen overflow-hidden relative">
+      {/* Background layers — cross-fade on page change */}
+      <div
+        className={`fixed inset-0 z-0 transition-opacity duration-1000 ease-in-out ${
+          currentPage === 0 ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/bg.jpg')" }}
+        />
+        <div className="absolute inset-0 bg-overlay" />
+      </div>
+      <div
+        className={`fixed inset-0 z-0 transition-opacity duration-1000 ease-in-out ${
+          currentPage === 1 ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/bg2.jpg')" }}
+        />
+        <div className="absolute inset-0 bg-overlay" />
+      </div>
+
+      {/* Fixed UI controls */}
       <LanguageSwitcher />
       <MusicPlayer />
 
-      <main>
-        <HeroSection />
-        <QuranicVerse />
-        <EventDetails />
-        <RSVPSection />
+      {/* Page content with transitions */}
+      <AnimatePresence mode="wait">
+        {currentPage === 0 ? (
+          <motion.div
+            key="page-invitation"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -40 }}
+            transition={{ duration: 0.7, ease: "easeInOut" }}
+            className="relative z-10 h-screen"
+          >
+            <HeroSection onNavigateNext={() => setCurrentPage(1)} />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="page-details"
+            ref={page2Ref}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -40 }}
+            transition={{ duration: 0.7, ease: "easeInOut" }}
+            className="relative z-10 h-screen overflow-y-auto"
+          >
+            {/* Back arrow */}
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              onClick={() => setCurrentPage(0)}
+              className="fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center rounded-full border border-border bg-bg-dark/60 backdrop-blur-md text-accent hover:border-accent transition-colors duration-300"
+              aria-label="Back to invitation"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 15l-6-6-6 6" />
+              </svg>
+            </motion.button>
 
-        {/* Footer */}
-        <footer className="text-center py-12 px-6">
-          <div className="section-divider mb-8" />
-          <p className={`text-xs tracking-[0.2em] uppercase ${isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"}`}>
-            {isRTL ? "وسيم و ريان \u2014 ٢٠٢٦" : "Wasim & Rayan \u2014 2026"}
-          </p>
-        </footer>
-      </main>
+            <main>
+              <EventDetails />
+              <RSVPSection />
+
+              {/* Footer */}
+              <footer className="text-center py-12 px-6">
+                <div className="section-divider mb-8" />
+                <p className={`text-xs tracking-[0.2em] uppercase ${isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"}`}>
+                  {isRTL ? "وسيم و ريان \u2014 ٢٠٢٦" : "Wasim & Rayan \u2014 2026"}
+                </p>
+              </footer>
+            </main>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

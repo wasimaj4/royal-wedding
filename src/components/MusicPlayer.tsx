@@ -1,32 +1,44 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function MusicPlayer() {
   const { t } = useLanguage();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(true);
 
   useEffect(() => {
-    audioRef.current = new Audio("/music.mp3");
-    audioRef.current.loop = true;
-    audioRef.current.volume = 0.4;
+    const audio = new Audio("/music.mp3");
+    audio.loop = true;
+    audio.volume = 0.4;
+    audioRef.current = audio;
+
+    let handler: (() => void) | null = null;
+
+    // Try immediate autoplay
+    audio.play()
+      .then(() => setIsPlaying(true))
+      .catch(() => {
+        // Autoplay blocked — play on first user interaction
+        handler = () => {
+          audio.play().then(() => setIsPlaying(true)).catch(() => {});
+          document.removeEventListener("click", handler!);
+          document.removeEventListener("touchstart", handler!);
+        };
+        document.addEventListener("click", handler);
+        document.addEventListener("touchstart", handler);
+      });
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
+      audio.pause();
+      audioRef.current = null;
+      if (handler) {
+        document.removeEventListener("click", handler);
+        document.removeEventListener("touchstart", handler);
       }
     };
-  }, []);
-
-  // Hide tooltip after 4s
-  useEffect(() => {
-    const timer = setTimeout(() => setShowTooltip(false), 4000);
-    return () => clearTimeout(timer);
   }, []);
 
   const togglePlay = useCallback(() => {
@@ -38,9 +50,7 @@ export default function MusicPlayer() {
     } else {
       audioRef.current.play().then(() => {
         setIsPlaying(true);
-        setShowTooltip(false);
       }).catch(() => {
-        // Autoplay blocked — user needs to interact
         setIsPlaying(false);
       });
     }
@@ -50,23 +60,9 @@ export default function MusicPlayer() {
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: 2, duration: 0.6 }}
-      className="fixed bottom-6 left-6 z-50 flex items-center gap-3"
+      transition={{ delay: 1.5, duration: 0.6 }}
+      className="fixed bottom-6 right-6 z-50"
     >
-      {/* Tooltip */}
-      <AnimatePresence>
-        {showTooltip && (
-          <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-            className="bg-bg-dark/80 border border-border backdrop-blur-md rounded-full px-4 py-1.5 shadow-lg text-xs font-body text-text-secondary tracking-wider whitespace-nowrap"
-          >
-            ♪ {t.playMusic}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Play/Pause Button */}
       <button
         onClick={togglePlay}
