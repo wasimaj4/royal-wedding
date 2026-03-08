@@ -8,18 +8,18 @@
    ═══════════════════════════════════════════════════════════ */
 
 :root {
-  --bg-primary: rgba(10, 8, 6, 0.85);
-  --bg-secondary: rgba(30, 25, 20, 0.6);
-  --bg-dark: #0A0806;
-  --text-primary: #F5F0E8;
-  --text-secondary: #C8C0B4;
+  --bg-primary: rgba(253, 250, 245, 0.9);
+  --bg-secondary: rgba(240, 235, 225, 0.7);
+  --bg-dark: #FDFAF5;
+  --text-primary: #1A1612;
+  --text-secondary: #4A4540;
   --text-muted: #8A8278;
-  --accent: #C4A265;
+  --accent: #B08D57;
   --accent-light: #DFC89A;
-  --accent-dark: #E8D5A8;
-  --damascus-rose: #E8A099;
-  --olive: #A0B08E;
-  --border: rgba(196, 162, 101, 0.25);
+  --accent-dark: #8B6F3A;
+  --damascus-rose: #C4706A;
+  --olive: #7A8E68;
+  --border: rgba(176, 141, 87, 0.25);
 }
 
 html {
@@ -28,30 +28,30 @@ html {
 
 body {
   font-family: var(--font-cormorant), 'Georgia', serif;
-  background-color: #0A0806;
+  background-color: #FDFAF5;
   color: var(--text-primary);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: rgba(196, 162, 101, 0.35);
+  background: rgba(176, 141, 87, 0.25);
   color: var(--text-primary);
 }
 
 ::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: #0A0806; }
+::-webkit-scrollbar-track { background: #FDFAF5; }
 ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent-light); }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-dark); }
 
 /* ── Background overlay for page backgrounds ─────────────────────── */
 .bg-overlay {
   background: linear-gradient(
     to bottom,
-    rgba(10, 8, 6, 0.55) 0%,
-    rgba(10, 8, 6, 0.65) 30%,
-    rgba(10, 8, 6, 0.72) 60%,
-    rgba(10, 8, 6, 0.80) 100%
+    rgba(253, 250, 245, 0.55) 0%,
+    rgba(253, 250, 245, 0.65) 30%,
+    rgba(253, 250, 245, 0.72) 60%,
+    rgba(253, 250, 245, 0.80) 100%
   );
 }
 
@@ -77,8 +77,8 @@ body {
 }
 
 .verse-card {
-  background: rgba(15, 12, 10, 0.65);
-  border: 1px solid rgba(196, 162, 101, 0.2);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(176, 141, 87, 0.2);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   position: relative;
@@ -110,18 +110,18 @@ body {
 }
 
 .rsvp-card {
-  background: rgba(15, 12, 10, 0.65);
-  border: 1px solid rgba(196, 162, 101, 0.2);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(176, 141, 87, 0.2);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
 }
 
 .form-input {
   width: 100%;
   padding: 0.875rem 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(196, 162, 101, 0.2);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(176, 141, 87, 0.25);
   color: var(--text-primary);
   font-size: 1.05rem;
   transition: all 0.4s ease;
@@ -130,8 +130,8 @@ body {
 .form-input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(196, 162, 101, 0.15);
-  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(176, 141, 87, 0.12);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .form-input::placeholder {
@@ -141,7 +141,7 @@ body {
 .btn-primary {
   padding: 0.875rem 2.5rem;
   border: 1.5px solid var(--accent);
-  color: var(--accent-light);
+  color: var(--accent-dark);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   font-size: 0.8rem;
@@ -153,8 +153,8 @@ body {
 
 .btn-primary:hover {
   background: var(--accent);
-  color: #0A0806;
-  box-shadow: 0 4px 25px rgba(196, 162, 101, 0.35);
+  color: #FDFAF5;
+  box-shadow: 0 4px 25px rgba(176, 141, 87, 0.3);
 }
 
 .btn-primary:disabled {
@@ -164,7 +164,7 @@ body {
 
 .btn-primary:disabled:hover {
   background: transparent;
-  color: var(--accent-light);
+  color: var(--accent-dark);
   box-shadow: none;
 }
 
@@ -172,8 +172,8 @@ body {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(10, 8, 6, 0.75);
-  border: 1px solid rgba(196, 162, 101, 0.25);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(176, 141, 87, 0.25);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;
@@ -181,7 +181,7 @@ body {
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .music-btn:hover {

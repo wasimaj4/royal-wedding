@@ -198,7 +198,7 @@ function JasmineFlower() {
       ))}
       {/* Center */}
       <circle cx="50" cy="50" r="8" fill="currentColor" opacity="0.8" />
-      <circle cx="50" cy="50" r="4" fill="#0A0806" />
+      <circle cx="50" cy="50" r="4" fill="#FDFAF5" />
     </svg>
   );
 }
