@@ -16,8 +16,7 @@ const fadeInUp = {
 export default function EventDetails() {
   const { t, isRTL } = useLanguage();
 
-  const womensHallMap = "https://maps.google.com/?q=Women's+Wedding+Hall";
-  const mensHallMap = "https://maps.google.com/?q=Men's+Wedding+Hall";
+  const venueMap = "https://maps.google.com/?q=Kon.+Wilhelminahaven+ZZ+10,+3134+KC+Vlaardingen";
 
   return (
     <section className="px-6 py-16 sm:py-24">
@@ -74,42 +73,22 @@ export default function EventDetails() {
           </motion.div>
         </motion.div>
 
-        {/* Venues */}
+        {/* Venue */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-40px" }}
-          className="space-y-8 mb-16"
+          className="mb-16"
         >
-          {/* Women's Hall */}
           <motion.div custom={0.2} variants={fadeInUp} className="text-center">
             <h3 className={`text-lg mb-2 ${isRTL ? "font-arabic font-bold text-text-primary" : "font-serif font-semibold text-text-primary"}`}>
-              {t.womensHall}
+              {isRTL ? "مكان الحفل" : "Venue"}
             </h3>
+            <p className={`text-sm text-text-secondary mb-3 ${isRTL ? "font-arabic" : "font-body"}`}>
+              Kon. Wilhelminahaven ZZ 10, 3134 KC Vlaardingen
+            </p>
             <a
-              href={womensHallMap}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`inline-flex items-center gap-2 text-accent hover:text-accent-dark transition-colors duration-300 text-sm tracking-wider ${
-                isRTL ? "font-arabic" : "font-body"
-              }`}
-            >
-              <MapPinIcon />
-              {t.viewOnMap}
-            </a>
-          </motion.div>
-
-          <motion.div custom={0.3} variants={fadeInUp}>
-            <div className="accent-line" />
-          </motion.div>
-
-          {/* Men's Hall */}
-          <motion.div custom={0.4} variants={fadeInUp} className="text-center">
-            <h3 className={`text-lg mb-2 ${isRTL ? "font-arabic font-bold text-text-primary" : "font-serif font-semibold text-text-primary"}`}>
-              {t.mensHall}
-            </h3>
-            <a
-              href={mensHallMap}
+              href={venueMap}
               target="_blank"
               rel="noopener noreferrer"
               className={`inline-flex items-center gap-2 text-accent hover:text-accent-dark transition-colors duration-300 text-sm tracking-wider ${
