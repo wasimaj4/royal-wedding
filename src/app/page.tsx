@@ -18,7 +18,7 @@ function WeddingApp() {
   }, [locale, isRTL]);
 
   return (
-    <div className="min-h-screen arabesque-bg">
+    <div className="min-h-screen wedding-bg">
       <LanguageSwitcher />
       <MusicPlayer />
 

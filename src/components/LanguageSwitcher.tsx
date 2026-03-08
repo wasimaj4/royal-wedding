@@ -11,14 +11,14 @@ export default function LanguageSwitcher() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.5 }}
-      className="fixed top-4 right-4 z-50 flex items-center gap-0 rounded-full border border-border bg-bg-primary/90 backdrop-blur-sm shadow-sm overflow-hidden"
+      className="fixed top-4 right-4 z-50 flex items-center gap-0 rounded-full border border-border bg-bg-dark/80 backdrop-blur-md shadow-lg overflow-hidden"
     >
       <button
         onClick={() => setLocale("en")}
         className={`px-4 py-2 text-xs font-serif tracking-wider transition-all duration-400 ${
           locale === "en"
             ? "bg-accent text-white"
-            : "text-text-secondary hover:bg-bg-secondary"
+            : "text-text-secondary hover:bg-white/5"
         }`}
         aria-label="Switch to English"
       >
@@ -30,7 +30,7 @@ export default function LanguageSwitcher() {
         className={`px-4 py-2 text-xs font-arabic tracking-wider transition-all duration-400 ${
           locale === "ar"
             ? "bg-accent text-white"
-            : "text-text-secondary hover:bg-bg-secondary"
+            : "text-text-secondary hover:bg-white/5"
         }`}
         aria-label="Switch to Arabic"
       >

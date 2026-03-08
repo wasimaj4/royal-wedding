@@ -25,19 +25,6 @@ export default function HeroSection() {
 
   return (
     <section className="min-h-screen flex flex-col items-center justify-center relative px-6">
-      {/* Subtle background geometric pattern */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="damascus-pattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-              <path d="M40 0 L80 40 L40 80 L0 40 Z" fill="none" stroke="#8B7235" strokeWidth="0.5" />
-              <circle cx="40" cy="40" r="8" fill="none" stroke="#8B7235" strokeWidth="0.3" />
-              <circle cx="40" cy="40" r="3" fill="none" stroke="#8B7235" strokeWidth="0.3" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#damascus-pattern)" />
-        </svg>
-      </div>
 
       {/* Content */}
       <motion.div
@@ -163,7 +150,7 @@ function JasmineFlower() {
       ))}
       {/* Center */}
       <circle cx="50" cy="50" r="8" fill="currentColor" opacity="0.8" />
-      <circle cx="50" cy="50" r="4" fill="#FDFBF7" />
+      <circle cx="50" cy="50" r="4" fill="#0A0806" />
     </svg>
   );
 }

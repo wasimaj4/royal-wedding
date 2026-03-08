@@ -27,8 +27,8 @@ export default function QRCodeDisplay({
       margin: 2,
       errorCorrectionLevel: "M",
       color: {
-        dark: "#2A2A2A",
-        light: "#FFFFFF",
+        dark: "#F5F0E8",
+        light: "#1A1612",
       },
     }).catch((err: Error) => console.error("QR generation failed:", err));
   }, [data, size]);
@@ -43,7 +43,7 @@ export default function QRCodeDisplay({
     const ctx = exportCanvas.getContext("2d");
     if (!ctx) return;
 
-    ctx.fillStyle = "#FDFBF7";
+    ctx.fillStyle = "#1A1612";
     ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
 
     ctx.strokeStyle = "#C4A265";
@@ -53,12 +53,12 @@ export default function QRCodeDisplay({
     const qrX = (exportSize - size) / 2;
     ctx.drawImage(canvasRef.current, qrX, 20);
 
-    ctx.fillStyle = "#2A2A2A";
+    ctx.fillStyle = "#F5F0E8";
     ctx.font = "14px serif";
     ctx.textAlign = "center";
     ctx.fillText(guestName, exportSize / 2, size + 40);
 
-    ctx.fillStyle = "#9A9A9A";
+    ctx.fillStyle = "#8A8278";
     ctx.font = "9px sans-serif";
     ctx.fillText(rsvpId, exportSize / 2, size + 56);
 

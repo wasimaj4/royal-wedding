@@ -9,23 +9,23 @@ module.exports = {
     extend: {
       colors: {
         bg: {
-          primary: "#FDFBF7",
-          secondary: "#F5F0E8",
-          dark: "#1A1A1A",
+          primary: "rgba(10, 8, 6, 0.85)",
+          secondary: "rgba(30, 25, 20, 0.60)",
+          dark: "#0A0806",
         },
         text: {
-          primary: "#2A2A2A",
-          secondary: "#6B6B6B",
-          muted: "#9A9A9A",
+          primary: "#F5F0E8",
+          secondary: "#C8C0B4",
+          muted: "#8A8278",
         },
         accent: {
           light: "#DFC89A",
           DEFAULT: "#C4A265",
-          dark: "#8B7235",
+          dark: "#E8D5A8",
         },
-        "damascus-rose": "#C17C74",
-        olive: "#7C8C6E",
-        border: "#E8E0D4",
+        "damascus-rose": "#E8A099",
+        olive: "#A0B08E",
+        border: "rgba(196, 162, 101, 0.25)",
       },
       fontFamily: {
         script: ["var(--font-great-vibes)", "cursive"],

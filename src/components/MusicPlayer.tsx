@@ -60,7 +60,7 @@ export default function MusicPlayer() {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -10 }}
-            className="bg-bg-primary border border-border rounded-full px-4 py-1.5 shadow-sm text-xs font-body text-text-secondary tracking-wider whitespace-nowrap"
+            className="bg-bg-dark/80 border border-border backdrop-blur-md rounded-full px-4 py-1.5 shadow-lg text-xs font-body text-text-secondary tracking-wider whitespace-nowrap"
           >
             ♪ {t.playMusic}
           </motion.div>
