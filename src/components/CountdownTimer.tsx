@@ -18,7 +18,6 @@ interface TimeLeft {
 export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
   const { t, isRTL } = useLanguage();
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => {
-    // Calculate immediately to avoid flash of "--"
     const difference = new Date(targetDate).getTime() - Date.now();
     if (difference > 0) {
       return {
@@ -32,24 +31,20 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
   });
 
   useEffect(() => {
-    const calculateTimeLeft = () => {
-      const difference = new Date(targetDate).getTime() - Date.now();
-      if (difference > 0) {
+    const calc = () => {
+      const diff = new Date(targetDate).getTime() - Date.now();
+      if (diff > 0) {
         return {
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
+          days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((diff / 1000 / 60) % 60),
+          seconds: Math.floor((diff / 1000) % 60),
         };
       }
       return { days: 0, hours: 0, minutes: 0, seconds: 0 };
     };
-
-    setTimeLeft(calculateTimeLeft());
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
-
+    setTimeLeft(calc());
+    const timer = setInterval(() => setTimeLeft(calc()), 1000);
     return () => clearInterval(timer);
   }, [targetDate]);
 
@@ -61,29 +56,27 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
   ];
 
   return (
-    <div className={`flex justify-center gap-4 sm:gap-8 ${isRTL ? "flex-row-reverse" : ""}`}>
+    <div className={`flex justify-center gap-4 sm:gap-6 ${isRTL ? "flex-row-reverse" : ""}`}>
       {units.map((unit, index) => (
         <div key={unit.label} className="text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: index * 0.1 }}
-            className="w-16 sm:w-20 h-16 sm:h-20 flex items-center justify-center border border-gold/30 bg-parchment-dark/20 relative overflow-hidden"
+            transition={{ duration: 0.6, delay: index * 0.1 }}
+            className="w-16 sm:w-20 h-16 sm:h-20 flex items-center justify-center border border-border bg-bg-secondary/50"
           >
-            {/* Subtle shimmer */}
-            <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent" />
             <motion.span
               key={unit.value}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="text-2xl sm:text-3xl font-serif text-gold-dark relative z-10"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
+              className="text-2xl sm:text-3xl font-serif text-text-primary"
               suppressHydrationWarning
             >
               {String(unit.value).padStart(2, "0")}
             </motion.span>
           </motion.div>
-          <span className={`text-xs tracking-[0.2em] uppercase text-gold-dark/50 mt-2 block ${isRTL ? "font-arabic" : "font-body"}`}>
+          <span className={`text-[10px] tracking-[0.2em] uppercase mt-2 block ${isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"}`}>
             {unit.label}
           </span>
         </div>

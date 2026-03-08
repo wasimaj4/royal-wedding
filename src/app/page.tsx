@@ -1,16 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
+import { useEffect } from "react";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
-import EnvelopePage from "@/components/EnvelopePage";
-import InvitationPage from "@/components/InvitationPage";
-import RSVPPage from "@/components/RSVPPage";
+import HeroSection from "@/components/HeroSection";
+import QuranicVerse from "@/components/QuranicVerse";
+import EventDetails from "@/components/EventDetails";
+import RSVPSection from "@/components/RSVPSection";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import MusicPlayer from "@/components/MusicPlayer";
 
 function WeddingApp() {
-  const [currentPage, setCurrentPage] = useState<"envelope" | "invitation" | "rsvp">("envelope");
-  const [isEnvelopeOpened, setIsEnvelopeOpened] = useState(false);
   const { locale, isRTL } = useLanguage();
 
   useEffect(() => {
@@ -18,42 +17,25 @@ function WeddingApp() {
     document.documentElement.dir = isRTL ? "rtl" : "ltr";
   }, [locale, isRTL]);
 
-  const handleEnvelopeOpen = () => {
-    setIsEnvelopeOpened(true);
-    setTimeout(() => {
-      setCurrentPage("invitation");
-    }, 2000);
-  };
-
-  const navigateToRSVP = () => setCurrentPage("rsvp");
-  const navigateToInvitation = () => setCurrentPage("invitation");
-
   return (
-    <div className="min-h-screen parchment-bg">
-      {/* Language Switcher — always visible */}
+    <div className="min-h-screen arabesque-bg">
       <LanguageSwitcher />
+      <MusicPlayer />
 
-      <AnimatePresence mode="wait">
-        {currentPage === "envelope" && (
-          <EnvelopePage
-            key="envelope"
-            onOpen={handleEnvelopeOpen}
-            isOpening={isEnvelopeOpened}
-          />
-        )}
-        {currentPage === "invitation" && (
-          <InvitationPage
-            key="invitation"
-            onNavigateToRSVP={navigateToRSVP}
-          />
-        )}
-        {currentPage === "rsvp" && (
-          <RSVPPage
-            key="rsvp"
-            onBack={navigateToInvitation}
-          />
-        )}
-      </AnimatePresence>
+      <main>
+        <HeroSection />
+        <QuranicVerse />
+        <EventDetails />
+        <RSVPSection />
+
+        {/* Footer */}
+        <footer className="text-center py-12 px-6">
+          <div className="section-divider mb-8" />
+          <p className={`text-xs tracking-[0.2em] uppercase ${isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"}`}>
+            {isRTL ? "وسيم و ريان \u2014 ٢٠٢٦" : "Wasim & Rayan \u2014 2026"}
+          </p>
+        </footer>
+      </main>
     </div>
   );
 }

@@ -11,10 +11,6 @@ interface QRCodeDisplayProps {
   rsvpId: string;
 }
 
-/**
- * Renders a QR code using the battle-tested `qrcode` library.
- * Draws to canvas with deep-brown color to match the theme.
- */
 export default function QRCodeDisplay({
   data,
   size = 200,
@@ -31,7 +27,7 @@ export default function QRCodeDisplay({
       margin: 2,
       errorCorrectionLevel: "M",
       color: {
-        dark: "#3E2723", // deep brown to match theme
+        dark: "#2A2A2A",
         light: "#FFFFFF",
       },
     }).catch((err: Error) => console.error("QR generation failed:", err));
@@ -40,74 +36,53 @@ export default function QRCodeDisplay({
   const handleDownload = () => {
     if (!canvasRef.current) return;
 
-    // Create a composite image with guest info + QR code
     const exportCanvas = document.createElement("canvas");
-    const exportSize = size + 120;
+    const exportSize = size + 80;
     exportCanvas.width = exportSize;
-    exportCanvas.height = exportSize + 80;
+    exportCanvas.height = exportSize + 60;
     const ctx = exportCanvas.getContext("2d");
     if (!ctx) return;
 
-    // Background
-    ctx.fillStyle = "#FAF0E6";
+    ctx.fillStyle = "#FDFBF7";
     ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
 
-    // Gold border
-    ctx.strokeStyle = "#D4AF37";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(4, 4, exportCanvas.width - 8, exportCanvas.height - 8);
-    ctx.strokeRect(8, 8, exportCanvas.width - 16, exportCanvas.height - 16);
+    ctx.strokeStyle = "#C4A265";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(6, 6, exportCanvas.width - 12, exportCanvas.height - 12);
 
-    // Header text
-    ctx.fillStyle = "#8B7536";
-    ctx.font = "10px Georgia, serif";
+    const qrX = (exportSize - size) / 2;
+    ctx.drawImage(canvasRef.current, qrX, 20);
+
+    ctx.fillStyle = "#2A2A2A";
+    ctx.font = "14px serif";
     ctx.textAlign = "center";
-    ctx.fillText("WASIM & RAYAN WEDDING", exportCanvas.width / 2, 35);
+    ctx.fillText(guestName, exportSize / 2, size + 40);
 
-    // Guest name
-    ctx.fillStyle = "#3E2723";
-    ctx.font = "bold 14px Georgia, serif";
-    ctx.fillText(guestName, exportCanvas.width / 2, 55);
+    ctx.fillStyle = "#9A9A9A";
+    ctx.font = "9px sans-serif";
+    ctx.fillText(rsvpId, exportSize / 2, size + 56);
 
-    // QR code
-    ctx.drawImage(canvasRef.current, 60, 70, size, size);
-
-    // RSVP ID
-    ctx.fillStyle = "#8B7536";
-    ctx.font = "10px monospace";
-    ctx.fillText(rsvpId, exportCanvas.width / 2, size + 95);
-
-    // Date
-    ctx.font = "9px Georgia, serif";
-    ctx.fillText("17 May 2026", exportCanvas.width / 2, size + 112);
-
-    // Download
     const link = document.createElement("a");
-    link.download = `wedding-rsvp-${rsvpId}.png`;
+    link.download = `wedding-pass-${rsvpId}.png`;
     link.href = exportCanvas.toDataURL("image/png");
     link.click();
   };
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <div className="p-4 bg-white rounded shadow-md border border-gold/20">
-        <canvas
-          ref={canvasRef}
-          width={size}
-          height={size}
-          className="block"
-        />
+      <div className="p-3 bg-white border border-border inline-block">
+        <canvas ref={canvasRef} />
       </div>
-
-      <p className="text-xs text-gold-dark/50 font-mono tracking-wider">
-        {rsvpId}
-      </p>
 
       <button
         onClick={handleDownload}
-        className="px-6 py-2 text-xs tracking-[0.2em] uppercase border border-gold/40 text-gold-dark/70 
-          hover:bg-gold/10 transition-all duration-500 font-serif"
+        className="text-xs tracking-wider text-accent hover:text-accent-dark transition-colors duration-300 font-body flex items-center gap-1.5"
       >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
         {t.saveQRCode}
       </button>
     </div>

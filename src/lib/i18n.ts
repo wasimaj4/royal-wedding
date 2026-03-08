@@ -1,17 +1,14 @@
 export type Locale = "en" | "ar";
 
 export interface Translations {
-  // Envelope page
-  tapToOpen: string;
-  
-  // Invitation page
-  weddingOf: string;
+  youAreInvited: string;
   groomName: string;
   brideName: string;
   and: string;
   coupleNames: string;
-  
-  // Event details
+  invitationText: string;
+  eventDate: string;
+  eventLocation: string;
   eventDetails: string;
   date: string;
   dateValue: string;
@@ -20,19 +17,15 @@ export interface Translations {
   womensHall: string;
   mensHall: string;
   viewOnMap: string;
-  
-  // Timeline
   programTimeline: string;
   timeline: { time: string; event: string }[];
-  
-  // Countdown
+  quranVerse: string;
+  quranReference: string;
   countdown: string;
   days: string;
   hours: string;
   minutes: string;
   seconds: string;
-  
-  // RSVP
   rsvpTitle: string;
   rsvpSubtitle: string;
   fullName: string;
@@ -49,35 +42,32 @@ export interface Translations {
   qrEntryPass: string;
   qrPresentAtEntrance: string;
   saveQRCode: string;
-  
-  // Navigation
   invitation: string;
   rsvp: string;
-  
-  // Meta
+  playMusic: string;
+  pauseMusic: string;
   metaTitle: string;
   metaDescription: string;
 }
 
 export const translations: Record<Locale, Translations> = {
   en: {
-    tapToOpen: "Tap to Open",
-    
-    weddingOf: "The Wedding of",
+    youAreInvited: "You Are Invited!",
     groomName: "Wasim",
     brideName: "Rayan",
     and: "&",
     coupleNames: "Wasim & Rayan",
-    
+    invitationText: "Together with our families, and by the grace of Allah,\nWe are honored to invite you to our wedding celebration.",
+    eventDate: "Saturday, 17 May 2026",
+    eventLocation: "Syria",
     eventDetails: "Event Details",
     date: "Date",
     dateValue: "17 May 2026",
     time: "Time",
     timeValue: "5:00 PM",
-    womensHall: "Women's Hall",
-    mensHall: "Men's Hall",
+    womensHall: "Women\u2019s Hall",
+    mensHall: "Men\u2019s Hall",
     viewOnMap: "View on Map",
-    
     programTimeline: "Program Timeline",
     timeline: [
       { time: "5:00 PM", event: "Ceremony Begins" },
@@ -86,15 +76,15 @@ export const translations: Record<Locale, Translations> = {
       { time: "9:30 PM", event: "Cake Cutting" },
       { time: "10:00 PM", event: "Family Entrance & Congratulations" },
     ],
-    
+    quranVerse: "\u201CAnd among His signs is that He created for you spouses from among yourselves so that you may find tranquility in them, and He placed between you affection and mercy.\u201D",
+    quranReference: "Qur\u2019an 30:21 (Surah Ar-Rum)",
     countdown: "Counting Down to Our Special Day",
     days: "Days",
     hours: "Hours",
     minutes: "Minutes",
     seconds: "Seconds",
-    
-    rsvpTitle: "Kindly Respond",
-    rsvpSubtitle: "We humbly request the honour of your presence at our celebration of love",
+    rsvpTitle: "Confirm Your Attendance",
+    rsvpSubtitle: "We would be truly honoured by your presence at our celebration",
     fullName: "Full Name",
     attendance: "Will you attend?",
     attendanceYes: "Joyfully Accept",
@@ -104,73 +94,72 @@ export const translations: Record<Locale, Translations> = {
     companionNo: "No",
     submit: "Send Response",
     sending: "Sending...",
-    confirmationTitle: "With Gratitude",
-    confirmationMessage: "Your gracious response has been received. We are truly honoured and look forward to celebrating this blessed occasion with you.",
+    confirmationTitle: "Thank You",
+    confirmationMessage: "Your response has been received. We are truly honoured and look forward to celebrating this blessed occasion with you.",
     qrEntryPass: "Your personal entry pass \u2014 please save it",
     qrPresentAtEntrance: "Please present this QR code at the entrance",
     saveQRCode: "Save QR Code",
-    
     invitation: "Invitation",
     rsvp: "RSVP",
-    
-    metaTitle: "Wasim & Rayan — Wedding Invitation",
+    playMusic: "Play music",
+    pauseMusic: "Pause music",
+    metaTitle: "Wasim & Rayan \u2014 Wedding Invitation",
     metaDescription: "You are cordially invited to the wedding celebration of Wasim & Rayan on 17 May 2026.",
   },
   ar: {
-    tapToOpen: "اضغط للفتح",
-    
-    weddingOf: "حفل زفاف",
-    groomName: "وسيم",
-    brideName: "ريان",
-    and: "و",
-    coupleNames: "وسيم و ريان",
-    
-    eventDetails: "تفاصيل الحفل",
-    date: "التاريخ",
-    dateValue: "١٧ مايو ٢٠٢٦",
-    time: "الوقت",
-    timeValue: "٥:٠٠ مساءً",
-    womensHall: "قاعة النساء",
-    mensHall: "قاعة الرجال",
-    viewOnMap: "عرض على الخريطة",
-    
-    programTimeline: "برنامج الحفل",
+    youAreInvited: "!\u0623\u0647\u0644\u0627\u064B \u0648\u0633\u0647\u0644\u0627\u064B",
+    groomName: "\u0648\u0633\u064A\u0645",
+    brideName: "\u0631\u064A\u0627\u0646",
+    and: "\u0648",
+    coupleNames: "\u0648\u0633\u064A\u0645 \u0648 \u0631\u064A\u0627\u0646",
+    invitationText: "\u0645\u0639 \u0639\u0627\u0626\u0644\u062A\u064A\u0646\u0627\u060C \u0648\u0628\u0641\u0636\u0644 \u0627\u0644\u0644\u0647\u060C\n\u064A\u0633\u0639\u062F\u0646\u0627 \u0648\u064A\u0634\u0631\u0651\u0641\u0646\u0627 \u0623\u0646 \u0646\u062F\u0639\u0648\u0643\u0645 \u0625\u0644\u0649 \u062D\u0641\u0644 \u0632\u0641\u0627\u0641\u0646\u0627.",
+    eventDate: "\u0627\u0644\u0633\u0628\u062A\u060C \u0661\u0667 \u0623\u064A\u0627\u0631 \u0662\u0660\u0662\u0666",
+    eventLocation: "\u0633\u0648\u0631\u064A\u0627",
+    eventDetails: "\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u062D\u0641\u0644",
+    date: "\u0627\u0644\u062A\u0627\u0631\u064A\u062E",
+    dateValue: "\u0661\u0667 \u0623\u064A\u0627\u0631 \u0662\u0660\u0662\u0666",
+    time: "\u0627\u0644\u062A\u0648\u0642\u064A\u062A",
+    timeValue: "\u0665:\u0660\u0660 \u0645\u0633\u0627\u0621\u064B",
+    womensHall: "\u0642\u0627\u0639\u0629 \u0627\u0644\u0646\u0633\u0627\u0621",
+    mensHall: "\u0642\u0627\u0639\u0629 \u0627\u0644\u0631\u062C\u0627\u0644",
+    viewOnMap: "\u0639\u0631\u0636 \u0639\u0644\u0649 \u0627\u0644\u062E\u0631\u064A\u0637\u0629",
+    programTimeline: "\u0628\u0631\u0646\u0627\u0645\u062C \u0627\u0644\u062D\u0641\u0644",
     timeline: [
-      { time: "٥:٠٠", event: "بداية الحفل" },
-      { time: "٦:٠٠", event: "دخول العروسين" },
-      { time: "٧:٣٠", event: "العشاء" },
-      { time: "٩:٣٠", event: "قطع الكيك" },
-      { time: "١٠:٠٠", event: "دخول الأهل والتهاني" },
+      { time: "\u0665:\u0660\u0660", event: "\u0628\u062F\u0627\u064A\u0629 \u0627\u0644\u062D\u0641\u0644" },
+      { time: "\u0666:\u0660\u0660", event: "\u062F\u062E\u0644\u0629 \u0627\u0644\u0639\u0631\u0633\u0627\u0646" },
+      { time: "\u0667:\u0663\u0660", event: "\u0627\u0644\u0639\u0634\u0627\u0621" },
+      { time: "\u0669:\u0663\u0660", event: "\u0642\u0637\u0639 \u0627\u0644\u0643\u0627\u062A\u0648" },
+      { time: "\u0661\u0660:\u0660\u0660", event: "\u062F\u062E\u0644\u0629 \u0627\u0644\u0623\u0647\u0644 \u0648\u0627\u0644\u062A\u0647\u0627\u0646\u064A" },
     ],
-    
-    countdown: "العد التنازلي ليومنا المميز",
-    days: "أيام",
-    hours: "ساعات",
-    minutes: "دقائق",
-    seconds: "ثواني",
-    
-    rsvpTitle: "نرجو تأكيد الحضور",
-    rsvpSubtitle: "نتشرف بدعوتكم لحضور حفل زفافنا المبارك",
-    fullName: "الاسم الكامل",
-    attendance: "هل ستحضر؟",
-    attendanceYes: "بكل سرور",
-    attendanceNo: "أعتذر بكل احترام",
-    companion: "مرافق واحد؟",
-    companionYes: "نعم",
-    companionNo: "لا",
-    submit: "إرسال الرد",
-    sending: "جارٍ الإرسال...",
-    confirmationTitle: "مع خالص الامتنان",
-    confirmationMessage: "تم استلام ردكم الكريم. نحن ممتنون لتشريفكم ونتطلع للاحتفال بهذه المناسبة المباركة معكم.",
-    qrEntryPass: "رمز الدخول الخاص بك \u2014 يُرجى حفظه",
-    qrPresentAtEntrance: "يُرجى تقديم رمز QR هذا عند الدخول",
-    saveQRCode: "حفظ رمز QR",
-
-    invitation: "الدعوة",
-    rsvp: "تأكيد الحضور",
-    
-    metaTitle: "وسيم و ريان — دعوة زفاف",
-    metaDescription: "يسعدنا دعوتكم لحضور حفل زفاف وسيم وريان بتاريخ ١٧ مايو ٢٠٢٦",
+    quranVerse: "\u201C\u0648\u064E\u0645\u0650\u0646\u0652 \u0622\u064A\u0627\u062A\u0650\u0647\u0650 \u0623\u064E\u0646\u0652 \u062E\u064E\u0644\u064E\u0642\u064E \u0644\u064E\u0643\u064F\u0645\u0652 \u0645\u0650\u0646\u0652 \u0623\u064E\u0646\u0641\u064F\u0633\u0650\u0643\u064F\u0645\u0652 \u0623\u064E\u0632\u0652\u0648\u0627\u062C\u064B\u0627 \u0644\u0650\u062A\u064E\u0633\u0652\u0643\u064F\u0646\u064F\u0648\u0627 \u0625\u0650\u0644\u064E\u064A\u0652\u0647\u0627\u060C \u0648\u064E\u062C\u064E\u0639\u064E\u0644\u064E \u0628\u064E\u064A\u0652\u0646\u064E\u0643\u064F\u0645\u0652 \u0645\u064E\u0648\u064E\u062F\u0651\u0629\u064B \u0648\u064E\u0631\u064E\u062D\u0652\u0645\u064E\u0629\u064B\u201D",
+    quranReference: "\u0627\u0644\u0642\u0631\u0622\u0646 \u0627\u0644\u0643\u0631\u064A\u0645 \u2014 \u0633\u0648\u0631\u0629 \u0627\u0644\u0631\u0648\u0645\u060C \u0627\u0644\u0622\u064A\u0629 \u0662\u0661",
+    countdown: "\u0627\u0644\u0639\u062F \u0627\u0644\u062A\u0646\u0627\u0632\u0644\u064A \u0644\u064A\u0648\u0645\u0646\u0627 \u0627\u0644\u0645\u0645\u064A\u0632",
+    days: "\u064A\u0648\u0645",
+    hours: "\u0633\u0627\u0639\u0629",
+    minutes: "\u062F\u0642\u064A\u0642\u0629",
+    seconds: "\u062B\u0627\u0646\u064A\u0629",
+    rsvpTitle: "\u0646\u0631\u062C\u0648 \u062A\u0623\u0643\u064A\u062F \u0627\u0644\u062D\u0636\u0648\u0631",
+    rsvpSubtitle: "\u0646\u062A\u0634\u0631\u0641 \u0628\u062F\u0639\u0648\u062A\u0643\u0645 \u0644\u062D\u0636\u0648\u0631 \u062D\u0641\u0644 \u0632\u0641\u0627\u0641\u0646\u0627 \u0627\u0644\u0645\u0628\u0627\u0631\u0643",
+    fullName: "\u0627\u0644\u0627\u0633\u0645 \u0627\u0644\u0643\u0627\u0645\u0644",
+    attendance: "\u0647\u0644 \u0631\u062D \u062A\u062D\u0636\u0631\u0648\u0627\u061F",
+    attendanceYes: "\u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647",
+    attendanceNo: "\u0627\u0644\u0644\u0647 \u064A\u0628\u0627\u0631\u0643 \u0625\u0644\u0643\u0645",
+    companion: "\u0641\u064A \u0645\u0631\u0627\u0641\u0642\u061F",
+    companionYes: "\u0625\u064A",
+    companionNo: "\u0644\u0623",
+    submit: "\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0631\u062F",
+    sending: "\u0639\u0645 \u064A\u0628\u0639\u062A...",
+    confirmationTitle: "\u0627\u0644\u0644\u0647 \u064A\u062D\u0641\u0638\u0643\u0645",
+    confirmationMessage: "\u0648\u0635\u0644 \u0631\u062F\u0643\u0645. \u0634\u0631\u0641\u062A\u0648\u0646\u0627 \u0648\u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647 \u0645\u0646\u062A\u0644\u0627\u0642\u0649 \u0628\u0647\u0627\u0644\u064A\u0648\u0645 \u0627\u0644\u062D\u0644\u0648.",
+    qrEntryPass: "\u0628\u0637\u0627\u0642\u0629 \u0627\u0644\u062F\u062E\u0648\u0644 \u0627\u0644\u062E\u0627\u0635\u0629 \u0641\u064A\u0643 \u2014 \u0627\u062D\u0641\u0638\u0647\u0627",
+    qrPresentAtEntrance: "\u0631\u062C\u0627\u0621\u064B \u0637\u0644\u0651\u0639 \u0627\u0644\u0640 QR \u0639\u0646\u062F \u0627\u0644\u0628\u0627\u0628",
+    saveQRCode: "\u062D\u0641\u0638 \u0627\u0644\u0631\u0645\u0632",
+    invitation: "\u0627\u0644\u062F\u0639\u0648\u0629",
+    rsvp: "\u062A\u0623\u0643\u064A\u062F \u0627\u0644\u062D\u0636\u0648\u0631",
+    playMusic: "\u062A\u0634\u063A\u064A\u0644 \u0627\u0644\u0645\u0648\u0633\u064A\u0642\u0649",
+    pauseMusic: "\u0625\u064A\u0642\u0627\u0641 \u0627\u0644\u0645\u0648\u0633\u064A\u0642\u0649",
+    metaTitle: "\u0648\u0633\u064A\u0645 \u0648 \u0631\u064A\u0627\u0646 \u2014 \u062F\u0639\u0648\u0629 \u0632\u0641\u0627\u0641",
+    metaDescription: "\u064A\u0633\u0639\u062F\u0646\u0627 \u062F\u0639\u0648\u062A\u0643\u0645 \u0644\u062D\u0636\u0648\u0631 \u062D\u0641\u0644 \u0632\u0641\u0627\u0641 \u0648\u0633\u064A\u0645 \u0648\u0631\u064A\u0627\u0646 \u0628\u062A\u0627\u0631\u064A\u062E \u0661\u0667 \u0623\u064A\u0627\u0631 \u0662\u0660\u0662\u0666",
   },
 };
 

@@ -10,29 +10,29 @@ export default function LanguageSwitcher() {
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1, delay: 0.5 }}
-      className="fixed top-4 right-4 z-50 flex items-center gap-0 rounded-full border border-gold/40 bg-parchment/90 backdrop-blur-sm shadow-lg overflow-hidden"
+      transition={{ duration: 0.8, delay: 0.5 }}
+      className="fixed top-4 right-4 z-50 flex items-center gap-0 rounded-full border border-border bg-bg-primary/90 backdrop-blur-sm shadow-sm overflow-hidden"
     >
       <button
         onClick={() => setLocale("en")}
-        className={`px-4 py-2 text-sm font-serif tracking-wider transition-all duration-500 ${
+        className={`px-4 py-2 text-xs font-serif tracking-wider transition-all duration-400 ${
           locale === "en"
-            ? "bg-gold text-white shadow-inner"
-            : "text-gold-dark hover:bg-gold/10"
+            ? "bg-accent text-white"
+            : "text-text-secondary hover:bg-bg-secondary"
         }`}
         aria-label="Switch to English"
       >
         EN
       </button>
-      <div className="w-px h-6 bg-gold/30" />
+      <div className="w-px h-5 bg-border" />
       <button
         onClick={() => setLocale("ar")}
-        className={`px-4 py-2 text-sm font-arabic tracking-wider transition-all duration-500 ${
+        className={`px-4 py-2 text-xs font-arabic tracking-wider transition-all duration-400 ${
           locale === "ar"
-            ? "bg-gold text-white shadow-inner"
-            : "text-gold-dark hover:bg-gold/10"
+            ? "bg-accent text-white"
+            : "text-text-secondary hover:bg-bg-secondary"
         }`}
-        aria-label="التبديل إلى العربية"
+        aria-label="Switch to Arabic"
       >
         AR
       </button>
