@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
 import HeroSection from "@/components/HeroSection";
+import ScratchReveal from "@/components/ScratchReveal";
 import EventDetails from "@/components/EventDetails";
 import RSVPSection from "@/components/RSVPSection";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -12,23 +13,24 @@ import MusicPlayer from "@/components/MusicPlayer";
 function WeddingApp() {
   const { locale, isRTL } = useLanguage();
   const [currentPage, setCurrentPage] = useState(0);
-  const page2Ref = useRef<HTMLDivElement>(null);
+  const page3Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.documentElement.lang = locale;
     document.documentElement.dir = isRTL ? "rtl" : "ltr";
   }, [locale, isRTL]);
 
-  // Reset scroll on page 2 when entering
+  // Reset scroll on page 3 when entering
   useEffect(() => {
-    if (currentPage === 1 && page2Ref.current) {
-      page2Ref.current.scrollTop = 0;
+    if (currentPage === 2 && page3Ref.current) {
+      page3Ref.current.scrollTop = 0;
     }
   }, [currentPage]);
 
   return (
     <div className="h-screen overflow-hidden relative">
       {/* Background layers — cross-fade on page change */}
+      {/* Page 0: Mosque night */}
       <div
         className={`fixed inset-0 z-0 transition-opacity duration-1000 ease-in-out ${
           currentPage === 0 ? "opacity-100" : "opacity-0"
@@ -40,9 +42,18 @@ function WeddingApp() {
         />
         <div className="absolute inset-0 bg-overlay" />
       </div>
+      {/* Page 1: Scratch — white/cream bg (no photo) */}
       <div
         className={`fixed inset-0 z-0 transition-opacity duration-1000 ease-in-out ${
           currentPage === 1 ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <div className="absolute inset-0 bg-[#FDFAF5]" />
+      </div>
+      {/* Page 2: Details — Courtyard night */}
+      <div
+        className={`fixed inset-0 z-0 transition-opacity duration-1000 ease-in-out ${
+          currentPage === 2 ? "opacity-100" : "opacity-0"
         }`}
       >
         <div
@@ -58,7 +69,7 @@ function WeddingApp() {
 
       {/* Page content with transitions */}
       <AnimatePresence mode="wait">
-        {currentPage === 0 ? (
+        {currentPage === 0 && (
           <motion.div
             key="page-invitation"
             initial={{ opacity: 0, y: 40 }}
@@ -69,10 +80,28 @@ function WeddingApp() {
           >
             <HeroSection onNavigateNext={() => setCurrentPage(1)} />
           </motion.div>
-        ) : (
+        )}
+
+        {currentPage === 1 && (
+          <motion.div
+            key="page-scratch"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -40 }}
+            transition={{ duration: 0.7, ease: "easeInOut" }}
+            className="relative z-10 h-screen"
+          >
+            <ScratchReveal
+              onNavigateBack={() => setCurrentPage(0)}
+              onNavigateNext={() => setCurrentPage(2)}
+            />
+          </motion.div>
+        )}
+
+        {currentPage === 2 && (
           <motion.div
             key="page-details"
-            ref={page2Ref}
+            ref={page3Ref}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -40 }}
@@ -84,9 +113,9 @@ function WeddingApp() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              onClick={() => setCurrentPage(0)}
+              onClick={() => setCurrentPage(1)}
               className="fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center rounded-full border border-border bg-bg-dark/60 backdrop-blur-md text-accent hover:border-accent transition-colors duration-300"
-              aria-label="Back to invitation"
+              aria-label="Back"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M18 15l-6-6-6 6" />
