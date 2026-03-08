@@ -4,6 +4,18 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 
+/* ── Countdown calculator ──────────────────────────────── */
+function getCountdown(target: string) {
+  const diff = new Date(target).getTime() - Date.now();
+  if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  return {
+    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((diff / 1000 / 60) % 60),
+    seconds: Math.floor((diff / 1000) % 60),
+  };
+}
+
 /* ── Single scratch circle ─────────────────────────────── */
 interface ScratchCircleProps {
   size: number;
@@ -31,7 +43,6 @@ function ScratchCircle({ size, label, value, onRevealed, index }: ScratchCircleP
     canvas.height = size * dpr;
     ctx.scale(dpr, dpr);
 
-    // Gold metallic radial gradient
     const cx = size / 2;
     const cy = size / 2;
     const r = size / 2;
@@ -55,7 +66,6 @@ function ScratchCircle({ size, label, value, onRevealed, index }: ScratchCircleP
     ctx.fillStyle = grad;
     ctx.fill();
 
-    // Add subtle radial sheen
     const sheen = ctx.createRadialGradient(cx * 0.7, cy * 0.7, 0, cx, cy, r);
     sheen.addColorStop(0, "rgba(255, 255, 255, 0.25)");
     sheen.addColorStop(0.5, "rgba(255, 255, 255, 0.05)");
@@ -68,7 +78,6 @@ function ScratchCircle({ size, label, value, onRevealed, index }: ScratchCircleP
     ctx.globalCompositeOperation = "source-over";
   }, [size]);
 
-  /* Check how much is scratched */
   const checkReveal = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas || revealed) return;
@@ -90,7 +99,6 @@ function ScratchCircle({ size, label, value, onRevealed, index }: ScratchCircleP
     }
   }, [revealed, onRevealed]);
 
-  /* Scratch at position */
   const scratch = useCallback(
     (clientX: number, clientY: number) => {
       const canvas = canvasRef.current;
@@ -113,7 +121,6 @@ function ScratchCircle({ size, label, value, onRevealed, index }: ScratchCircleP
     [size, revealed]
   );
 
-  /* Mouse events */
   const onMouseDown = (e: React.MouseEvent) => {
     isDrawing.current = true;
     scratch(e.clientX, e.clientY);
@@ -127,7 +134,6 @@ function ScratchCircle({ size, label, value, onRevealed, index }: ScratchCircleP
     checkReveal();
   };
 
-  /* Touch events */
   const onTouchStart = (e: React.TouchEvent) => {
     e.preventDefault();
     isDrawing.current = true;
@@ -157,17 +163,15 @@ function ScratchCircle({ size, label, value, onRevealed, index }: ScratchCircleP
         className="scratch-circle-wrapper"
         style={{ width: size, height: size }}
       >
-        {/* Revealed content underneath */}
         <div className={`scratch-content ${revealed ? "visible" : ""}`}>
-          <span className={`scratch-label ${isRTL ? "font-arabic" : "font-body"}`}>
-            {label}
-          </span>
           <span className={`scratch-value ${isRTL ? "font-arabic" : "font-serif"}`}>
             {value}
           </span>
+          <span className={`scratch-label ${isRTL ? "font-arabic" : "font-body"}`}>
+            {label}
+          </span>
         </div>
 
-        {/* Canvas overlay */}
         <canvas
           ref={canvasRef}
           className={`scratch-canvas ${revealed ? "revealed" : ""}`}
@@ -181,7 +185,6 @@ function ScratchCircle({ size, label, value, onRevealed, index }: ScratchCircleP
           onTouchEnd={onTouchEnd}
         />
 
-        {/* White ring shadow */}
         <div className="scratch-ring" />
       </div>
     </motion.div>
@@ -197,136 +200,128 @@ interface ScratchRevealProps {
 export default function ScratchReveal({ onNavigateNext, onNavigateBack }: ScratchRevealProps) {
   const { t, isRTL } = useLanguage();
   const [revealedCount, setRevealedCount] = useState(0);
+  const [countdown, setCountdown] = useState(() => getCountdown("2026-05-17T17:00:00"));
   const allRevealed = revealedCount >= 5;
 
-  const circleSize = typeof window !== "undefined" && window.innerWidth < 640 ? 90 : 130;
+  useEffect(() => {
+    const timer = setInterval(() => setCountdown(getCountdown("2026-05-17T17:00:00")), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const circleSize = typeof window !== "undefined" && window.innerWidth < 640 ? 80 : 130;
 
   const items = [
+    { label: isRTL ? "يوم" : "Days", value: String(countdown.days) },
+    { label: isRTL ? "ساعة" : "Hours", value: String(countdown.hours) },
+    { label: isRTL ? "دقيقة" : "Minutes", value: String(countdown.minutes) },
+    { label: isRTL ? "ثانية" : "Seconds", value: String(countdown.seconds) },
     { label: isRTL ? "التاريخ" : "Date", value: t.dateValue },
-    { label: isRTL ? "التوقيت" : "Time", value: t.timeValue },
-    { label: isRTL ? "المكان" : "Location", value: t.eventLocation },
-    { label: isRTL ? "قاعة النساء" : "Women", value: isRTL ? "قاعة النساء" : "Women\u2019s Hall" },
-    { label: isRTL ? "قاعة الرجال" : "Men", value: isRTL ? "قاعة الرجال" : "Men\u2019s Hall" },
   ];
 
   return (
-    <div className="h-screen flex flex-col scratch-page">
-      {/* Top strip with back arrow */}
-      <div className="scratch-top-strip">
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          onClick={onNavigateBack}
-          className="absolute top-4 left-1/2 -translate-x-1/2 z-10"
-          aria-label="Back"
-        >
-          <motion.div
-            animate={{ y: [0, -4, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="rgba(255,255,255,0.7)"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M6 9l6 6 6-6" />
-            </svg>
-          </motion.div>
-        </motion.button>
-      </div>
-
-      {/* Main content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 pb-6">
-        {/* Title */}
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className={`scratch-title ${isRTL ? "font-arabic-decorative" : "font-script"}`}
-        >
-          {isRTL ? "يبدأ العدّ التنازلي" : "The Countdown Begins"}
-        </motion.h2>
-
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35, duration: 0.8 }}
-          className={`scratch-subtitle ${isRTL ? "font-arabic" : "font-body"}`}
-        >
-          {isRTL
-            ? "بقلوب ملؤها الامتنان،\nنتطلّع لمشاركتكم هذا الاتحاد المبارك."
-            : "With hearts full of gratitude,\nwe look forward to celebrating this blessed union with you."}
-        </motion.p>
-
-        {/* Hand icon */}
+    <div className="h-screen flex flex-col items-center justify-center scratch-page px-6">
+      {/* Back arrow — top center */}
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        onClick={onNavigateBack}
+        className="absolute top-5 left-1/2 -translate-x-1/2 z-10"
+        aria-label="Back"
+      >
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          className="scratch-hand-icon"
+          animate={{ y: [0, -4, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M18 11V6a2 2 0 0 0-4 0v5" />
-            <path d="M14 10V4a2 2 0 0 0-4 0v7" />
-            <path d="M10 10.5V6a2 2 0 0 0-4 0v8" />
-            <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.21 0-4.2-.9-5.66-2.34L3.5 16.83a1.73 1.73 0 0 1 .25-2.44 1.76 1.76 0 0 1 2.38.16L8 16.5" />
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B6F5E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 15l-6-6-6 6" />
           </svg>
         </motion.div>
+      </motion.button>
 
-        {/* Instruction text */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.55, duration: 0.6 }}
-          className={`scratch-instruction ${isRTL ? "font-arabic-decorative" : "font-script"}`}
-        >
-          {isRTL
-            ? "امسح الدوائر الخمس لكشف التفاصيل"
-            : "Scratch all 5 circles to reveal the details"}
-        </motion.p>
+      {/* Title */}
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.8 }}
+        className={`scratch-title ${isRTL ? "font-arabic-decorative" : "font-script"}`}
+      >
+        {isRTL ? "يبدأ العدّ التنازلي" : "The Countdown Begins"}
+      </motion.h2>
 
-        {/* Scratch circles */}
-        <div className="scratch-circles-row">
-          {items.map((item, i) => (
-            <ScratchCircle
-              key={i}
-              index={i}
-              size={circleSize}
-              label={item.label}
-              value={item.value}
-              onRevealed={() => setRevealedCount((c) => c + 1)}
-            />
-          ))}
-        </div>
+      {/* Subtitle */}
+      <motion.p
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.35, duration: 0.8 }}
+        className={`scratch-subtitle ${isRTL ? "font-arabic" : "font-body"}`}
+      >
+        {isRTL
+          ? "بقلوب ملؤها الامتنان،\nنتطلّع لمشاركتكم هذا الاتحاد المبارك."
+          : "With hearts full of gratitude,\nwe look forward to celebrating this blessed union with you."}
+      </motion.p>
 
-        {/* Continue button — appears after all revealed */}
-        <AnimatePresence>
-          {allRevealed && (
-            <motion.button
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              onClick={onNavigateNext}
-              className="scratch-continue-btn"
-            >
-              <span className={`${isRTL ? "font-arabic" : "font-serif font-semibold"}`}>
-                {isRTL ? "تأكيد الحضور" : "Confirm Attendance"}
-              </span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </motion.button>
-          )}
-        </AnimatePresence>
+      {/* Hand icon */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.6 }}
+        className="scratch-hand-icon"
+      >
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 11V6a2 2 0 0 0-4 0v5" />
+          <path d="M14 10V4a2 2 0 0 0-4 0v7" />
+          <path d="M10 10.5V6a2 2 0 0 0-4 0v8" />
+          <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.21 0-4.2-.9-5.66-2.34L3.5 16.83a1.73 1.73 0 0 1 .25-2.44 1.76 1.76 0 0 1 2.38.16L8 16.5" />
+        </svg>
+      </motion.div>
+
+      {/* Instruction text */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.55, duration: 0.6 }}
+        className={`scratch-instruction ${isRTL ? "font-arabic-decorative" : "font-script"}`}
+      >
+        {isRTL
+          ? "امسح الدوائر الخمس لكشف التفاصيل"
+          : "Scratch all 5 circles to reveal the details"}
+      </motion.p>
+
+      {/* Scratch circles */}
+      <div className="scratch-circles-row">
+        {items.map((item, i) => (
+          <ScratchCircle
+            key={i}
+            index={i}
+            size={circleSize}
+            label={item.label}
+            value={item.value}
+            onRevealed={() => setRevealedCount((c) => c + 1)}
+          />
+        ))}
       </div>
+
+      {/* Continue button — appears after all revealed */}
+      <AnimatePresence>
+        {allRevealed && (
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            onClick={onNavigateNext}
+            className="scratch-continue-btn"
+          >
+            <span className={`${isRTL ? "font-arabic" : "font-serif font-semibold"}`}>
+              {isRTL ? "تأكيد الحضور" : "Confirm Attendance"}
+            </span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

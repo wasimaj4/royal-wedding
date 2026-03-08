@@ -30,37 +30,21 @@ function WeddingApp() {
   return (
     <div className="h-screen overflow-hidden relative">
       {/* Background layers — cross-fade on page change */}
-      {/* Page 0: Mosque night */}
+      {/* Page 0 & 2: Dark solid */}
       <div
         className={`fixed inset-0 z-0 transition-opacity duration-1000 ease-in-out ${
-          currentPage === 0 ? "opacity-100" : "opacity-0"
+          currentPage !== 1 ? "opacity-100" : "opacity-0"
         }`}
       >
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/bg.jpg')" }}
-        />
-        <div className="absolute inset-0 bg-overlay" />
+        <div className="absolute inset-0 bg-[#0A0806]" />
       </div>
-      {/* Page 1: Scratch — white/cream bg (no photo) */}
+      {/* Page 1: Scratch — cream bg */}
       <div
         className={`fixed inset-0 z-0 transition-opacity duration-1000 ease-in-out ${
           currentPage === 1 ? "opacity-100" : "opacity-0"
         }`}
       >
         <div className="absolute inset-0 bg-[#FDFAF5]" />
-      </div>
-      {/* Page 2: Details — Courtyard night */}
-      <div
-        className={`fixed inset-0 z-0 transition-opacity duration-1000 ease-in-out ${
-          currentPage === 2 ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/bg2.jpg')" }}
-        />
-        <div className="absolute inset-0 bg-overlay" />
       </div>
 
       {/* Fixed UI controls */}
