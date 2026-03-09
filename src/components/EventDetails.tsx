@@ -98,6 +98,19 @@ export default function EventDetails() {
               <MapPinIcon />
               {t.viewOnMap}
             </a>
+
+            {/* Venue photo */}
+            <motion.div
+              custom={0.5}
+              variants={fadeInUp}
+              className="mt-6 overflow-hidden rounded-lg border border-border shadow-md"
+            >
+              <img
+                src="/venue.jpg"
+                alt="Wedding venue"
+                className="w-full h-auto object-cover"
+              />
+            </motion.div>
           </motion.div>
         </motion.div>
 
