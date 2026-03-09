@@ -111,6 +111,24 @@ export default function EventDetails() {
                 className="w-full h-auto object-cover"
               />
             </motion.div>
+
+            {/* Embedded Google Map */}
+            <motion.div
+              custom={0.6}
+              variants={fadeInUp}
+              className="mt-6 overflow-hidden rounded-lg border border-border shadow-md"
+            >
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3381.5!2d4.3372!3d51.9122!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c44f5a2dbfffff%3A0x0!2sKon.+Wilhelminahaven+ZZ+10%2C+3134+KC+Vlaardingen!5e0!3m2!1sen!2snl!4v1"
+                width="100%"
+                height="250"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Venue location"
+              />
+            </motion.div>
           </motion.div>
         </motion.div>
 
