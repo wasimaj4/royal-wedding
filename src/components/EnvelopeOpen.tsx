@@ -114,11 +114,11 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                 : { duration: 0.3, ease: "easeOut" }
             }
             style={{
-              background: `radial-gradient(ellipse at 50% 40%,
-                #FAF6EF 0%,
-                #F5EFE5 35%,
-                #EDE6DA 65%,
-                #E5DDD0 100%
+              background: `radial-gradient(ellipse at 50% 30%,
+                #F5EFE5 0%,
+                #EDE6D8 30%,
+                #E3DAC8 60%,
+                #D8CEBA 100%
               )`,
               willChange: "transform",
             }}
@@ -128,11 +128,11 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
               className="absolute inset-0 pointer-events-none"
               style={{
                 background: `linear-gradient(180deg,
-                  rgba(255,252,248,0.55) 0%,
-                  rgba(255,252,248,0.2) 25%,
-                  transparent 50%,
-                  rgba(200,190,175,0.12) 80%,
-                  rgba(180,170,155,0.18) 100%
+                  rgba(255,253,248,0.7) 0%,
+                  rgba(255,252,248,0.3) 18%,
+                  transparent 40%,
+                  rgba(180,168,148,0.15) 72%,
+                  rgba(155,142,122,0.28) 100%
                 )`,
               }}
             />
@@ -143,7 +143,7 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
               style={{
                 backgroundImage: PAPER_NOISE,
                 backgroundRepeat: "repeat",
-                opacity: 0.045,
+                opacity: 0.065,
               }}
             />
 
@@ -152,10 +152,10 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
               className="absolute inset-0 pointer-events-none"
               style={{
                 background: `radial-gradient(ellipse at 50% 45%,
-                  transparent 40%,
-                  rgba(0,0,0,0.04) 60%,
-                  rgba(0,0,0,0.09) 80%,
-                  rgba(0,0,0,0.14) 100%
+                  transparent 30%,
+                  rgba(0,0,0,0.05) 55%,
+                  rgba(0,0,0,0.13) 78%,
+                  rgba(0,0,0,0.22) 100%
                 )`,
               }}
             />
@@ -218,7 +218,7 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                 className="absolute inset-0 pointer-events-none"
                 style={{
                   background: `linear-gradient(170deg,
-                    #FFFDF8 0%, #FBF7EE 40%, #F3EDE2 100%)`,
+                    #FEFCF7 0%, #FAF6EE 35%, #F3ECE0 100%)`,
                   zIndex: 0,
                   willChange: "transform, opacity",
                 }}
@@ -233,10 +233,6 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                   ease: EASE_FLAP as unknown as number[],
                 }}
               >
-                <div
-                  className="absolute inset-[8%] sm:inset-[10%] md:inset-[12%] border border-dashed pointer-events-none"
-                  style={{ borderColor: "rgba(176,141,87,0.1)" }}
-                />
               </motion.div>
 
               {/* ─────────────────────────────────────────
@@ -245,9 +241,9 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
               <motion.div
                 className="absolute inset-0"
                 style={{
-                  background: `linear-gradient(178deg,
-                    #FBF7F0 0%, #F8F3EB 18%, #F4EEE4 40%,
-                    #F0E9DD 65%, #ECE4D6 85%, #E8DFCF 100%
+                  background: `linear-gradient(175deg,
+                    #F7F2E9 0%, #F2EDE2 20%, #EDE6D8 48%,
+                    #E7DFD0 70%, #E1D9C8 88%, #DACED8 100%
                   )`,
                   zIndex: 2,
                   willChange: "transform",
@@ -259,13 +255,13 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                   ease: EASE_FLAP as unknown as number[],
                 }}
               >
-                {/* Paper fiber texture — strong enough to see */}
+                {/* Paper fiber texture — visible */}
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
                     backgroundImage: PAPER_NOISE,
                     backgroundRepeat: "repeat",
-                    opacity: 0.04,
+                    opacity: 0.07,
                   }}
                 />
 
@@ -274,36 +270,39 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                   className="absolute inset-0 pointer-events-none"
                   style={{
                     background: `linear-gradient(180deg,
-                      rgba(255,255,255,0.18) 0%,
-                      rgba(255,255,255,0.06) 20%,
-                      transparent 45%,
-                      rgba(0,0,0,0.012) 75%,
-                      rgba(0,0,0,0.025) 100%
+                      rgba(255,255,255,0.28) 0%,
+                      rgba(255,255,255,0.1) 15%,
+                      transparent 38%,
+                      rgba(0,0,0,0.025) 68%,
+                      rgba(0,0,0,0.055) 100%
                     )`,
                   }}
                 />
 
-                {/* Left edge fold shadow */}
+                {/* Left edge fold shadow — deep */}
                 <div
-                  className="absolute top-0 left-0 bottom-0 w-10 sm:w-14 pointer-events-none"
+                  className="absolute top-0 left-0 bottom-0 pointer-events-none"
                   style={{
-                    background: "linear-gradient(to right, rgba(0,0,0,0.04), transparent)",
+                    width: "clamp(40px, 8vw, 70px)",
+                    background: "linear-gradient(to right, rgba(0,0,0,0.12), rgba(0,0,0,0.04) 50%, transparent)",
                   }}
                 />
 
-                {/* Right edge fold shadow */}
+                {/* Right edge fold shadow — deep */}
                 <div
-                  className="absolute top-0 right-0 bottom-0 w-10 sm:w-14 pointer-events-none"
+                  className="absolute top-0 right-0 bottom-0 pointer-events-none"
                   style={{
-                    background: "linear-gradient(to left, rgba(0,0,0,0.04), transparent)",
+                    width: "clamp(40px, 8vw, 70px)",
+                    background: "linear-gradient(to left, rgba(0,0,0,0.12), rgba(0,0,0,0.04) 50%, transparent)",
                   }}
                 />
 
-                {/* Bottom edge shadow */}
+                {/* Bottom edge shadow — deeper */}
                 <div
-                  className="absolute bottom-0 left-0 right-0 h-8 sm:h-12 pointer-events-none"
+                  className="absolute bottom-0 left-0 right-0 pointer-events-none"
                   style={{
-                    background: "linear-gradient(to top, rgba(0,0,0,0.03), transparent)",
+                    height: "clamp(50px, 10vh, 90px)",
+                    background: "linear-gradient(to top, rgba(0,0,0,0.09), rgba(0,0,0,0.03) 60%, transparent)",
                   }}
                 />
 
@@ -312,11 +311,11 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                   className="absolute left-0 right-0 pointer-events-none"
                   style={{
                     top: `${FLAP_PCT}%`,
-                    height: "8px",
-                    marginTop: "-4px",
+                    height: "14px",
+                    marginTop: "-7px",
                     background: `linear-gradient(to bottom,
-                      rgba(0,0,0,0.045),
-                      rgba(0,0,0,0.025),
+                      rgba(0,0,0,0.08),
+                      rgba(0,0,0,0.04),
                       transparent
                     )`,
                     zIndex: 4,
@@ -324,45 +323,16 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                 />
                 {/* Fold highlight (paper catches light above crease) */}
                 <div
-                  className="absolute left-[5%] right-[5%] pointer-events-none"
+                  className="absolute left-0 right-0 pointer-events-none"
                   style={{
                     top: `${FLAP_PCT}%`,
-                    height: "1px",
-                    marginTop: "-5px",
-                    background: "rgba(255,255,255,0.25)",
+                    height: "1.5px",
+                    marginTop: "-8px",
+                    background: "rgba(255,255,255,0.4)",
                     zIndex: 4,
                   }}
                 />
 
-                {/* ── Gold double border (luxury filigree) ── */}
-                {/* Outer border */}
-                <div
-                  className="absolute pointer-events-none"
-                  style={{
-                    top: `calc(${FLAP_PCT}% + 16px)`,
-                    left: "5.5%",
-                    right: "5.5%",
-                    bottom: "5.5%",
-                    border: "1px solid rgba(176,141,87,0.14)",
-                  }}
-                />
-                {/* Inner border */}
-                <div
-                  className="absolute pointer-events-none"
-                  style={{
-                    top: `calc(${FLAP_PCT}% + 24px)`,
-                    left: "7%",
-                    right: "7%",
-                    bottom: "7%",
-                    border: "0.5px solid rgba(176,141,87,0.08)",
-                  }}
-                />
-
-                {/* ── Corner ornaments (L-shaped gold accents) ── */}
-                {/* Bottom-left */}
-                <div className="absolute pointer-events-none" style={{ bottom: "5%", left: "5%", width: "18px", height: "18px", borderBottom: "1px solid rgba(176,141,87,0.2)", borderLeft: "1px solid rgba(176,141,87,0.2)" }} />
-                {/* Bottom-right */}
-                <div className="absolute pointer-events-none" style={{ bottom: "5%", right: "5%", width: "18px", height: "18px", borderBottom: "1px solid rgba(176,141,87,0.2)", borderRight: "1px solid rgba(176,141,87,0.2)" }} />
               </motion.div>
 
               {/* ─────────────────────────────────────────
@@ -397,11 +367,11 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
               </div>
 
               {/* ─────────────────────────────────────────
-                  BOTTOM FLAP — triangular behind body
+                  BOTTOM FLAP — visibly darker, physically distinct
                   ───────────────────────────────────────── */}
               <div
                 className="absolute bottom-0 left-0 right-0 pointer-events-none"
-                style={{ zIndex: -1, height: "30%" }}
+                style={{ zIndex: -1, height: "32%" }}
               >
                 <svg
                   viewBox="0 0 100 100"
@@ -409,12 +379,20 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                   className="w-full h-full"
                   style={{ display: "block" }}
                 >
+                  <defs>
+                    <linearGradient id="bottomFlapGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#C8BFA8" />
+                      <stop offset="50%" stopColor="#C0B69E" />
+                      <stop offset="100%" stopColor="#B8AC94" />
+                    </linearGradient>
+                  </defs>
                   <polygon
-                    points="0,100 100,100 50,8"
-                    fill="#EDE6DA"
-                    stroke="rgba(200,190,175,0.08)"
-                    strokeWidth="0.3"
+                    points="0,100 100,100 50,5"
+                    fill="url(#bottomFlapGrad)"
                   />
+                  {/* seam lines */}
+                  <line x1="0" y1="100" x2="50" y2="5" stroke="rgba(0,0,0,0.1)" strokeWidth="0.4" />
+                  <line x1="100" y1="100" x2="50" y2="5" stroke="rgba(0,0,0,0.1)" strokeWidth="0.4" />
                 </svg>
               </div>
 
@@ -451,15 +429,15 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                 >
                   <defs>
                     <linearGradient id="flapGradV3" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#F8F3EB" />
-                      <stop offset="35%" stopColor="#F2ECE2" />
-                      <stop offset="70%" stopColor="#EBE4D8" />
-                      <stop offset="100%" stopColor="#E4DCD0" />
+                      <stop offset="0%" stopColor="#F2EBE0" />
+                      <stop offset="40%" stopColor="#E9E0D2" />
+                      <stop offset="75%" stopColor="#DED4C2" />
+                      <stop offset="100%" stopColor="#D4C8B2" />
                     </linearGradient>
                     <linearGradient id="flapShadowV3" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="transparent" />
-                      <stop offset="60%" stopColor="transparent" />
-                      <stop offset="100%" stopColor="rgba(0,0,0,0.05)" />
+                      <stop offset="50%" stopColor="transparent" />
+                      <stop offset="100%" stopColor="rgba(0,0,0,0.09)" />
                     </linearGradient>
                   </defs>
                   {/* Flap triangle */}
@@ -473,10 +451,10 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                     fill="url(#flapShadowV3)"
                   />
                   {/* Fold edge lines */}
-                  <line x1="0" y1="0" x2="50" y2="100" stroke="rgba(180,170,155,0.12)" strokeWidth="0.2" />
-                  <line x1="100" y1="0" x2="50" y2="100" stroke="rgba(180,170,155,0.12)" strokeWidth="0.2" />
+                  <line x1="0" y1="0" x2="50" y2="100" stroke="rgba(150,138,118,0.18)" strokeWidth="0.3" />
+                  <line x1="100" y1="0" x2="50" y2="100" stroke="rgba(150,138,118,0.18)" strokeWidth="0.3" />
                   {/* Top edge seam */}
-                  <line x1="0" y1="0.3" x2="100" y2="0.3" stroke="rgba(176,141,87,0.06)" strokeWidth="0.3" />
+                  <line x1="0" y1="0.3" x2="100" y2="0.3" stroke="rgba(0,0,0,0.06)" strokeWidth="0.5" />
                 </svg>
 
                 {/* Paper texture on flap */}
@@ -485,7 +463,7 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                   style={{
                     backgroundImage: PAPER_NOISE,
                     backgroundRepeat: "repeat",
-                    opacity: 0.035,
+                    opacity: 0.065,
                     clipPath: "polygon(0 0, 100% 0, 50% 100%)",
                   }}
                 />
@@ -554,32 +532,6 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                     }
                   />
 
-                  {/* Outer aurora ring */}
-                  <motion.div
-                    className="absolute pointer-events-none"
-                    style={{
-                      width: SEAL + 52,
-                      height: SEAL + 52,
-                      left: "50%",
-                      top: `${FLAP_PCT}%`,
-                      marginLeft: -(SEAL + 52) / 2,
-                      marginTop: -(SEAL + 52) / 2,
-                      borderRadius: "50%",
-                      background: "radial-gradient(circle, rgba(196,162,101,0.08) 0%, rgba(196,162,101,0.03) 50%, transparent 72%)",
-                      zIndex: 19,
-                    }}
-                    animate={
-                      phase === "idle"
-                        ? { scale: [1, 1.18, 1], opacity: [0.4, 0.85, 0.4] }
-                        : { scale: 1, opacity: 0 }
-                    }
-                    transition={
-                      phase === "idle"
-                        ? { duration: 3.2, repeat: Infinity, ease: "easeInOut" }
-                        : { duration: 0.15 }
-                    }
-                  />
-
                   {/* ── Seal disc ── */}
                   <motion.div
                     className="absolute z-20 flex items-center justify-center"
@@ -640,56 +592,68 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                       }}
                     />
 
-                    {/* Circular micro-texture (handcrafted feel) */}
-                    <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 120 120">
-                      <defs>
-                        <filter id="sealGrain">
-                          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise" />
-                          <feColorMatrix type="saturate" values="0" in="noise" result="mono" />
-                          <feBlend in="SourceGraphic" in2="mono" mode="multiply" />
-                        </filter>
-                      </defs>
-                      {/* Subtle concentric imperfection rings */}
-                      <circle cx="60" cy="60" r="58" fill="none" stroke="rgba(255,245,215,0.07)" strokeWidth="0.6" />
-                      <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(0,0,0,0.04)" strokeWidth="0.3" strokeDasharray="2.5 2" />
-                      <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(255,245,215,0.05)" strokeWidth="0.4" strokeDasharray="1.5 3.5" />
-                      <circle cx="60" cy="60" r="38" fill="none" stroke="rgba(0,0,0,0.025)" strokeWidth="0.3" strokeDasharray="1 5" />
-                      <circle cx="60" cy="60" r="25" fill="none" stroke="rgba(0,0,0,0.02)" strokeWidth="0.3" strokeDasharray="0.8 6" />
+                    {/* ── Jasmine flower + outer seal ring ── */}
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 120 120" style={{ zIndex: 1 }}>
+                      {/* Embossed outer ring */}
+                      <circle cx="60" cy="60" r="53" fill="none" stroke="rgba(255,240,200,0.22)" strokeWidth="2.5" />
+                      <circle cx="60" cy="60" r="53" fill="none" stroke="rgba(0,0,0,0.0)" strokeWidth="0"
+                        style={{ filter: "drop-shadow(0 1.5px 3px rgba(255,240,200,0.14))" }}
+                      />
+
+                      {/* ── Jasmine: 5 outer petals ── */}
+                      <g transform="translate(60,60) rotate(0)">
+                        <path d="M 0 0 C 11 -9, 13 -30, 0 -45 C -13 -30, -11 -9, 0 0 Z"
+                          fill="rgba(255,242,195,0.30)" stroke="rgba(255,240,200,0.40)" strokeWidth="0.8" strokeLinejoin="round" />
+                      </g>
+                      <g transform="translate(60,60) rotate(72)">
+                        <path d="M 0 0 C 11 -9, 13 -30, 0 -45 C -13 -30, -11 -9, 0 0 Z"
+                          fill="rgba(255,242,195,0.30)" stroke="rgba(255,240,200,0.40)" strokeWidth="0.8" strokeLinejoin="round" />
+                      </g>
+                      <g transform="translate(60,60) rotate(144)">
+                        <path d="M 0 0 C 11 -9, 13 -30, 0 -45 C -13 -30, -11 -9, 0 0 Z"
+                          fill="rgba(255,242,195,0.30)" stroke="rgba(255,240,200,0.40)" strokeWidth="0.8" strokeLinejoin="round" />
+                      </g>
+                      <g transform="translate(60,60) rotate(216)">
+                        <path d="M 0 0 C 11 -9, 13 -30, 0 -45 C -13 -30, -11 -9, 0 0 Z"
+                          fill="rgba(255,242,195,0.30)" stroke="rgba(255,240,200,0.40)" strokeWidth="0.8" strokeLinejoin="round" />
+                      </g>
+                      <g transform="translate(60,60) rotate(288)">
+                        <path d="M 0 0 C 11 -9, 13 -30, 0 -45 C -13 -30, -11 -9, 0 0 Z"
+                          fill="rgba(255,242,195,0.30)" stroke="rgba(255,240,200,0.40)" strokeWidth="0.8" strokeLinejoin="round" />
+                      </g>
+
+                      {/* ── Jasmine: 5 inner petals (offset 36°) ── */}
+                      <g transform="translate(60,60) rotate(36)">
+                        <path d="M 0 0 C 8 -6, 9 -20, 0 -31 C -9 -20, -8 -6, 0 0 Z"
+                          fill="rgba(255,242,195,0.22)" stroke="rgba(255,240,200,0.30)" strokeWidth="0.6" strokeLinejoin="round" />
+                      </g>
+                      <g transform="translate(60,60) rotate(108)">
+                        <path d="M 0 0 C 8 -6, 9 -20, 0 -31 C -9 -20, -8 -6, 0 0 Z"
+                          fill="rgba(255,242,195,0.22)" stroke="rgba(255,240,200,0.30)" strokeWidth="0.6" strokeLinejoin="round" />
+                      </g>
+                      <g transform="translate(60,60) rotate(180)">
+                        <path d="M 0 0 C 8 -6, 9 -20, 0 -31 C -9 -20, -8 -6, 0 0 Z"
+                          fill="rgba(255,242,195,0.22)" stroke="rgba(255,240,200,0.30)" strokeWidth="0.6" strokeLinejoin="round" />
+                      </g>
+                      <g transform="translate(60,60) rotate(252)">
+                        <path d="M 0 0 C 8 -6, 9 -20, 0 -31 C -9 -20, -8 -6, 0 0 Z"
+                          fill="rgba(255,242,195,0.22)" stroke="rgba(255,240,200,0.30)" strokeWidth="0.6" strokeLinejoin="round" />
+                      </g>
+                      <g transform="translate(60,60) rotate(324)">
+                        <path d="M 0 0 C 8 -6, 9 -20, 0 -31 C -9 -20, -8 -6, 0 0 Z"
+                          fill="rgba(255,242,195,0.22)" stroke="rgba(255,240,200,0.30)" strokeWidth="0.6" strokeLinejoin="round" />
+                      </g>
+
+                      {/* ── Center: stamens + pistil ── */}
+                      <circle cx="60" cy="60" r="9.5" fill="rgba(255,245,210,0.28)" stroke="rgba(255,240,200,0.32)" strokeWidth="0.8" />
+                      <circle cx="60" cy="60" r="5" fill="rgba(255,248,220,0.35)" />
+                      {/* 5 stamen dots */}
+                      <circle cx="60" cy="54" r="1.6" fill="rgba(255,245,200,0.50)" />
+                      <circle cx="65.7" cy="58.1" r="1.6" fill="rgba(255,245,200,0.50)" />
+                      <circle cx="63.5" cy="64.9" r="1.6" fill="rgba(255,245,200,0.50)" />
+                      <circle cx="56.5" cy="64.9" r="1.6" fill="rgba(255,245,200,0.50)" />
+                      <circle cx="54.3" cy="58.1" r="1.6" fill="rgba(255,245,200,0.50)" />
                     </svg>
-
-                    {/* Embossed outer ring — thick, prominent */}
-                    <div
-                      className="absolute inset-[7px] rounded-full pointer-events-none"
-                      style={{
-                        border: "2.5px solid rgba(255,240,200,0.22)",
-                        boxShadow: `
-                          inset 0 2px 6px rgba(0,0,0,0.18),
-                          0 1.5px 3px rgba(255,240,200,0.14),
-                          inset 0 -1px 2px rgba(255,250,230,0.1)
-                        `,
-                      }}
-                    />
-
-                    {/* Decorative middle ring */}
-                    <div
-                      className="absolute inset-[15px] rounded-full pointer-events-none"
-                      style={{
-                        border: "1.5px solid rgba(255,240,200,0.16)",
-                        boxShadow: `
-                          inset 0 1.5px 4px rgba(0,0,0,0.12),
-                          0 0.5px 1.5px rgba(255,240,200,0.08)
-                        `,
-                      }}
-                    />
-
-                    {/* Inner detail ring */}
-                    <div
-                      className="absolute inset-[22px] rounded-full pointer-events-none"
-                      style={{
-                        border: "1px solid rgba(255,240,200,0.1)",
-                        boxShadow: "inset 0 1px 3px rgba(0,0,0,0.08)",
-                      }}
-                    />
 
                     {/* Specular highlight — top-left (studio light reflection) */}
                     <div
@@ -730,25 +694,24 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                         zIndex: 2,
                         gap: "3px",
                         marginTop: "-1px",
+                        direction: "ltr",
                       }}
                     >
                       {/* Letter W */}
                       <span
                         style={{
-                          fontFamily: "var(--font-playfair), 'Playfair Display', Georgia, serif",
-                          fontSize: "28px",
-                          fontWeight: 700,
-                          fontStyle: "italic",
-                          color: "rgba(255,250,235,0.95)",
+                          fontFamily: "var(--font-great-vibes), 'Great Vibes', cursive",
+                          fontSize: "38px",
+                          color: "rgba(255,250,235,0.97)",
                           textShadow: `
-                            0 3px 5px rgba(0,0,0,0.4),
-                            0 -1.5px 2px rgba(255,248,225,0.28),
-                            0 0 16px rgba(220,195,140,0.24),
+                            0 3px 5px rgba(0,0,0,0.45),
+                            0 -1.5px 2px rgba(255,248,225,0.32),
+                            0 0 18px rgba(220,195,140,0.30),
                             0 1.5px 0 rgba(80,62,28,0.55),
-                            0 -0.5px 0 rgba(255,250,235,0.15)
+                            0 -0.5px 0 rgba(255,250,235,0.18)
                           `,
                           lineHeight: 1,
-                          letterSpacing: "0.04em",
+                          letterSpacing: "0.02em",
                         }}
                       >
                         W
@@ -781,20 +744,18 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                       {/* Letter R */}
                       <span
                         style={{
-                          fontFamily: "var(--font-playfair), 'Playfair Display', Georgia, serif",
-                          fontSize: "28px",
-                          fontWeight: 700,
-                          fontStyle: "italic",
-                          color: "rgba(255,250,235,0.95)",
+                          fontFamily: "var(--font-great-vibes), 'Great Vibes', cursive",
+                          fontSize: "38px",
+                          color: "rgba(255,250,235,0.97)",
                           textShadow: `
-                            0 3px 5px rgba(0,0,0,0.4),
-                            0 -1.5px 2px rgba(255,248,225,0.28),
-                            0 0 16px rgba(220,195,140,0.24),
+                            0 3px 5px rgba(0,0,0,0.45),
+                            0 -1.5px 2px rgba(255,248,225,0.32),
+                            0 0 18px rgba(220,195,140,0.30),
                             0 1.5px 0 rgba(80,62,28,0.55),
-                            0 -0.5px 0 rgba(255,250,235,0.15)
+                            0 -0.5px 0 rgba(255,250,235,0.18)
                           `,
                           lineHeight: 1,
-                          letterSpacing: "0.04em",
+                          letterSpacing: "0.02em",
                         }}
                       >
                         R
@@ -915,13 +876,14 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
             {/* ── "Tap to open" ── */}
             {phase === "idle" && (
               <motion.p
-                className="absolute left-0 right-0 text-center text-[11px] sm:text-xs tracking-[0.3em] uppercase font-body z-30 pointer-events-none"
+                className="absolute left-0 right-0 text-center text-xs sm:text-sm tracking-[0.32em] uppercase font-body z-30 pointer-events-none"
                 style={{
                   top: `calc(${FLAP_PCT}% + ${HALF + 28}px)`,
-                  color: "rgba(138,130,120,0.7)",
+                  color: "rgba(80,68,52,0.95)",
+                  textShadow: "0 1px 3px rgba(255,252,245,0.7), 0 0 12px rgba(255,250,235,0.5)",
                 }}
                 initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: [0, 0.7], y: 0 }}
+                animate={{ opacity: [0, 1], y: 0 }}
                 transition={{ delay: 2, duration: 1.4, ease: "easeOut" }}
               >
                 {t.tapToOpen}

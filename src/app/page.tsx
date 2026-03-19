@@ -95,17 +95,20 @@ function WeddingApp() {
                   </svg>
                 </motion.button>
 
-                <main>
+                <main className="max-w-2xl mx-auto">
                   <EventDetails />
+                  <div className="section-divider" />
                   <DressCode />
+                  <div className="section-divider" />
                   <FoodDrinks />
+                  <div className="section-divider" />
                   <FAQ />
+                  <div className="section-divider" />
                   <RSVPSection />
 
                   {/* Footer */}
-                  <footer className="text-center py-12 px-6">
-                    <div className="section-divider mb-8" />
-                    <p className={`text-xs tracking-[0.2em] uppercase ${isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"}`}>
+                  <footer className="text-center py-16 sm:py-20 px-6">
+                    <p className={`text-[11px] tracking-[0.25em] uppercase ${isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"}`}>
                       {isRTL ? "وسيم و ريان \u2014 ٢٠٢٦" : "Wasim & Rayan \u2014 2026"}
                     </p>
                   </footer>

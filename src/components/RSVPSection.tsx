@@ -115,20 +115,16 @@ export default function RSVPSection() {
   }`;
 
   return (
-    <section className="px-6 py-20 sm:py-28" id="rsvp">
-      <div className="max-w-md mx-auto">
+    <section className="px-6 py-20 sm:py-24" id="rsvp">
+      <div className="max-w-lg mx-auto">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
           className="text-center mb-10"
         >
-          <motion.div custom={0} variants={fadeInUp}>
-            <div className="section-divider mb-10" />
-          </motion.div>
-
           <motion.h2
-            custom={0.2}
+            custom={0.1}
             variants={fadeInUp}
             className={`text-2xl sm:text-3xl tracking-[0.15em] uppercase mb-3 ${
               isRTL ? "font-arabic text-text-primary" : "font-serif text-text-primary"
@@ -138,7 +134,7 @@ export default function RSVPSection() {
           </motion.h2>
 
           <motion.p
-            custom={0.4}
+            custom={0.2}
             variants={fadeInUp}
             className={`text-sm leading-relaxed max-w-sm mx-auto ${
               isRTL ? "font-arabic text-text-secondary" : "font-body text-text-secondary"
@@ -175,7 +171,7 @@ export default function RSVPSection() {
               exit={{ opacity: 0, y: -20 }}
             >
               <motion.form
-                custom={0.5}
+                custom={0.3}
                 variants={fadeInUp}
                 onSubmit={handleSubmit}
                 className="rsvp-card p-8 sm:p-10 space-y-6"

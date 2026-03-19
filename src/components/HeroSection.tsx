@@ -46,20 +46,20 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
   const { t, isRTL } = useLanguage();
 
   return (
-    <section className="h-screen flex flex-col items-center justify-center relative px-6 py-8">
+    <section className="h-screen flex flex-col items-center justify-center relative px-6">
       <motion.div
         initial="hidden"
         animate="visible"
-        className="text-center relative z-10 max-w-2xl w-full"
+        className="text-center relative z-10 max-w-xl w-full"
       >
         {/* "You are invited" */}
         <motion.p
           custom={0.2}
           variants={slideUp}
-          className={`text-xs sm:text-sm tracking-[0.35em] uppercase mb-5 sm:mb-6 ${
+          className={`text-[11px] sm:text-xs tracking-[0.4em] uppercase mb-6 sm:mb-8 ${
             isRTL
-              ? "font-arabic text-accent-dark"
-              : "font-serif text-text-secondary"
+              ? "font-arabic text-text-muted"
+              : "font-body text-text-muted"
           }`}
         >
           {t.youAreInvited}
@@ -131,20 +131,15 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
         </motion.div>
 
         {/* Decorative line */}
-        <motion.div custom={0.9} variants={fadeIn} className="my-5 sm:my-6">
+        <motion.div custom={0.9} variants={fadeIn} className="my-6 sm:my-8">
           <div className="accent-line" />
-        </motion.div>
-
-        {/* Jasmine flower */}
-        <motion.div custom={1.0} variants={fadeIn} className="flex justify-center mb-4 sm:mb-5">
-          <JasmineFlower />
         </motion.div>
 
         {/* Invitation text */}
         <motion.p
-          custom={1.2}
+          custom={1.1}
           variants={slideUp}
-          className={`text-sm sm:text-base leading-relaxed whitespace-pre-line max-w-md mx-auto ${
+          className={`text-sm sm:text-base leading-[1.9] whitespace-pre-line max-w-sm mx-auto ${
             isRTL
               ? "font-arabic text-text-secondary"
               : "font-body text-text-secondary"
@@ -155,9 +150,9 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
 
         {/* Date & Location */}
         <motion.div
-          custom={1.4}
+          custom={1.3}
           variants={slideUp}
-          className="mt-4 sm:mt-5 space-y-1"
+          className="mt-5 sm:mt-6 space-y-1.5"
         >
           <p
             className={`text-base sm:text-lg font-semibold tracking-wide ${
@@ -176,8 +171,8 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
         </motion.div>
 
         {/* Quranic Verse — compact card */}
-        <motion.div custom={1.6} variants={slideUp} className="mt-5 sm:mt-6">
-          <div className="verse-card max-w-md mx-auto px-5 py-5 sm:px-8 sm:py-6 text-center">
+        <motion.div custom={1.5} variants={slideUp} className="mt-8 sm:mt-10">
+          <div className="verse-card max-w-sm mx-auto px-6 py-6 sm:px-8 sm:py-7 text-center">
             <blockquote
               className={`text-xs sm:text-sm leading-[1.8] ${
                 isRTL
@@ -204,9 +199,9 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
         </motion.div>
 
         {/* "CONFIRM YOUR ATTENDANCE" + Down Arrow */}
-        <motion.div custom={2.0} variants={slideUp} className="mt-6 sm:mt-8">
+        <motion.div custom={1.8} variants={slideUp} className="mt-8 sm:mt-10">
           <p
-            className={`text-[10px] sm:text-xs tracking-[0.25em] sm:tracking-[0.3em] uppercase mb-3 sm:mb-4 ${
+            className={`text-[10px] sm:text-[11px] tracking-[0.3em] uppercase mb-4 ${
               isRTL
                 ? "font-arabic text-text-muted"
                 : "font-body text-text-muted"
@@ -241,26 +236,3 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
   );
 }
 
-/* ── Syrian Jasmine Flower (الياسمين الدمشقي) ──────────── */
-function JasmineFlower() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 100 100" className="text-accent opacity-40">
-      {/* Five petals */}
-      {[0, 72, 144, 216, 288].map((angle, i) => (
-        <ellipse
-          key={i}
-          cx="50"
-          cy="25"
-          rx="10"
-          ry="20"
-          fill="currentColor"
-          opacity="0.6"
-          transform={`rotate(${angle} 50 50)`}
-        />
-      ))}
-      {/* Center */}
-      <circle cx="50" cy="50" r="8" fill="currentColor" opacity="0.8" />
-      <circle cx="50" cy="50" r="4" fill="#FDFAF5" />
-    </svg>
-  );
-}

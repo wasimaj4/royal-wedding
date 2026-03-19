@@ -57,8 +57,8 @@ body {
 
 .section-divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(196, 162, 101, 0.3), rgba(196, 162, 101, 0.5), rgba(196, 162, 101, 0.3), transparent);
-  max-width: 300px;
+  background: linear-gradient(90deg, transparent, rgba(196, 162, 101, 0.25), rgba(196, 162, 101, 0.45), rgba(196, 162, 101, 0.25), transparent);
+  max-width: 200px;
   margin: 0 auto;
 }
 
@@ -85,36 +85,11 @@ body {
 }
 
 .verse-card {
-  background: rgba(255, 255, 255, 0.65);
-  border: 1px solid rgba(176, 141, 87, 0.2);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(176, 141, 87, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   position: relative;
-}
-
-.verse-card::before,
-.verse-card::after {
-  content: '';
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-color: var(--accent-light);
-  border-style: solid;
-  opacity: 0.6;
-}
-
-.verse-card::before {
-  top: 12px;
-  left: 12px;
-  border-width: 1px 0 0 1px;
-  border-color: rgba(196, 162, 101, 0.3);
-}
-
-.verse-card::after {
-  bottom: 12px;
-  right: 12px;
-  border-width: 0 1px 1px 0;
-  border-color: rgba(196, 162, 101, 0.3);
 }
 
 /* FAQ Accordion */
@@ -149,28 +124,28 @@ body {
 }
 
 .rsvp-card {
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(176, 141, 87, 0.2);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(176, 141, 87, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.06);
 }
 
 .form-input {
   width: 100%;
   padding: 0.875rem 1rem;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(176, 141, 87, 0.25);
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(176, 141, 87, 0.2);
   color: var(--text-primary);
-  font-size: 1.05rem;
-  transition: all 0.4s ease;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
 .form-input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(176, 141, 87, 0.12);
-  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 0 2px rgba(176, 141, 87, 0.1);
+  background: rgba(255, 255, 255, 0.75);
 }
 
 .form-input::placeholder {
@@ -178,22 +153,22 @@ body {
 }
 
 .btn-primary {
-  padding: 0.875rem 2.5rem;
-  border: 1.5px solid var(--accent);
+  padding: 0.9rem 2.5rem;
+  border: 1px solid var(--accent);
   color: var(--accent-dark);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
   background: transparent;
-  transition: all 0.5s ease;
+  transition: all 0.4s ease;
   cursor: pointer;
 }
 
 .btn-primary:hover {
   background: var(--accent);
   color: #FDFAF5;
-  box-shadow: 0 4px 25px rgba(176, 141, 87, 0.3);
+  box-shadow: 0 8px 32px rgba(176, 141, 87, 0.2);
 }
 
 .btn-primary:disabled {
@@ -291,7 +266,6 @@ body {
 
 @media (max-width: 640px) {
   .verse-card { padding: 1.5rem; }
-  .verse-card::before, .verse-card::after { width: 14px; height: 14px; }
 }
 
 /* ═══════════════════════════════════════════════════════════

@@ -56,14 +56,14 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
   ];
 
   return (
-    <div className={`flex justify-center gap-4 sm:gap-6 ${isRTL ? "flex-row-reverse" : ""}`}>
+    <div className={`flex justify-center gap-3 sm:gap-5 ${isRTL ? "flex-row-reverse" : ""}`}>
       {units.map((unit, index) => (
         <div key={unit.label} className="text-center">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
-            className="w-16 sm:w-20 h-16 sm:h-20 flex items-center justify-center border border-border bg-bg-secondary backdrop-blur-sm relative overflow-hidden"
+            className="w-16 sm:w-20 h-16 sm:h-20 flex items-center justify-center border border-border/60 bg-white/40 backdrop-blur-sm"
           >
             <motion.span
               key={unit.value}

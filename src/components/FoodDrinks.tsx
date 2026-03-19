@@ -16,7 +16,7 @@ export default function FoodDrinks() {
   const { t, isRTL } = useLanguage();
 
   return (
-    <section className="px-6 py-16 sm:py-20">
+    <section className="px-6 py-20 sm:py-24">
       <div className="max-w-xl mx-auto">
         <motion.div
           initial="hidden"
@@ -24,32 +24,8 @@ export default function FoodDrinks() {
           viewport={{ once: true, margin: "-60px" }}
           className="text-center"
         >
-          <motion.div custom={0} variants={fadeUp}>
-            <div className="section-divider mb-10" />
-          </motion.div>
-
-          <motion.div custom={0.1} variants={fadeUp} className="flex justify-center mb-6">
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-accent opacity-60"
-            >
-              <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
-              <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
-              <line x1="6" y1="1" x2="6" y2="4" />
-              <line x1="10" y1="1" x2="10" y2="4" />
-              <line x1="14" y1="1" x2="14" y2="4" />
-            </svg>
-          </motion.div>
-
           <motion.h2
-            custom={0.2}
+            custom={0.1}
             variants={fadeUp}
             className={`text-2xl sm:text-3xl tracking-[0.15em] uppercase mb-8 ${
               isRTL ? "font-arabic text-text-primary" : "font-serif text-text-primary"
@@ -58,7 +34,7 @@ export default function FoodDrinks() {
             {t.foodDrinksTitle}
           </motion.h2>
 
-          <motion.div custom={0.4} variants={fadeUp}>
+          <motion.div custom={0.3} variants={fadeUp}>
             <div className="verse-card max-w-md mx-auto px-6 py-6 sm:px-8 sm:py-8">
               {/* Food */}
               <p

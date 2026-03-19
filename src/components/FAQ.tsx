@@ -18,48 +18,26 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="px-6 py-16 sm:py-20">
+    <section className="px-6 py-20 sm:py-24">
       <div className="max-w-xl mx-auto">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
         >
-          <motion.div custom={0} variants={fadeUp} className="text-center">
-            <div className="section-divider mb-10" />
-          </motion.div>
-
-          <motion.div custom={0.1} variants={fadeUp} className="flex justify-center mb-6">
-            <svg
-              width="36"
-              height="36"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-accent opacity-60"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-              <line x1="12" y1="17" x2="12.01" y2="17" />
-            </svg>
-          </motion.div>
-
           <motion.h2
-            custom={0.2}
+            custom={0.1}
             variants={fadeUp}
-            className={`text-center text-2xl sm:text-3xl tracking-[0.15em] uppercase mb-10 ${
+            className={`text-center text-2xl sm:text-3xl tracking-[0.15em] uppercase mb-8 ${
               isRTL ? "font-arabic text-text-primary" : "font-serif text-text-primary"
             }`}
           >
             {t.faqTitle}
           </motion.h2>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {t.faqItems.map((item, i) => (
-              <motion.div key={i} custom={0.3 + 0.1 * i} variants={fadeUp}>
+              <motion.div key={i} custom={0.2 + 0.08 * i} variants={fadeUp}>
                 <button
                   onClick={() => setOpenIndex(openIndex === i ? null : i)}
                   className={`w-full text-left faq-accordion-btn ${
