@@ -72,14 +72,19 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
   const handleClick = useCallback(() => {
     if (phase !== "idle") return;
     setPhase("pressed");
-    setTimeout(() => setPhase("waiting"), 120);
-    setTimeout(() => setPhase("breaking"), 520);
-    setTimeout(() => setPhase("opening"), 1000);
-    setTimeout(() => setPhase("revealing"), 3000);
+    // 0.3s pause — let the press register visually
+    setTimeout(() => setPhase("waiting"), 300);
+    // seal break after pause
+    setTimeout(() => setPhase("breaking"), 700);
+    // flap begins opening — slow, cinematic
+    setTimeout(() => setPhase("opening"), 1200);
+    // content reveal after flap is well open
+    setTimeout(() => setPhase("revealing"), 3800);
+    // dissolve out
     setTimeout(() => {
       setPhase("done");
-      setTimeout(onOpen, 300);
-    }, 4200);
+      setTimeout(onOpen, 500);
+    }, 5400);
   }, [phase, onOpen]);
 
   const isAfterBreak = phase === "breaking" || phase === "opening" || phase === "revealing";
@@ -92,7 +97,7 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
           key="envelope-fullscreen"
           className="fixed inset-0 z-50 overflow-hidden"
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.8, ease: EASE_DISSOLVE as unknown as number[] }}
+          transition={{ duration: 1.2, ease: EASE_DISSOLVE as unknown as number[] }}
           style={{ width: "100vw", height: "100dvh", margin: 0, padding: 0 }}
         >
 
@@ -173,8 +178,8 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
               }
               transition={
                 isOpening
-                  ? { duration: 3, times: [0, 0.3, 0.65, 1], ease: "easeInOut" }
-                  : { duration: 0.4 }
+                  ? { duration: 4.0, times: [0, 0.3, 0.65, 1], ease: "easeInOut" }
+                  : { duration: 0.5 }
               }
               style={{
                 background: `radial-gradient(ellipse at 50% ${FLAP_PCT}%,
@@ -201,8 +206,8 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
             }
             transition={
               phase === "revealing"
-                ? { duration: 1.2, ease: EASE_DISSOLVE as unknown as number[] }
-                : { duration: 0.2, ease: "easeOut" }
+                ? { duration: 1.8, ease: EASE_DISSOLVE as unknown as number[] }
+                : { duration: 0.3, ease: "easeOut" }
             }
             style={{ willChange: "transform, opacity" }}
           >
@@ -224,12 +229,12 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                 }}
                 animate={
                   isOpening
-                    ? { y: -8, opacity: 1, scale: 1.002 }
+                    ? { y: -10, opacity: 1, scale: 1.002 }
                     : { y: 0, opacity: 0, scale: 1 }
                 }
                 transition={{
-                  duration: 1.4,
-                  delay: 0.35,
+                  duration: 2.0,
+                  delay: 0.6,
                   ease: EASE_FLAP as unknown as number[],
                 }}
               >
@@ -250,8 +255,8 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                 }}
                 animate={isOpening ? { y: 8 } : {}}
                 transition={{
-                  duration: 1.6,
-                  delay: 0.3,
+                  duration: 2.2,
+                  delay: 0.4,
                   ease: EASE_FLAP as unknown as number[],
                 }}
               >
@@ -417,8 +422,8 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                 }
                 transition={
                   isOpening
-                    ? { duration: 1.6, ease: EASE_FLAP as unknown as number[] }
-                    : { duration: 0.5, ease: "easeOut" }
+                    ? { duration: 2.2, ease: EASE_FLAP as unknown as number[] }
+                    : { duration: 0.6, ease: "easeOut" }
                 }
               >
                 <svg
@@ -487,7 +492,7 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                     ? { opacity: [0, 0.9, 0.4], scaleY: [0, 1.4, 0.7] }
                     : {}
                 }
-                transition={{ duration: 1.8, ease: "easeOut" }}
+                transition={{ duration: 2.4, ease: "easeOut" }}
               />
             </div>
 
@@ -898,7 +903,7 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: [0, 0, 0.65, 0] }}
               transition={{
-                duration: 2.2,
+                duration: 3.0,
                 times: [0, 0.3, 0.65, 1],
                 ease: "easeOut",
               }}
