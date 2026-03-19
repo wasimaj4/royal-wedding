@@ -27,6 +27,8 @@ interface RSVPRecord {
   fullName: string;
   attendance: string;
   companion: string;
+  plusOneName: string;
+  songSuggestion: string;
   timestamp: string;
   emailSent: boolean;
   signature: string;
@@ -36,6 +38,8 @@ interface EmailData {
   fullName: string;
   attendance: string;
   companion: string;
+  plusOneName: string;
+  songSuggestion: string;
   rsvpId: string;
   timestamp: string;
 }
@@ -101,9 +105,9 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { fullName, attendance, companion } = body;
+    const { fullName, attendance, companion, plusOneName, songSuggestion } = body;
 
-    if (!fullName || !attendance || !companion) {
+    if (!fullName || !attendance) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -113,11 +117,26 @@ export async function POST(request: NextRequest) {
     // ── Input validation ──────────────────────────────────
     const cleanName = sanitize(String(fullName).trim()).slice(0, 100);
     const cleanAttendance = attendance === "yes" ? "yes" : "no";
-    const cleanCompanion = companion === "yes" ? "yes" : "no";
+    // Companion only matters when attending
+    const cleanCompanion = cleanAttendance === "yes" && companion === "yes" ? "yes" : "no";
+    const cleanPlusOneName = cleanCompanion === "yes" && plusOneName
+      ? sanitize(String(plusOneName).trim()).slice(0, 100)
+      : "";
+    const cleanSong = songSuggestion
+      ? sanitize(String(songSuggestion).trim()).slice(0, 200)
+      : "";
 
     if (!cleanName) {
       return NextResponse.json(
         { error: "Invalid name" },
+        { status: 400 }
+      );
+    }
+
+    // ── Plus-one name must differ from guest name ─────────
+    if (cleanPlusOneName && cleanPlusOneName.toLowerCase().replace(/\s+/g, "") === cleanName.toLowerCase().replace(/\s+/g, "")) {
+      return NextResponse.json(
+        { error: "Companion name must differ from your name" },
         { status: 400 }
       );
     }
@@ -142,18 +161,24 @@ export async function POST(request: NextRequest) {
     const rsvpId = generateSecureRSVPId();
     const timestamp = new Date().toISOString();
 
-    // ── Sign the QR payload with HMAC-SHA256 ──────────────
-    const qrData = {
-      id: rsvpId,
-      guest: cleanName,
-      attendance: cleanAttendance,
-      companion: cleanCompanion,
-      event: "Wasim & Rayan Wedding",
-      date: "17-05-2026",
-      issued: timestamp,
-    };
-    const signature = signPayload(qrData);
-    const qrPayload = JSON.stringify({ ...qrData, sig: signature });
+    // ── Sign the QR payload with HMAC-SHA256 (only for attending) ──
+    let qrPayload: string | null = null;
+    let signature = "";
+
+    if (cleanAttendance === "yes") {
+      const qrData = {
+        id: rsvpId,
+        guest: cleanName,
+        attendance: cleanAttendance,
+        companion: cleanCompanion,
+        plusOne: cleanPlusOneName || undefined,
+        event: "Wasim & Rayan Wedding",
+        date: "17-05-2026",
+        issued: timestamp,
+      };
+      signature = signPayload(qrData);
+      qrPayload = JSON.stringify({ ...qrData, sig: signature });
+    }
 
     // ── Persist to Redis ──────────────────────────────────
     const record: RSVPRecord = {
@@ -161,6 +186,8 @@ export async function POST(request: NextRequest) {
       fullName: cleanName,
       attendance: cleanAttendance,
       companion: cleanCompanion,
+      plusOneName: cleanPlusOneName,
+      songSuggestion: cleanSong,
       timestamp,
       emailSent: false,
       signature,
@@ -178,6 +205,8 @@ export async function POST(request: NextRequest) {
       fullName: cleanName,
       attendance: cleanAttendance,
       companion: cleanCompanion,
+      plusOneName: cleanPlusOneName,
+      songSuggestion: cleanSong,
       rsvpId,
       timestamp,
     });
@@ -256,7 +285,22 @@ async function sendEmailNotification(data: EmailData): Promise<boolean> {
   const attendanceText =
     data.attendance === "yes" ? "✅ Will Attend" : "❌ Will Not Attend";
   const companionText =
-    data.companion === "yes" ? "Yes (1 companion)" : "No companion";
+    data.companion === "yes"
+      ? data.plusOneName
+        ? `Yes — ${data.plusOneName}`
+        : "Yes (1 companion)"
+      : "No companion";
+
+  const extraRows = [
+    data.plusOneName
+      ? `<tr><td style="padding: 8px 0; color: #8B7536;">Companion</td><td style="padding: 8px 0;">${companionText}</td></tr>`
+      : data.attendance === "yes"
+        ? `<tr><td style="padding: 8px 0; color: #8B7536;">Companion</td><td style="padding: 8px 0;">${companionText}</td></tr>`
+        : "",
+    data.songSuggestion
+      ? `<tr><td style="padding: 8px 0; color: #8B7536;">Song</td><td style="padding: 8px 0;">🎵 ${data.songSuggestion}</td></tr>`
+      : "",
+  ].filter(Boolean).join("\n");
 
   // data.fullName is already sanitized — safe for HTML embedding
   const emailHTML = `
@@ -275,10 +319,7 @@ async function sendEmailNotification(data: EmailData): Promise<boolean> {
           <td style="padding: 8px 0; color: #8B7536;">Attendance</td>
           <td style="padding: 8px 0;">${attendanceText}</td>
         </tr>
-        <tr>
-          <td style="padding: 8px 0; color: #8B7536;">Companion</td>
-          <td style="padding: 8px 0;">${companionText}</td>
-        </tr>
+        ${extraRows}
         <tr>
           <td style="padding: 8px 0; color: #8B7536;">RSVP ID</td>
           <td style="padding: 8px 0; font-family: monospace; font-size: 14px;">${data.rsvpId}</td>
@@ -290,7 +331,11 @@ async function sendEmailNotification(data: EmailData): Promise<boolean> {
       </table>
       
       <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #D4AF37;">
-        <p style="color: #8B7536; font-size: 12px; margin: 0;">This guest has been issued a unique QR code for entry.</p>
+        <p style="color: #8B7536; font-size: 12px; margin: 0;">${
+          data.attendance === "yes"
+            ? "This guest has been issued a unique QR code for entry."
+            : "This guest has declined the invitation."
+        }</p>
       </div>
     </div>
   `;

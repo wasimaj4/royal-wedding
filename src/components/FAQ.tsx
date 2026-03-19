@@ -9,7 +9,7 @@ const fadeUp = {
   visible: (delay: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 1, delay, ease: "easeOut" },
+    transition: { duration: 0.8, delay, ease: "easeOut" },
   }),
 };
 
@@ -84,7 +84,7 @@ export default function FAQ() {
                     strokeLinejoin="round"
                     className="text-accent flex-shrink-0"
                     animate={{ rotate: openIndex === i ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
                   >
                     <path d="M6 9l6 6 6-6" />
                   </motion.svg>

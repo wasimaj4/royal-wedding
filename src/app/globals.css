@@ -76,6 +76,14 @@ body {
   background-clip: text;
 }
 
+.text-gold-gradient {
+  background: linear-gradient(135deg, #DFC89A 0%, #C4A86C 28%, #B08D57 50%, #C4A86C 72%, #DFC89A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
 .verse-card {
   background: rgba(255, 255, 255, 0.65);
   border: 1px solid rgba(176, 141, 87, 0.2);

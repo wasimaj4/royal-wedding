@@ -1,16 +1,18 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import QRCodeDisplay from "./QRCodeDisplay";
+
+const STORAGE_KEY = "rsvp_submitted";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 25 },
   visible: (delay: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 1, delay, ease: "easeOut" },
+    transition: { duration: 0.8, delay, ease: "easeOut" },
   }),
 };
 
@@ -20,12 +22,47 @@ export default function RSVPSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [rsvpId, setRsvpId] = useState("");
-  const [qrPayload, setQrPayload] = useState("");
+  const [qrPayload, setQrPayload] = useState<string | null>(null);
+  const [alreadyDone, setAlreadyDone] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     attendance: "",
     companion: "",
+    plusOneName: "",
+    songSuggestion: "",
   });
+
+  // ── Anti-abuse: check localStorage on mount ──
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined" && localStorage.getItem(STORAGE_KEY)) {
+        setAlreadyDone(true);
+      }
+    } catch {
+      // localStorage unavailable — ignore
+    }
+  }, []);
+
+  // ── Reset companion fields when attendance changes to "no" ──
+  const setAttendance = (val: string) => {
+    if (val === "no") {
+      setFormData((f) => ({
+        ...f,
+        attendance: val,
+        companion: "",
+        plusOneName: "",
+        songSuggestion: "",
+      }));
+    } else {
+      setFormData((f) => ({ ...f, attendance: val }));
+    }
+  };
+
+  const canSubmit =
+    formData.fullName.trim().length > 0 &&
+    formData.attendance !== "" &&
+    (formData.attendance === "no" || formData.companion !== "") &&
+    !isSubmitting;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -43,14 +80,15 @@ export default function RSVPSection() {
 
       if (data.success) {
         setRsvpId(data.rsvpId);
-        setQrPayload(data.qrPayload);
+        setQrPayload(data.qrPayload ?? null);
         setSubmitted(true);
+        try {
+          localStorage.setItem(STORAGE_KEY, data.rsvpId);
+        } catch {
+          // ignore
+        }
       } else if (data.error === "duplicate") {
-        setSubmitError(
-          isRTL
-            ? "يا عمي ردك وصل قبل هيك بهالاسم"
-            : "An RSVP with this name has already been submitted"
-        );
+        setSubmitError(t.alreadySubmitted);
       } else {
         setSubmitError(
           isRTL
@@ -68,6 +106,13 @@ export default function RSVPSection() {
       setIsSubmitting(false);
     }
   };
+
+  const labelCls = `block text-xs tracking-[0.15em] uppercase mb-2 ${
+    isRTL ? "font-arabic text-right text-text-muted" : "font-body text-text-muted"
+  }`;
+  const labelCls3 = `block text-xs tracking-[0.15em] uppercase mb-3 ${
+    isRTL ? "font-arabic text-right text-text-muted" : "font-body text-text-muted"
+  }`;
 
   return (
     <section className="px-6 py-20 sm:py-28" id="rsvp">
@@ -104,7 +149,24 @@ export default function RSVPSection() {
         </motion.div>
 
         <AnimatePresence mode="wait">
-          {!submitted ? (
+          {alreadyDone && !submitted ? (
+            /* ── Already submitted guard ─────────── */
+            <motion.div
+              key="already"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="rsvp-card p-8 sm:p-10 text-center"
+            >
+              <div className="w-14 h-14 mx-auto mb-5 rounded-full border border-accent/40 flex items-center justify-center">
+                <svg width="26" height="26" viewBox="0 0 40 40" fill="none">
+                  <path d="M10 20 L17 27 L30 13" stroke="#C4A265" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <p className={`text-sm leading-relaxed ${isRTL ? "font-arabic text-text-secondary" : "font-body text-text-secondary"}`}>
+                {t.alreadySubmitted}
+              </p>
+            </motion.div>
+          ) : !submitted ? (
             <motion.div
               key="form"
               initial="hidden"
@@ -118,15 +180,9 @@ export default function RSVPSection() {
                 onSubmit={handleSubmit}
                 className="rsvp-card p-8 sm:p-10 space-y-6"
               >
-                {/* Full Name */}
+                {/* ── Full Name ── */}
                 <div>
-                  <label
-                    className={`block text-xs tracking-[0.15em] uppercase mb-2 ${
-                      isRTL ? "font-arabic text-right text-text-muted" : "font-body text-text-muted"
-                    }`}
-                  >
-                    {t.fullName}
-                  </label>
+                  <label className={labelCls}>{t.fullName}</label>
                   <input
                     type="text"
                     required
@@ -134,22 +190,14 @@ export default function RSVPSection() {
                     onChange={(e) =>
                       setFormData({ ...formData, fullName: e.target.value })
                     }
-                    className={`form-input ${
-                      isRTL ? "font-arabic text-right" : "font-body"
-                    }`}
+                    className={`form-input ${isRTL ? "font-arabic text-right" : "font-body"}`}
                     placeholder={isRTL ? "الاسم الكامل" : "Your full name"}
                   />
                 </div>
 
-                {/* Attendance */}
+                {/* ── Attendance ── */}
                 <div>
-                  <label
-                    className={`block text-xs tracking-[0.15em] uppercase mb-3 ${
-                      isRTL ? "font-arabic text-right text-text-muted" : "font-body text-text-muted"
-                    }`}
-                  >
-                    {t.attendance}
-                  </label>
+                  <label className={labelCls3}>{t.attendance}</label>
                   <div className="flex gap-3">
                     {(["yes", "no"] as const).map((val) => (
                       <button
@@ -158,9 +206,7 @@ export default function RSVPSection() {
                         role="radio"
                         aria-checked={formData.attendance === val}
                         aria-label={val === "yes" ? t.attendanceYes : t.attendanceNo}
-                        onClick={() =>
-                          setFormData({ ...formData, attendance: val })
-                        }
+                        onClick={() => setAttendance(val)}
                         className={`flex-1 py-3 px-4 border text-sm tracking-wider transition-all duration-400 ${
                           formData.attendance === val
                             ? "border-accent bg-accent/8 text-accent-dark"
@@ -173,39 +219,90 @@ export default function RSVPSection() {
                   </div>
                 </div>
 
-                {/* Companion */}
-                <div>
-                  <label
-                    className={`block text-xs tracking-[0.15em] uppercase mb-3 ${
-                      isRTL ? "font-arabic text-right text-text-muted" : "font-body text-text-muted"
-                    }`}
-                  >
-                    {t.companion}
-                  </label>
-                  <div className="flex gap-3">
-                    {(["yes", "no"] as const).map((val) => (
-                      <button
-                        key={val}
-                        type="button"
-                        role="radio"
-                        aria-checked={formData.companion === val}
-                        aria-label={val === "yes" ? t.companionYes : t.companionNo}
-                        onClick={() =>
-                          setFormData({ ...formData, companion: val })
-                        }
-                        className={`flex-1 py-3 px-4 border text-sm tracking-wider transition-all duration-400 ${
-                          formData.companion === val
-                            ? "border-accent bg-accent/8 text-accent-dark"
-                            : "border-border text-text-muted hover:border-accent/40"
-                        } ${isRTL ? "font-arabic" : "font-body"}`}
-                      >
-                        {val === "yes" ? t.companionYes : t.companionNo}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                {/* ── Conditional attending-only fields ── */}
+                <AnimatePresence>
+                  {formData.attendance === "yes" && (
+                    <motion.div
+                      key="attending-fields"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                      className="space-y-6 overflow-hidden"
+                    >
+                      {/* ── Companion ── */}
+                      <div>
+                        <label className={labelCls3}>{t.companion}</label>
+                        <div className="flex gap-3">
+                          {(["yes", "no"] as const).map((val) => (
+                            <button
+                              key={val}
+                              type="button"
+                              role="radio"
+                              aria-checked={formData.companion === val}
+                              aria-label={val === "yes" ? t.companionYes : t.companionNo}
+                              onClick={() =>
+                                setFormData({
+                                  ...formData,
+                                  companion: val,
+                                  plusOneName: val === "no" ? "" : formData.plusOneName,
+                                })
+                              }
+                              className={`flex-1 py-3 px-4 border text-sm tracking-wider transition-all duration-400 ${
+                                formData.companion === val
+                                  ? "border-accent bg-accent/8 text-accent-dark"
+                                  : "border-border text-text-muted hover:border-accent/40"
+                              } ${isRTL ? "font-arabic" : "font-body"}`}
+                            >
+                              {val === "yes" ? t.companionYes : t.companionNo}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
 
-                {/* Error */}
+                      {/* ── Plus-one Name (when companion = yes) ── */}
+                      <AnimatePresence>
+                        {formData.companion === "yes" && (
+                          <motion.div
+                            key="plusone"
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="overflow-hidden"
+                          >
+                            <label className={labelCls}>{t.companionName}</label>
+                            <input
+                              type="text"
+                              value={formData.plusOneName}
+                              onChange={(e) =>
+                                setFormData({ ...formData, plusOneName: e.target.value })
+                              }
+                              className={`form-input ${isRTL ? "font-arabic text-right" : "font-body"}`}
+                              placeholder={isRTL ? t.companionNamePlaceholder : t.companionNamePlaceholder}
+                            />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      {/* ── Song Suggestion ── */}
+                      <div>
+                        <label className={labelCls}>{t.songSuggestion}</label>
+                        <input
+                          type="text"
+                          value={formData.songSuggestion}
+                          onChange={(e) =>
+                            setFormData({ ...formData, songSuggestion: e.target.value })
+                          }
+                          className={`form-input ${isRTL ? "font-arabic text-right" : "font-body"}`}
+                          placeholder={t.songPlaceholder}
+                        />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* ── Error ── */}
                 {submitError && (
                   <motion.div
                     initial={{ opacity: 0, y: -8 }}
@@ -219,15 +316,10 @@ export default function RSVPSection() {
                   </motion.div>
                 )}
 
-                {/* Submit */}
+                {/* ── Submit ── */}
                 <motion.button
                   type="submit"
-                  disabled={
-                    !formData.fullName ||
-                    !formData.attendance ||
-                    !formData.companion ||
-                    isSubmitting
-                  }
+                  disabled={!canSubmit}
                   className={`w-full btn-primary mt-4 ${
                     isRTL ? "font-arabic" : "font-serif font-semibold"
                   }`}
@@ -264,24 +356,18 @@ export default function RSVPSection() {
                 </motion.button>
               </motion.form>
             </motion.div>
-          ) : (
-            /* ── Confirmation ──────────────────────── */
+          ) : formData.attendance === "yes" ? (
+            /* ── Attending confirmation (with QR) ── */
             <motion.div
-              key="confirmation"
+              key="confirmation-yes"
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, ease: "easeOut" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
               className="rsvp-card p-8 sm:p-10 text-center"
             >
               {/* Checkmark */}
               <div className="w-16 h-16 mx-auto mb-6 rounded-full border border-accent flex items-center justify-center">
-                <motion.svg
-                  width="32"
-                  height="32"
-                  viewBox="0 0 40 40"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                >
+                <motion.svg width="32" height="32" viewBox="0 0 40 40">
                   <motion.path
                     d="M10 20 L17 27 L30 13"
                     fill="none"
@@ -291,7 +377,7 @@ export default function RSVPSection() {
                     strokeLinejoin="round"
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
-                    transition={{ delay: 0.5, duration: 0.8 }}
+                    transition={{ delay: 0.6, duration: 1, ease: "easeOut" }}
                   />
                 </motion.svg>
               </div>
@@ -314,9 +400,9 @@ export default function RSVPSection() {
 
               {qrPayload && (
                 <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1, duration: 0.8 }}
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
                 >
                   <div className="section-divider mb-6" />
 
@@ -342,8 +428,51 @@ export default function RSVPSection() {
                   >
                     {t.qrPresentAtEntrance}
                   </p>
+
+                  {/* No children notice */}
+                  <div className="mt-6 pt-5 border-t border-border">
+                    <p
+                      className={`text-xs tracking-wider ${
+                        isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"
+                      }`}
+                    >
+                      {t.noChildrenNotice}
+                    </p>
+                  </div>
                 </motion.div>
               )}
+            </motion.div>
+          ) : (
+            /* ── Decline confirmation (no QR) ── */
+            <motion.div
+              key="confirmation-no"
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="rsvp-card p-8 sm:p-10 text-center"
+            >
+              <div className="w-16 h-16 mx-auto mb-6 rounded-full border border-accent/40 flex items-center justify-center">
+                <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 8 C14 8 9 12.5 9 18 C9 28 20 34 20 34 C20 34 31 28 31 18 C31 12.5 26 8 20 8Z"
+                    stroke="#C4A265" strokeWidth="1.5" fill="none" />
+                </svg>
+              </div>
+
+              <h2
+                className={`text-2xl sm:text-3xl mb-3 ${
+                  isRTL ? "font-arabic-decorative text-text-primary" : "font-script text-text-primary"
+                }`}
+              >
+                {t.declineTitle}
+              </h2>
+
+              <p
+                className={`text-sm leading-relaxed max-w-sm mx-auto ${
+                  isRTL ? "font-arabic text-text-secondary" : "font-body text-text-secondary"
+                }`}
+              >
+                {t.declineMessage}
+              </p>
             </motion.div>
           )}
         </AnimatePresence>

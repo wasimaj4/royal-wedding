@@ -9,7 +9,7 @@ const fadeInUp = {
   visible: (delay: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 1, delay, ease: "easeOut" },
+    transition: { duration: 0.8, delay, ease: "easeOut" },
   }),
 };
 
@@ -104,8 +104,10 @@ export default function EventDetails() {
               custom={0.5}
               variants={fadeInUp}
               className="mt-6 overflow-hidden rounded-lg border border-border shadow-md"
+              whileHover={{ scale: 1.01 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
             >
-              <img
+              <motion.img
                 src="/venue.jpg"
                 alt="Wedding venue"
                 className="w-full h-auto object-cover"
@@ -164,9 +166,11 @@ export default function EventDetails() {
                   variants={fadeInUp}
                   className={`flex items-start gap-6 ${isRTL ? "flex-row-reverse" : ""}`}
                 >
-                  {/* Dot */}
+                  {/* Dot with subtle pulse */}
                   <div className="flex-shrink-0 w-8 flex items-center justify-center pt-1">
-                    <div className="w-2 h-2 bg-accent rounded-full" />
+                    <div
+                      className="w-2 h-2 bg-accent rounded-full"
+                    />
                   </div>
 
                   {/* Content */}

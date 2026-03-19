@@ -62,8 +62,8 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
-            className="w-16 sm:w-20 h-16 sm:h-20 flex items-center justify-center border border-border bg-bg-secondary backdrop-blur-sm"
+            transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
+            className="w-16 sm:w-20 h-16 sm:h-20 flex items-center justify-center border border-border bg-bg-secondary backdrop-blur-sm relative overflow-hidden"
           >
             <motion.span
               key={unit.value}
@@ -76,7 +76,9 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
               {String(unit.value).padStart(2, "0")}
             </motion.span>
           </motion.div>
-          <span className={`text-[10px] tracking-[0.2em] uppercase mt-2 block ${isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"}`}>
+          <span
+            className={`text-[10px] tracking-[0.2em] uppercase mt-2 block ${isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"}`}
+          >
             {unit.label}
           </span>
         </div>

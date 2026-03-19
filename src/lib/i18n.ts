@@ -5,6 +5,8 @@ export interface Translations {
   groomName: string;
   brideName: string;
   and: string;
+  groomParent: string;
+  brideParent: string;
   coupleNames: string;
   invitationText: string;
   eventDate: string;
@@ -35,13 +37,21 @@ export interface Translations {
   companion: string;
   companionYes: string;
   companionNo: string;
+  companionName: string;
+  companionNamePlaceholder: string;
+  songSuggestion: string;
+  songPlaceholder: string;
   submit: string;
   sending: string;
   confirmationTitle: string;
   confirmationMessage: string;
+  declineTitle: string;
+  declineMessage: string;
   qrEntryPass: string;
   qrPresentAtEntrance: string;
+  noChildrenNotice: string;
   saveQRCode: string;
+  alreadySubmitted: string;
   invitation: string;
   rsvp: string;
   playMusic: string;
@@ -67,6 +77,8 @@ export const translations: Record<Locale, Translations> = {
     groomName: "Wasim",
     brideName: "Rayan",
     and: "&",
+    groomParent: "Son of Mr. Jamal Majani",
+    brideParent: "Daughter of the late Mahmoud Samman",
     coupleNames: "Wasim & Rayan",
     invitationText: "Together with our families, and by the grace of Allah,\nWe are honored to invite you to our wedding celebration.",
     eventDate: "Saturday, 17 May 2026",
@@ -100,16 +112,24 @@ export const translations: Record<Locale, Translations> = {
     attendance: "Will you attend?",
     attendanceYes: "Joyfully Accept",
     attendanceNo: "Respectfully Decline",
-    companion: "One companion?",
+    companion: "Bringing a companion?",
     companionYes: "Yes",
     companionNo: "No",
+    companionName: "Companion Name",
+    companionNamePlaceholder: "Companion's full name",
+    songSuggestion: "Song suggestion (optional)",
+    songPlaceholder: "A song you\u2019d love to hear",
     submit: "Send Response",
     sending: "Sending...",
     confirmationTitle: "Thank You",
     confirmationMessage: "Your response has been received. We are truly honoured and look forward to celebrating this blessed occasion with you.",
+    declineTitle: "We\u2019ll Miss You",
+    declineMessage: "Thank you for letting us know. We hope to celebrate with you another time.",
     qrEntryPass: "Your personal entry pass \u2014 please save it",
     qrPresentAtEntrance: "Please present this QR code at the entrance",
+    noChildrenNotice: "Please kindly note: the event is for adults only",
     saveQRCode: "Save QR Code",
+    alreadySubmitted: "You have already submitted your response",
     invitation: "Invitation",
     rsvp: "RSVP",
     playMusic: "Play music",
@@ -138,6 +158,8 @@ export const translations: Record<Locale, Translations> = {
     groomName: "\u0648\u0633\u064A\u0645",
     brideName: "\u0631\u064A\u0627\u0646",
     and: "\u0648",
+    groomParent: "ابن السيد جمال مجني",
+    brideParent: "ابنة المرحوم محمود سمان",
     coupleNames: "\u0648\u0633\u064A\u0645 \u0648 \u0631\u064A\u0627\u0646",
     invitationText: "\u0645\u0639 \u0639\u0627\u0626\u0644\u062A\u064A\u0646\u0627\u060C \u0648\u0628\u0641\u0636\u0644 \u0627\u0644\u0644\u0647\u060C\n\u064A\u0633\u0639\u062F\u0646\u0627 \u0648\u064A\u0634\u0631\u0651\u0641\u0646\u0627 \u0623\u0646 \u0646\u062F\u0639\u0648\u0643\u0645 \u0625\u0644\u0649 \u062D\u0641\u0644 \u0632\u0641\u0627\u0641\u0646\u0627.",
     eventDate: "\u0627\u0644\u0633\u0628\u062A\u060C \u0661\u0667 \u0623\u064A\u0627\u0631 \u0662\u0660\u0662\u0666",
@@ -174,13 +196,21 @@ export const translations: Record<Locale, Translations> = {
     companion: "\u0641\u064A \u0645\u0631\u0627\u0641\u0642\u061F",
     companionYes: "\u0625\u064A",
     companionNo: "\u0644\u0623",
+    companionName: "\u0627\u0633\u0645 \u0627\u0644\u0645\u0631\u0627\u0641\u0642",
+    companionNamePlaceholder: "\u0627\u0644\u0627\u0633\u0645 \u0627\u0644\u0643\u0627\u0645\u0644 \u0644\u0644\u0645\u0631\u0627\u0641\u0642",
+    songSuggestion: "\u0627\u0642\u062A\u0631\u0627\u062D \u0623\u063A\u0646\u064A\u0629 (\u0627\u062E\u062A\u064A\u0627\u0631\u064A)",
+    songPlaceholder: "\u0623\u063A\u0646\u064A\u0629 \u062A\u062D\u0628\u0648\u0627 \u062A\u0633\u0645\u0639\u0648\u0647\u0627",
     submit: "\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0631\u062F",
     sending: "\u0639\u0645 \u064A\u0628\u0639\u062A...",
     confirmationTitle: "\u0627\u0644\u0644\u0647 \u064A\u062D\u0641\u0638\u0643\u0645",
     confirmationMessage: "\u0648\u0635\u0644 \u0631\u062F\u0643\u0645. \u0634\u0631\u0641\u062A\u0648\u0646\u0627 \u0648\u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647 \u0645\u0646\u062A\u0644\u0627\u0642\u0649 \u0628\u0647\u0627\u0644\u064A\u0648\u0645 \u0627\u0644\u062D\u0644\u0648.",
+    declineTitle: "\u0627\u0644\u0644\u0647 \u064A\u0628\u0627\u0631\u0643 \u0641\u064A\u0643\u0645",
+    declineMessage: "\u0634\u0643\u0631\u0627\u064B \u0639\u0627\u0644\u0631\u062F. \u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647 \u0645\u0646\u062A\u0644\u0627\u0642\u0649 \u0628\u0645\u0646\u0627\u0633\u0628\u0629 \u062A\u0627\u0646\u064A\u0629.",
     qrEntryPass: "\u0628\u0637\u0627\u0642\u0629 \u0627\u0644\u062F\u062E\u0648\u0644 \u0627\u0644\u062E\u0627\u0635\u0629 \u0641\u064A\u0643 \u2014 \u0627\u062D\u0641\u0638\u0647\u0627",
     qrPresentAtEntrance: "\u0631\u062C\u0627\u0621\u064B \u0637\u0644\u0651\u0639 \u0627\u0644\u0640 QR \u0639\u0646\u062F \u0627\u0644\u0628\u0627\u0628",
+    noChildrenNotice: "\u064A\u0631\u062C\u0649 \u0639\u062F\u0645 \u0627\u0635\u0637\u062D\u0627\u0628 \u0627\u0644\u0623\u0637\u0641\u0627\u0644",
     saveQRCode: "\u062D\u0641\u0638 \u0627\u0644\u0631\u0645\u0632",
+    alreadySubmitted: "\u064A\u0627 \u0639\u0645\u064A \u0631\u062F\u0643 \u0648\u0635\u0644 \u0642\u0628\u0644 \u0647\u064A\u0643",
     invitation: "\u0627\u0644\u062F\u0639\u0648\u0629",
     rsvp: "\u062A\u0623\u0643\u064A\u062F \u0627\u0644\u062D\u0636\u0648\u0631",
     playMusic: "\u062A\u0634\u063A\u064A\u0644 \u0627\u0644\u0645\u0648\u0633\u064A\u0642\u0649",

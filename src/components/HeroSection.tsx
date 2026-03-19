@@ -20,6 +20,24 @@ const slideUp = {
   }),
 };
 
+const namesReveal = {
+  hidden: { opacity: 0, y: 28 },
+  visible: (delay: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1.0, delay, ease: [0.22, 0.61, 0.36, 1] },
+  }),
+};
+
+const parentReveal = {
+  hidden: { opacity: 0, y: 10 },
+  visible: (delay: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, delay, ease: "easeOut" },
+  }),
+};
+
 interface HeroSectionProps {
   onNavigateNext: () => void;
 }
@@ -47,25 +65,69 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
           {t.youAreInvited}
         </motion.p>
 
-        {/* Couple Names */}
-        <motion.div custom={0.5} variants={fadeIn}>
-          {isRTL ? (
-            <h1 className="font-arabic-decorative text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-text-primary leading-[1.3] tracking-wide">
-              {t.groomName}
-              <span className="block text-2xl sm:text-3xl text-accent my-1.5 sm:my-2 font-arabic">
-                {t.and}
+        {/* ═══ Couple Names — Royal Calligraphy ═══ */}
+        <motion.div custom={0.5} variants={namesReveal} className="py-2 sm:py-4">
+          {/* Glow wrapper — soft gold aura fades in after names reveal */}
+          <motion.div
+            initial={{ filter: "drop-shadow(0 0 0px rgba(176,141,87,0))" }}
+            animate={{ filter: "drop-shadow(0 0 22px rgba(176,141,87,0.12))" }}
+            transition={{ delay: 1.4, duration: 1.8, ease: "easeOut" }}
+          >
+            <h1 className="flex items-center justify-center gap-3 sm:gap-5 md:gap-7">
+              <span
+                className={`${
+                  isRTL ? "font-arabic-decorative" : "font-script"
+                } text-gold-gradient text-[2.75rem] sm:text-6xl md:text-7xl lg:text-8xl leading-[1.15]`}
+              >
+                {t.groomName}
               </span>
-              {t.brideName}
-            </h1>
-          ) : (
-            <h1 className="font-script text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-text-primary leading-[1.1]">
-              {t.groomName}
-              <span className="block text-2xl sm:text-3xl text-accent my-1.5 sm:my-2 font-serif italic font-light">
-                {t.and}
+
+              {/* Elegant thin-stroke heart */}
+              <svg
+                className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 flex-shrink-0 opacity-55"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                  stroke="#C4A86C"
+                  strokeWidth="1.3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+
+              <span
+                className={`${
+                  isRTL ? "font-arabic-decorative" : "font-script"
+                } text-gold-gradient text-[2.75rem] sm:text-6xl md:text-7xl lg:text-8xl leading-[1.15]`}
+              >
+                {t.brideName}
               </span>
-              {t.brideName}
             </h1>
-          )}
+          </motion.div>
+
+          {/* Parent names — aligned under each name */}
+          <motion.div
+            custom={0.9}
+            variants={parentReveal}
+            className="flex items-start justify-center gap-10 sm:gap-16 md:gap-24 mt-3 sm:mt-4"
+          >
+            <p
+              className={`text-[11px] sm:text-xs md:text-sm leading-relaxed ${
+                isRTL ? "font-arabic" : "font-serif italic"
+              } text-text-secondary`}
+            >
+              {t.groomParent}
+            </p>
+            <p
+              className={`text-[11px] sm:text-xs md:text-sm leading-relaxed ${
+                isRTL ? "font-arabic" : "font-serif italic"
+              } text-text-secondary`}
+            >
+              {t.brideParent}
+            </p>
+          </motion.div>
         </motion.div>
 
         {/* Decorative line */}
