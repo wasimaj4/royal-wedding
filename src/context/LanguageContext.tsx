@@ -21,10 +21,13 @@ function getInitialLocale(): Locale {
     const saved = localStorage.getItem(LOCALE_STORAGE_KEY);
     if (saved === "en" || saved === "ar") return saved;
 
-    // 2. Browser language detection — use primary language only
+    // 2. Browser language detection — check top 3 preferences
+    // (mobiles set OS language as #1; laptops often have English as #1 but Arabic as #2-3)
     try {
-      const langs = navigator.languages ?? [navigator.language];
-      if (langs[0]?.startsWith("ar")) return "ar";
+      const langs = navigator.languages?.length
+        ? navigator.languages
+        : [navigator.language];
+      if (langs.slice(0, 3).some((l) => l?.startsWith("ar"))) return "ar";
     } catch {
       // ignore — SSR or restricted environment
     }
