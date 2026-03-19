@@ -48,6 +48,17 @@ export interface Translations {
   pauseMusic: string;
   metaTitle: string;
   metaDescription: string;
+  tapToOpen: string;
+  dressCodeTitle: string;
+  dressCodeText: string;
+  foodDrinksTitle: string;
+  foodIntro: string;
+  foodItems: string[];
+  drinksIntro: string;
+  drinkItems: string[];
+  foodNote: string;
+  faqTitle: string;
+  faqItems: { question: string; answer: string }[];
 }
 
 export const translations: Record<Locale, Translations> = {
@@ -105,6 +116,22 @@ export const translations: Record<Locale, Translations> = {
     pauseMusic: "Pause music",
     metaTitle: "Wasim & Rayan \u2014 Wedding Invitation",
     metaDescription: "You are cordially invited to the wedding celebration of Wasim & Rayan on 17 May 2026.",
+    tapToOpen: "Tap to open the invitation",
+    dressCodeTitle: "Dress Code",
+    dressCodeText: "We kindly invite our guests to wear elegant attire suitable for the occasion.\nThere will be one celebration only, so the same outfit can be worn throughout the evening.",
+    foodDrinksTitle: "Food & Drinks",
+    foodIntro: "Traditional dishes will be served including:",
+    foodItems: ["Rice", "Bulgur", "Meat", "Chicken", "Mixed nuts", "Fruits"],
+    drinksIntro: "Open beverages will also be available:",
+    drinkItems: ["Coffee", "Tea", "Juices", "Cola"],
+    foodNote: "No alcoholic drinks will be served.",
+    faqTitle: "FAQ",
+    faqItems: [
+      { question: "Can I bring a plus one?", answer: "Yes, guests are welcome to bring a companion." },
+      { question: "Are children invited?", answer: "We kindly ask that the event remains adults only." },
+      { question: "Is the wedding mixed?", answer: "The celebration will be organized with separate sections for men and women." },
+      { question: "Is there more than one celebration?", answer: "No, there will be only one celebration with one dress." },
+    ],
   },
   ar: {
     youAreInvited: "!\u0623\u0647\u0644\u0627\u064B \u0648\u0633\u0647\u0644\u0627\u064B",
@@ -160,6 +187,22 @@ export const translations: Record<Locale, Translations> = {
     pauseMusic: "\u0625\u064A\u0642\u0627\u0641 \u0627\u0644\u0645\u0648\u0633\u064A\u0642\u0649",
     metaTitle: "\u0648\u0633\u064A\u0645 \u0648 \u0631\u064A\u0627\u0646 \u2014 \u062F\u0639\u0648\u0629 \u0632\u0641\u0627\u0641",
     metaDescription: "\u064A\u0633\u0639\u062F\u0646\u0627 \u062F\u0639\u0648\u062A\u0643\u0645 \u0644\u062D\u0636\u0648\u0631 \u062D\u0641\u0644 \u0632\u0641\u0627\u0641 \u0648\u0633\u064A\u0645 \u0648\u0631\u064A\u0627\u0646 \u0628\u062A\u0627\u0631\u064A\u062E \u0661\u0667 \u0623\u064A\u0627\u0631 \u0662\u0660\u0662\u0666",
+    tapToOpen: "اضغط لفتح الدعوة",
+    dressCodeTitle: "لباس الحفل",
+    dressCodeText: "نرحب بكم في حفل زفافنا وندعوكم لارتداء لباس أنيق يليق بالمناسبة.\nسيكون هناك احتفال واحد فقط خلال الأمسية لذلك سيكون لباس واحد طوال الحفل.",
+    foodDrinksTitle: "الطعام والمشروبات",
+    foodIntro: "سيتم تقديم مأكولات شرقية تتضمن:",
+    foodItems: ["رز", "برغل", "لحم", "دجاج", "بعض المكسرات", "فواكه"],
+    drinksIntro: "كما تتوفر مشروبات مفتوحة مثل:",
+    drinkItems: ["قهوة", "شاي", "عصائر", "كولا"],
+    foodNote: "لا يتم تقديم أي مشروبات كحولية.",
+    faqTitle: "الأسئلة الشائعة",
+    faqItems: [
+      { question: "هل يمكنني إحضار مرافق؟", answer: "نعم، يمكنكم إحضار مرافق معكم." },
+      { question: "هل الأطفال مدعوون؟", answer: "نعتذر، الحفل مخصص للبالغين فقط." },
+      { question: "هل الحفل مختلط؟", answer: "الحفل منفصل حيث يوجد قسم للرجال وقسم للنساء." },
+      { question: "هل يوجد أكثر من احتفال؟", answer: "لا، سيكون هناك احتفال واحد فقط بلباس واحد." },
+    ],
   },
 };
 

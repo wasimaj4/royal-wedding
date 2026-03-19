@@ -109,6 +109,37 @@ body {
   border-color: rgba(196, 162, 101, 0.3);
 }
 
+/* FAQ Accordion */
+.faq-accordion-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(176, 141, 87, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: 100%;
+}
+
+.faq-accordion-btn:hover,
+.faq-accordion-btn.active {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.faq-answer {
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.4);
+  border-left: 1px solid rgba(176, 141, 87, 0.15);
+  border-right: 1px solid rgba(176, 141, 87, 0.15);
+  border-bottom: 1px solid rgba(176, 141, 87, 0.15);
+}
+
 .rsvp-card {
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(176, 141, 87, 0.2);
@@ -219,6 +250,20 @@ body {
 
 [dir="rtl"] .section-divider {
   background: linear-gradient(270deg, transparent, rgba(196, 162, 101, 0.3), rgba(196, 162, 101, 0.5), rgba(196, 162, 101, 0.3), transparent);
+}
+
+[dir="rtl"] .faq-accordion-btn {
+  flex-direction: row-reverse;
+}
+
+@media (max-width: 640px) {
+  .faq-accordion-btn,
+  .faq-answer {
+    padding: 0.875rem 1rem;
+  }
+  .faq-accordion-btn {
+    min-height: 48px;
+  }
 }
 
 @keyframes soundWave {
