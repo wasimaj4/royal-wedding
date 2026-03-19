@@ -5,11 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 25 },
+  hidden: { opacity: 0, y: 32 },
   visible: (delay: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, delay, ease: "easeOut" },
+    transition: { duration: 1.4, delay, ease: [0.22, 0.61, 0.36, 1] },
   }),
 };
 
@@ -37,7 +37,7 @@ export default function FAQ() {
 
           <div className="space-y-2.5">
             {t.faqItems.map((item, i) => (
-              <motion.div key={i} custom={0.2 + 0.08 * i} variants={fadeUp}>
+              <motion.div key={i} custom={0.3 + 0.14 * i} variants={fadeUp}>
                 <button
                   onClick={() => setOpenIndex(openIndex === i ? null : i)}
                   className={`w-full text-left faq-accordion-btn ${
@@ -62,7 +62,7 @@ export default function FAQ() {
                     strokeLinejoin="round"
                     className="text-accent flex-shrink-0"
                     animate={{ rotate: openIndex === i ? 180 : 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
                   >
                     <path d="M6 9l6 6 6-6" />
                   </motion.svg>
@@ -74,7 +74,7 @@ export default function FAQ() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      transition={{ duration: 0.5, ease: "easeInOut" }}
                       className="overflow-hidden"
                     >
                       <div className={`faq-answer ${isRTL ? "text-right" : "text-left"}`}>

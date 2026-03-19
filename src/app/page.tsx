@@ -49,7 +49,7 @@ function WeddingApp() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+          transition={{ duration: 1.4, delay: 0.5 }}
         >
 
           {/* Fixed UI controls */}
@@ -61,10 +61,10 @@ function WeddingApp() {
             {currentPage === 0 && (
               <motion.div
                 key="page-invitation"
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 48 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -40 }}
-                transition={{ duration: 0.7, ease: "easeInOut" }}
+                exit={{ opacity: 0, y: -48 }}
+                transition={{ duration: 1.1, ease: [0.22, 0.61, 0.36, 1] }}
                 className="relative z-10 h-screen"
               >
                 <HeroSection onNavigateNext={() => setCurrentPage(1)} />
@@ -75,17 +75,17 @@ function WeddingApp() {
               <motion.div
                 key="page-details"
                 ref={page2Ref}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 48 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -40 }}
-                transition={{ duration: 0.7, ease: "easeInOut" }}
+                exit={{ opacity: 0, y: -48 }}
+                transition={{ duration: 1.1, ease: [0.22, 0.61, 0.36, 1] }}
                 className="relative z-10 h-screen overflow-y-auto"
               >
                 {/* Back arrow */}
                 <motion.button
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
+                  transition={{ delay: 0.6 }}
                   onClick={() => setCurrentPage(0)}
                   className="fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center rounded-full border border-border bg-white/60 backdrop-blur-md text-accent hover:border-accent transition-colors duration-300"
                   aria-label="Back"

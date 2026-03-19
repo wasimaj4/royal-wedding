@@ -5,11 +5,11 @@ import { useLanguage } from "@/context/LanguageContext";
 import CountdownTimer from "./CountdownTimer";
 
 const fadeInUp = {
-  hidden: { opacity: 0, y: 25 },
+  hidden: { opacity: 0, y: 32 },
   visible: (delay: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, delay, ease: "easeOut" },
+    transition: { duration: 1.4, delay, ease: [0.22, 0.61, 0.36, 1] },
   }),
 };
 
@@ -160,7 +160,7 @@ export default function EventDetails() {
               {t.timeline.map((item, index) => (
                 <motion.div
                   key={index}
-                  custom={0.2 + index * 0.12}
+                  custom={0.2 + index * 0.18}
                   variants={fadeInUp}
                   className={`flex items-start gap-6 ${isRTL ? "flex-row-reverse" : ""}`}
                 >

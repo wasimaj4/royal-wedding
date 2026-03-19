@@ -7,34 +7,34 @@ const fadeIn = {
   hidden: { opacity: 0 },
   visible: (delay: number) => ({
     opacity: 1,
-    transition: { duration: 1.2, delay, ease: "easeOut" },
+    transition: { duration: 1.6, delay, ease: "easeOut" },
   }),
 };
 
 const slideUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (delay: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 1, delay, ease: "easeOut" },
-  }),
-};
-
-const namesReveal = {
   hidden: { opacity: 0, y: 28 },
   visible: (delay: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 1.0, delay, ease: [0.22, 0.61, 0.36, 1] },
+    transition: { duration: 1.4, delay, ease: [0.22, 0.61, 0.36, 1] },
+  }),
+};
+
+const namesReveal = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (delay: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1.8, delay, ease: [0.22, 0.61, 0.36, 1] },
   }),
 };
 
 const parentReveal = {
-  hidden: { opacity: 0, y: 10 },
+  hidden: { opacity: 0, y: 14 },
   visible: (delay: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, delay, ease: "easeOut" },
+    transition: { duration: 1.2, delay, ease: "easeOut" },
   }),
 };
 
@@ -54,7 +54,7 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
       >
         {/* "You are invited" */}
         <motion.p
-          custom={0.2}
+          custom={0.4}
           variants={slideUp}
           className={`text-[11px] sm:text-xs tracking-[0.4em] uppercase mb-6 sm:mb-8 ${
             isRTL
@@ -66,12 +66,12 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
         </motion.p>
 
         {/* ═══ Couple Names — Royal Calligraphy ═══ */}
-        <motion.div custom={0.5} variants={namesReveal} className="py-2 sm:py-4">
+        <motion.div custom={0.85} variants={namesReveal} className="py-2 sm:py-4">
           {/* Glow wrapper — soft gold aura fades in after names reveal */}
           <motion.div
             initial={{ filter: "drop-shadow(0 0 0px rgba(176,141,87,0))" }}
             animate={{ filter: "drop-shadow(0 0 22px rgba(176,141,87,0.12))" }}
-            transition={{ delay: 1.4, duration: 1.8, ease: "easeOut" }}
+            transition={{ delay: 2.2, duration: 2.2, ease: "easeOut" }}
           >
             <h1 className="flex items-center justify-center gap-3 sm:gap-5 md:gap-7">
               <span
@@ -109,7 +109,7 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
 
           {/* Parent names — aligned under each name */}
           <motion.div
-            custom={0.9}
+            custom={1.3}
             variants={parentReveal}
             className="flex items-start justify-center gap-10 sm:gap-16 md:gap-24 mt-3 sm:mt-4"
           >
@@ -131,13 +131,13 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
         </motion.div>
 
         {/* Decorative line */}
-        <motion.div custom={0.9} variants={fadeIn} className="my-6 sm:my-8">
+        <motion.div custom={1.5} variants={fadeIn} className="my-6 sm:my-8">
           <div className="accent-line" />
         </motion.div>
 
         {/* Invitation text */}
         <motion.p
-          custom={1.1}
+          custom={1.8}
           variants={slideUp}
           className={`text-sm sm:text-base leading-[1.9] whitespace-pre-line max-w-sm mx-auto ${
             isRTL
@@ -150,7 +150,7 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
 
         {/* Date & Location */}
         <motion.div
-          custom={1.3}
+          custom={2.2}
           variants={slideUp}
           className="mt-5 sm:mt-6 space-y-1.5"
         >
@@ -171,7 +171,7 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
         </motion.div>
 
         {/* Quranic Verse — compact card */}
-        <motion.div custom={1.5} variants={slideUp} className="mt-8 sm:mt-10">
+        <motion.div custom={2.8} variants={slideUp} className="mt-8 sm:mt-10">
           <div className="verse-card max-w-sm mx-auto px-6 py-6 sm:px-8 sm:py-7 text-center">
             <blockquote
               className={`text-xs sm:text-sm leading-[1.8] ${
@@ -199,7 +199,7 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
         </motion.div>
 
         {/* "CONFIRM YOUR ATTENDANCE" + Down Arrow */}
-        <motion.div custom={1.8} variants={slideUp} className="mt-8 sm:mt-10">
+        <motion.div custom={3.5} variants={slideUp} className="mt-8 sm:mt-10">
           <p
             className={`text-[10px] sm:text-[11px] tracking-[0.3em] uppercase mb-4 ${
               isRTL
@@ -214,7 +214,7 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
             onClick={onNavigateNext}
             className="mx-auto flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-accent/40 text-accent hover:border-accent hover:bg-accent/10 transition-all duration-300"
             animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
             aria-label="Go to RSVP"
           >
             <svg
