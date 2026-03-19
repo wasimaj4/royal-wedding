@@ -35,6 +35,11 @@ function WeddingApp() {
       {/* Background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[#FDFAF5]" />
+        {/* Soft radial warmth — top center */}
+        <div className="absolute inset-0" style={{
+          background: "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(196,162,101,0.06) 0%, transparent 65%)",
+          pointerEvents: "none",
+        }} />
       </div>
 
       {/* Envelope opening — shown once before the invitation */}
@@ -87,7 +92,7 @@ function WeddingApp() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.6 }}
                   onClick={() => setCurrentPage(0)}
-                  className="fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center rounded-full border border-border bg-white/60 backdrop-blur-md text-accent hover:border-accent transition-colors duration-300"
+                  className="fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center rounded-full border border-border bg-white/70 backdrop-blur-md text-accent hover:border-accent hover:shadow-[0_2px_16px_rgba(176,141,87,0.18)] transition-all duration-500"
                   aria-label="Back"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
