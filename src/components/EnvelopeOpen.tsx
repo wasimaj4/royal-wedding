@@ -521,19 +521,26 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                       phase === "idle"
                         ? {
                             boxShadow: [
-                              "0 0 30px 10px rgba(196,162,101,0.14)",
-                              "0 0 55px 22px rgba(196,162,101,0.32)",
-                              "0 0 30px 10px rgba(196,162,101,0.14)",
+                              "0 0 24px 8px rgba(196,162,101,0.12), 0 0 60px 20px rgba(196,162,101,0.06)",
+                              "0 0 48px 18px rgba(196,162,101,0.30), 0 0 80px 30px rgba(196,162,101,0.12)",
+                              "0 0 24px 8px rgba(196,162,101,0.12), 0 0 60px 20px rgba(196,162,101,0.06)",
                             ],
+                            scale: [1, 1.04, 1],
+                          }
+                        : phase === "pressed" || phase === "waiting"
+                        ? {
+                            boxShadow: "0 0 60px 24px rgba(196,162,101,0.40), 0 0 100px 40px rgba(196,162,101,0.18)",
+                            scale: 1.12,
                           }
                         : {
                             boxShadow: "0 0 14px 5px rgba(196,162,101,0.08)",
+                            scale: 1,
                           }
                     }
                     transition={
                       phase === "idle"
                         ? { duration: 3.2, repeat: Infinity, ease: "easeInOut" }
-                        : { duration: 0.15 }
+                        : { duration: 0.3, ease: "easeOut" }
                     }
                   />
 
@@ -562,19 +569,45 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                     }}
                     animate={
                       phase === "pressed" || phase === "waiting"
-                        ? { scale: 0.95 }
-                        : { scale: 1 }
+                        ? {
+                            scale: 0.91,
+                            rotate: -2,
+                            boxShadow: `
+                              0 4px 16px rgba(0,0,0,0.50),
+                              0 2px 6px rgba(0,0,0,0.34),
+                              0 8px 24px rgba(80,60,20,0.28),
+                              0 0 40px 12px rgba(196,162,101,0.25),
+                              inset 0 3px 10px rgba(255,245,215,0.50),
+                              inset 0 -6px 18px rgba(0,0,0,0.35),
+                              inset 5px 0 10px rgba(0,0,0,0.12),
+                              inset -5px 0 10px rgba(0,0,0,0.12)
+                            `,
+                          }
+                        : {
+                            scale: 1,
+                            rotate: 0,
+                            boxShadow: `
+                              0 10px 32px rgba(0,0,0,0.38),
+                              0 4px 10px rgba(0,0,0,0.26),
+                              0 18px 48px rgba(80,60,20,0.22),
+                              inset 0 3px 10px rgba(255,245,215,0.45),
+                              inset 0 -6px 18px rgba(0,0,0,0.3),
+                              inset 5px 0 10px rgba(0,0,0,0.1),
+                              inset -5px 0 10px rgba(0,0,0,0.1)
+                            `,
+                          }
                     }
                     whileHover={
                       phase === "idle"
                         ? {
-                            scale: 1.05,
+                            scale: 1.06,
+                            rotate: 0.5,
                             boxShadow: `
-                              0 12px 38px rgba(0,0,0,0.4),
+                              0 14px 42px rgba(0,0,0,0.42),
                               0 4px 10px rgba(0,0,0,0.26),
-                              0 20px 56px rgba(80,60,20,0.26),
-                              0 0 28px 8px rgba(196,162,101,0.2),
-                              inset 0 3px 10px rgba(255,245,215,0.5),
+                              0 22px 60px rgba(80,60,20,0.28),
+                              0 0 36px 10px rgba(196,162,101,0.24),
+                              inset 0 3px 10px rgba(255,245,215,0.55),
                               inset 0 -6px 18px rgba(0,0,0,0.3),
                               inset 5px 0 10px rgba(0,0,0,0.1),
                               inset -5px 0 10px rgba(0,0,0,0.1)
@@ -582,8 +615,13 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
                           }
                         : {}
                     }
-                    whileTap={phase === "idle" ? { scale: 0.95 } : {}}
-                    transition={{ type: "spring", stiffness: 380, damping: 22 }}
+                    whileTap={phase === "idle" ? { scale: 0.91, rotate: -2 } : {}}
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 18,
+                      mass: 0.8,
+                    }}
                   >
                     {/* Wax texture overlay (realistic surface) */}
                     <div

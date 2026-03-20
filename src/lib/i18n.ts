@@ -7,6 +7,9 @@ export interface Translations {
   and: string;
   groomParent: string;
   brideParent: string;
+  groomFamily: string;
+  brideFamily: string;
+  heroIntro: string;
   coupleNames: string;
   invitationText: string;
   eventDate: string;
@@ -84,6 +87,9 @@ export const translations: Record<Locale, Translations> = {
     and: "&",
     groomParent: "Son of Mr. Jamal Majanni",
     brideParent: "Daughter of the late Mahmoud Samman",
+    groomFamily: "Son of Mr. Jamal Majanni",
+    brideFamily: "Daughter of the late Mahmoud Samman",
+    heroIntro: "",
     coupleNames: "Wasim & Rayan",
     invitationText: "Together with our families, and by the grace of Allah,\nWe are honored to invite you to our wedding celebration.",
     eventDate: "Sunday, 17 May 2026",
@@ -170,6 +176,9 @@ export const translations: Record<Locale, Translations> = {
     and: "\u0648",
     groomParent: "ابن السيد جمال مجنّي",
     brideParent: "ابنة المرحوم محمود سمّان",
+    groomFamily: "حرم السيد جمال مجنّي",
+    brideFamily: "حرم المرحوم محمود سمّان",
+    heroIntro: "مع عائلتنا وبفضل الله، يسعدنا ويشرفنا أن ندعوكم إلى حفل زفاف",
     coupleNames: "\u0648\u0633\u064A\u0645 \u0648 \u0631\u064A\u0651\u0627\u0646",
     invitationText: "\u0645\u0639 \u0639\u0627\u0626\u0644\u062A\u064A\u0646\u0627\u060C \u0648\u0628\u0641\u0636\u0644 \u0627\u0644\u0644\u0647\u060C\n\u064A\u0633\u0639\u062F\u0646\u0627 \u0648\u064A\u0634\u0631\u0651\u0641\u0646\u0627 \u0623\u0646 \u0646\u062F\u0639\u0648\u0643\u0645 \u0625\u0644\u0649 \u062D\u0641\u0644 \u0632\u0641\u0627\u0641\u0646\u0627.",
     eventDate: "\u0627\u0644\u0623\u062D\u062F\u060C \u0661\u0667 \u0623\u064A\u0627\u0631 \u0662\u0660\u0662\u0666",
