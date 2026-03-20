@@ -101,7 +101,8 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
     if (audioRef?.current) {
       const audio = audioRef.current;
       audio.currentTime = 0;
-      audio.volume = 0.25;
+      audio.volume = 0.08;
+      audio.playbackRate = 0.85;
       audio.play().catch(() => {});
     }
 
@@ -689,7 +690,7 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
                       fontFamily: "var(--font-great-vibes), 'Great Vibes', cursive",
                       fontSize: "140px",
                       fontWeight: 400,
-                      color: "rgba(255,255,255,0.25)",
+                      color: "rgba(255,255,255,0.38)",
                       lineHeight: 1,
                     }}
                     animate={
@@ -711,7 +712,7 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
                       fontFamily: "var(--font-great-vibes), 'Great Vibes', cursive",
                       fontSize: "140px",
                       fontWeight: 400,
-                      color: "rgba(255,255,255,0.25)",
+                      color: "rgba(255,255,255,0.38)",
                       lineHeight: 1,
                     }}
                     animate={

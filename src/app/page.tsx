@@ -24,7 +24,8 @@ function WeddingApp() {
   useEffect(() => {
     const audio = new Audio("/audio/bridal-chorus-clean.mp3");
     audio.loop = true;
-    audio.volume = 0.25;
+    audio.volume = 0.08;
+    audio.playbackRate = 0.85;
     audio.preload = "auto";
     audioRef.current = audio;
     return () => { audio.pause(); audio.src = ""; audioRef.current = null; };

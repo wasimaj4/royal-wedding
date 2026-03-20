@@ -4,7 +4,8 @@ import { useState, useEffect, useCallback, type RefObject } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 
-const VOLUME = 0.25;
+const VOLUME = 0.08;
+const PLAYBACK_RATE = 0.85;
 
 interface MusicPlayerProps {
   audioRef: RefObject<HTMLAudioElement | null>;
@@ -38,6 +39,7 @@ export default function MusicPlayer({ audioRef }: MusicPlayerProps) {
       audio.pause();
     } else {
       audio.volume = VOLUME;
+      audio.playbackRate = PLAYBACK_RATE;
       audio.play().catch(() => {});
     }
   }, [isPlaying, audioRef]);
