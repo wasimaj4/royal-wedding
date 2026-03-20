@@ -101,8 +101,8 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
     if (audioRef?.current) {
       const audio = audioRef.current;
       audio.currentTime = 0;
-      audio.volume = 0.08;
-      audio.playbackRate = 0.85;
+      audio.volume = 0.02;
+      audio.playbackRate = 0.60;
       audio.play().catch(() => {});
     }
 
