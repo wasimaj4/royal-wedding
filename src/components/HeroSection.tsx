@@ -58,38 +58,41 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
             ═══════════════════════════════════════ */}
         {isRTL && (
           <>
-            {/* 1. FAMILY NAMES — 2-column, secondary */}
+            {/* 1. FAMILY NAMES — gold-tinted, elegant secondary */}
             <motion.div
               custom={0.4}
               variants={parentReveal}
-              className="flex items-start justify-center gap-8 sm:gap-14 md:gap-20 mb-3 sm:mb-4"
+              className="flex items-start justify-center gap-8 sm:gap-14 md:gap-20 mb-[15px]"
             >
-              <p className="font-arabic-label text-[13px] sm:text-sm md:text-base text-text-secondary/85 leading-relaxed">
+              <p className="font-arabic-label text-[10.5px] sm:text-[11.5px] md:text-[13px] font-normal leading-relaxed" style={{ color: "rgba(176,141,87,0.88)" }}>
                 {t.groomFamily}
               </p>
-              <p className="font-arabic-label text-[13px] sm:text-sm md:text-base text-text-secondary/85 leading-relaxed">
+              <p className="font-arabic-label text-[10.5px] sm:text-[11.5px] md:text-[13px] font-normal leading-relaxed" style={{ color: "rgba(176,141,87,0.88)" }}>
                 {t.brideFamily}
               </p>
             </motion.div>
 
-            {/* 2. INTRO TEXT — centered, supporting */}
+            {/* 2. INTRO TEXT — soft supporting text */}
             <motion.p
               custom={0.7}
               variants={slideUp}
-              className="font-arabic-label text-sm sm:text-base md:text-lg text-text-primary/90 leading-[2] mb-7 sm:mb-9 max-w-sm mx-auto"
+              className="font-arabic-label text-[9.5px] sm:text-[10.5px] md:text-[11.5px] font-normal text-text-secondary/[0.68] leading-[1.65] mb-9 sm:mb-11 max-w-[15rem] mx-auto"
             >
               {t.heroIntro}
             </motion.p>
 
             {/* 3. MAIN COUPLE NAMES — dominant, largest */}
-            <motion.div custom={1.0} variants={namesReveal} className="py-2 sm:py-4">
+            <motion.div custom={1.0} variants={namesReveal} className="py-5 sm:py-7">
               <motion.div
-                initial={{ filter: "drop-shadow(0 0 0px rgba(176,141,87,0))" }}
-                animate={{ filter: "drop-shadow(0 0 22px rgba(176,141,87,0.12))" }}
-                transition={{ delay: 2.2, duration: 2.2, ease: "easeOut" }}
+                initial={{ filter: "drop-shadow(0 0 0px rgba(212,175,55,0))" }}
+                animate={{ filter: "drop-shadow(0 0 28px rgba(212,175,55,0.14))" }}
+                transition={{ delay: 2.2, duration: 2.4, ease: "easeOut" }}
               >
                 <h1 className="flex items-center justify-center gap-3 sm:gap-5 md:gap-7">
-                  <span className="font-arabic-decorative text-gold-gradient text-[3rem] sm:text-7xl md:text-8xl lg:text-[6.5rem] leading-[1.15]">
+                  <span
+                    className="font-arabic-decorative text-gold-gradient text-[3.2rem] sm:text-[4.8rem] md:text-[5.6rem] lg:text-[7rem] leading-[1.15]"
+                    style={{ textShadow: "0 0 10px rgba(212,175,55,0.20), 0 0 24px rgba(212,175,55,0.10)" }}
+                  >
                     {t.groomName}
                   </span>
 
@@ -107,7 +110,10 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
                     />
                   </svg>
 
-                  <span className="font-arabic-decorative text-gold-gradient text-[3rem] sm:text-7xl md:text-8xl lg:text-[6.5rem] leading-[1.15]">
+                  <span
+                    className="font-arabic-decorative text-gold-gradient text-[3.2rem] sm:text-[4.8rem] md:text-[5.6rem] lg:text-[7rem] leading-[1.15]"
+                    style={{ textShadow: "0 0 10px rgba(212,175,55,0.20), 0 0 24px rgba(212,175,55,0.10)" }}
+                  >
                     {t.brideName}
                   </span>
                 </h1>
@@ -160,20 +166,6 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
                     {t.brideName}
                   </span>
                 </h1>
-              </motion.div>
-
-              {/* Parent names */}
-              <motion.div
-                custom={1.3}
-                variants={parentReveal}
-                className="flex items-start justify-center gap-10 sm:gap-16 md:gap-24 mt-3 sm:mt-4"
-              >
-                <p className="font-serif italic text-[11px] sm:text-xs md:text-sm leading-relaxed text-text-secondary">
-                  {t.groomParent}
-                </p>
-                <p className="font-serif italic text-[11px] sm:text-xs md:text-sm leading-relaxed text-text-secondary">
-                  {t.brideParent}
-                </p>
               </motion.div>
             </motion.div>
           </>

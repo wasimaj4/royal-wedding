@@ -117,7 +117,7 @@ export const translations: Record<Locale, Translations> = {
     hours: "Hours",
     minutes: "Minutes",
     seconds: "Seconds",
-    rsvpTitle: "RSVP",
+    rsvpTitle: "Event Details & RSVP",
     rsvpSubtitle: "We would be truly honoured by your presence at our celebration",
     fullName: "Full Name",
     attendance: "Will you attend?",
