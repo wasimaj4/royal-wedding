@@ -4,82 +4,80 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 
+const TARGET_VOLUME = 0.75;
+const FADE_IN_MS = 2000;
+const FADE_IN_TOGGLE_MS = 1200;
+
+function fadeAudioIn(audio: HTMLAudioElement, duration: number, target: number) {
+  audio.volume = 0;
+  const start = performance.now();
+  const tick = (now: number) => {
+    const progress = Math.min((now - start) / duration, 1);
+    try { audio.volume = progress * target; } catch { /* disposed */ }
+    if (progress < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
 export default function MusicPlayer() {
   const { t } = useLanguage();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const startedRef = useRef(false);
 
   useEffect(() => {
-    const audio = new Audio("/music.mp3");
+    const audio = new Audio("/audio/bridal-chorus-hq.mp3");
     audio.loop = true;
     audio.volume = 0;
+    audio.preload = "auto";
     audioRef.current = audio;
-
-    const TARGET_VOLUME = 0.25;
-    const FADE_DURATION = 2000; // ms
-
-    const fadeIn = () => {
-      const start = performance.now();
-      const tick = (now: number) => {
-        const elapsed = now - start;
-        const progress = Math.min(elapsed / FADE_DURATION, 1);
-        if (audioRef.current) {
-          audioRef.current.volume = progress * TARGET_VOLUME;
-        }
-        if (progress < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    };
-
-    let handler: (() => void) | null = null;
-
-    // Try immediate autoplay
-    audio.play()
-      .then(() => { setIsPlaying(true); fadeIn(); })
-      .catch(() => {
-        // Autoplay blocked — play on first user interaction
-        handler = () => {
-          audio.play().then(() => { setIsPlaying(true); fadeIn(); }).catch(() => {});
-          document.removeEventListener("click", handler!);
-          document.removeEventListener("touchstart", handler!);
-        };
-        document.addEventListener("click", handler);
-        document.addEventListener("touchstart", handler);
-      });
 
     return () => {
       audio.pause();
+      audio.src = "";
       audioRef.current = null;
-      if (handler) {
-        document.removeEventListener("click", handler);
-        document.removeEventListener("touchstart", handler);
-      }
     };
   }, []);
 
+  useEffect(() => {
+    if (startedRef.current) return;
+    const audio = audioRef.current;
+    if (!audio) return;
+    startedRef.current = true;
+
+    const play = () => {
+      audio.play()
+        .then(() => { setIsPlaying(true); fadeAudioIn(audio, FADE_IN_MS, TARGET_VOLUME); })
+        .catch(() => {
+          const handler = () => {
+            audio.play()
+              .then(() => { setIsPlaying(true); fadeAudioIn(audio, FADE_IN_MS, TARGET_VOLUME); })
+              .catch(() => {});
+            document.removeEventListener("click", handler);
+            document.removeEventListener("touchstart", handler);
+          };
+          document.addEventListener("click", handler);
+          document.addEventListener("touchstart", handler);
+        });
+    };
+
+    const id = setTimeout(play, 600);
+    return () => clearTimeout(id);
+  }, []);
+
   const togglePlay = useCallback(() => {
-    if (!audioRef.current) return;
+    const audio = audioRef.current;
+    if (!audio) return;
 
     if (isPlaying) {
-      audioRef.current.pause();
+      audio.pause();
       setIsPlaying(false);
     } else {
-      audioRef.current.volume = 0;
-      audioRef.current.play().then(() => {
+      audio.volume = 0;
+      audio.play().then(() => {
         setIsPlaying(true);
-        const TARGET_VOLUME = 0.25;
-        const FADE_DURATION = 1500;
-        const start = performance.now();
-        const tick = (now: number) => {
-          const elapsed = now - start;
-          const progress = Math.min(elapsed / FADE_DURATION, 1);
-          if (audioRef.current) audioRef.current.volume = progress * TARGET_VOLUME;
-          if (progress < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      }).catch(() => {
-        setIsPlaying(false);
-      });
+        fadeAudioIn(audio, FADE_IN_TOGGLE_MS, TARGET_VOLUME);
+      }).catch(() => setIsPlaying(false));
     }
   }, [isPlaying]);
 
@@ -90,7 +88,6 @@ export default function MusicPlayer() {
       transition={{ delay: 1.5, duration: 0.6 }}
       className="fixed bottom-6 right-6 z-50"
     >
-      {/* Play/Pause Button */}
       <button
         onClick={togglePlay}
         className={`music-btn ${isPlaying ? "playing" : ""}`}

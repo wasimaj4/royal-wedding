@@ -5,6 +5,7 @@ import {
   Cormorant_Garamond,
   Amiri,
   Aref_Ruqaa,
+  Cairo,
 } from "next/font/google";
 import "./globals.css";
 
@@ -39,6 +40,13 @@ const arefRuqaa = Aref_Ruqaa({
   subsets: ["arabic", "latin"],
   weight: ["400", "700"],
   variable: "--font-aref-ruqaa",
+  display: "swap",
+});
+
+const cairo = Cairo({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-cairo",
   display: "swap",
 });
 
@@ -90,7 +98,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`antialiased ${greatVibes.variable} ${playfairDisplay.variable} ${cormorantGaramond.variable} ${amiri.variable} ${arefRuqaa.variable}`}
+        className={`antialiased ${greatVibes.variable} ${playfairDisplay.variable} ${cormorantGaramond.variable} ${amiri.variable} ${arefRuqaa.variable} ${cairo.variable}`}
       >
         {children}
       </body>

@@ -11,6 +11,7 @@ import MusicPlayer from "@/components/MusicPlayer";
 import EnvelopeOpen from "@/components/EnvelopeOpen";
 import FAQ from "@/components/FAQ";
 import ProgramTimeline from "@/components/ProgramTimeline";
+import ContactSection from "@/components/ContactSection";
 
 function WeddingApp() {
   const { locale, isRTL } = useLanguage();
@@ -48,17 +49,21 @@ function WeddingApp() {
         )}
       </AnimatePresence>
 
-      {/* Main wedding content — revealed after envelope opens */}
+      {/* Fixed UI controls — only mount after envelope opens */}
       {envelopeOpened && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.4, delay: 0.5 }}
-        >
-
-          {/* Fixed UI controls */}
+        <>
           <LanguageSwitcher />
           <MusicPlayer />
+        </>
+      )}
+
+      {/* Main wedding content — pre-rendered hidden, revealed after envelope opens */}
+      <motion.div
+        initial={false}
+        animate={{ opacity: envelopeOpened ? 1 : 0 }}
+        transition={{ duration: 1.0, ease: "easeOut" }}
+        style={{ pointerEvents: envelopeOpened ? "auto" : "none", position: envelopeOpened ? undefined : "fixed", visibility: envelopeOpened ? undefined : "hidden" }}
+      >
 
           {/* Page content with transitions */}
           <AnimatePresence mode="wait">
@@ -107,11 +112,13 @@ function WeddingApp() {
                   <ProgramTimeline />
                   <div className="section-divider" />
                   <FAQ />
+                  <div className="section-divider" />
+                  <ContactSection />
 
                   {/* Footer */}
                   <footer className="text-center py-16 sm:py-20 px-6">
                     <p className={`text-[11px] tracking-[0.25em] uppercase ${isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"}`}>
-                      {isRTL ? "وسيم و ريان \u2014 ٢٠٢٦" : "Wasim & Rayan \u2014 2026"}
+                      {isRTL ? "وسيم و ريّان \u2014 ٢٠٢٦" : "Wasim & Rayan \u2014 2026"}
                     </p>
                   </footer>
                 </main>
@@ -119,7 +126,6 @@ function WeddingApp() {
             )}
           </AnimatePresence>
         </motion.div>
-      )}
     </div>
   );
 }

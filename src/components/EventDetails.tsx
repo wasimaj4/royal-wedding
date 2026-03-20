@@ -47,7 +47,7 @@ export default function EventDetails() {
           className="text-center mb-12 space-y-6"
         >
           <motion.div custom={0.2} variants={fadeInUp} className="space-y-2">
-            <p className={`text-xs ${isRTL ? "font-arabic text-text-muted" : "font-body tracking-[0.3em] uppercase text-text-muted"}`}>
+            <p className={`${isRTL ? "text-sm font-arabic-label font-medium text-text-muted" : "text-xs font-body tracking-[0.3em] uppercase text-text-muted"}`}>
               {t.date}
             </p>
             <p className={`text-2xl sm:text-3xl ${isRTL ? "font-arabic text-text-primary" : "font-serif text-text-primary font-medium"}`}>
@@ -60,7 +60,7 @@ export default function EventDetails() {
           </motion.div>
 
           <motion.div custom={0.4} variants={fadeInUp} className="space-y-2">
-            <p className={`text-xs ${isRTL ? "font-arabic text-text-muted" : "font-body tracking-[0.3em] uppercase text-text-muted"}`}>
+            <p className={`${isRTL ? "text-sm font-arabic-label font-medium text-text-muted" : "text-xs font-body tracking-[0.3em] uppercase text-text-muted"}`}>
               {t.time}
             </p>
             <p className={`text-2xl sm:text-3xl ${isRTL ? "font-arabic text-text-primary" : "font-serif text-text-primary font-medium"}`}>
@@ -77,15 +77,22 @@ export default function EventDetails() {
           className="mb-14"
         >
           <motion.div custom={0.2} variants={fadeInUp} className="text-center">
-            <p className={`text-xs mb-3 ${isRTL ? "font-arabic text-text-muted" : "font-body tracking-[0.25em] uppercase text-text-muted"}`}>
+            <p className={`mb-3 ${isRTL ? "text-sm font-arabic-label font-medium text-text-muted" : "text-xs font-body tracking-[0.25em] uppercase text-text-muted"}`}>
               {isRTL ? "مكان الحفل" : "Venue"}
             </p>
-            <p className={`text-base sm:text-lg text-text-primary mb-1 ${isRTL ? "font-arabic font-bold" : "font-serif font-medium"}`}>
-              Kon. Wilhelminahaven ZZ 10
-            </p>
-            <p className={`text-sm text-text-secondary mb-4 ${isRTL ? "font-arabic" : "font-body"}`}>
-              3134 KC Vlaardingen
-            </p>
+            <a
+              href="https://maps.google.com/?q=Kon.+Wilhelminahaven+ZZ+10+3134+KC+Vlaardingen"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block mb-4"
+            >
+              <p className={`text-base sm:text-lg text-text-primary group-hover:text-accent transition-colors duration-300 mb-1 ${isRTL ? "font-arabic font-bold" : "font-serif font-medium"}`}>
+                Kon. Wilhelminahaven ZZ 10
+              </p>
+              <p className={`text-sm text-text-secondary group-hover:text-accent transition-colors duration-300 ${isRTL ? "font-arabic" : "font-body"}`}>
+                3134 KC Vlaardingen
+              </p>
+            </a>
             <a
               href={venueMap}
               target="_blank"
@@ -141,8 +148,8 @@ export default function EventDetails() {
           <motion.p
             custom={0.1}
             variants={fadeInUp}
-            className={`text-center text-xs mb-8 ${
-              isRTL ? "font-arabic text-text-muted" : "font-body tracking-[0.25em] uppercase text-text-muted"
+            className={`text-center mb-8 ${
+              isRTL ? "text-sm font-arabic-label font-medium text-text-muted" : "text-xs font-body tracking-[0.25em] uppercase text-text-muted"
             }`}
           >
             {t.countdown}

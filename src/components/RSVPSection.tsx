@@ -24,6 +24,7 @@ export default function RSVPSection() {
   const [rsvpId, setRsvpId] = useState("");
   const [qrPayload, setQrPayload] = useState<string | null>(null);
   const [alreadyDone, setAlreadyDone] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     attendance: "",
@@ -32,8 +33,15 @@ export default function RSVPSection() {
     songSuggestion: "",
   });
 
-  // ── Anti-abuse: check localStorage on mount ──
+  // ── Admin mode: ?admin=1 in URL skips duplicate guards ──
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("admin") === "1") {
+        setIsAdmin(true);
+        return; // skip localStorage check for admin
+      }
+    }
     try {
       if (typeof window !== "undefined" && localStorage.getItem(STORAGE_KEY)) {
         setAlreadyDone(true);
@@ -73,7 +81,7 @@ export default function RSVPSection() {
       const response = await fetch("/api/rsvp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, admin: isAdmin || undefined }),
       });
 
       const data = await response.json();
@@ -88,7 +96,8 @@ export default function RSVPSection() {
           // ignore
         }
       } else if (data.error === "duplicate") {
-        setSubmitError(t.alreadySubmitted);
+        setAlreadyDone(true);
+        try { localStorage.setItem(STORAGE_KEY, data.existingId || "done"); } catch {}
       } else {
         setSubmitError(
           isRTL

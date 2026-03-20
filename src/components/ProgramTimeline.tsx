@@ -65,10 +65,10 @@ export default function ProgramTimeline() {
           <motion.p
             custom={0.1}
             variants={fadeInUp}
-            className={`text-xs mb-3 ${
+            className={`mb-3 ${
               isRTL
-                ? "font-arabic text-text-muted"
-                : "font-body tracking-[0.25em] uppercase text-text-muted"
+                ? "text-sm font-arabic-label font-medium text-text-muted"
+                : "text-xs font-body tracking-[0.25em] uppercase text-text-muted"
             }`}
           >
             {t.programTimeline}
@@ -83,54 +83,45 @@ export default function ProgramTimeline() {
           whileInView="visible"
           viewport={{ once: true, margin: "-40px" }}
         >
-          <div className="relative max-w-sm mx-auto">
-            {/* Vertical connector line */}
+          <div className="relative max-w-sm mx-auto" dir={isRTL ? "rtl" : "ltr"}>
+            {/* Vertical connector line — anchored to icon center */}
             <div
-              className={`absolute top-4 bottom-4 w-px bg-gradient-to-b from-transparent via-border to-transparent ${
-                isRTL ? "right-[19px]" : "left-[19px]"
-              }`}
+              className="absolute top-5 bottom-5 w-px bg-gradient-to-b from-transparent via-border to-transparent"
+              style={{ [isRTL ? "right" : "left"]: 19 }}
             />
 
-            <div className="space-y-0">
+            <div className="flex flex-col gap-1">
               {t.timeline.map((item, index) => (
                 <motion.div
                   key={index}
                   custom={0.2 + index * 0.15}
                   variants={fadeInUp}
-                  className={`flex items-start gap-4 py-4 ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
+                  className="flex items-center gap-4 py-3"
                 >
                   {/* Icon bubble */}
-                  <div
-                    className={`flex-shrink-0 w-10 h-10 rounded-full border border-border bg-[#FDFAF5] flex items-center justify-center text-accent relative z-10 ${
-                      isRTL ? "ml-2" : "mr-2"
-                    }`}
-                  >
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full border border-border bg-[#FDFAF5] flex items-center justify-center text-accent relative z-10">
                     {EVENT_ICONS[index] ?? (
                       <div className="w-2 h-2 bg-accent rounded-full" />
                     )}
                   </div>
 
-                  {/* Content */}
-                  <div
-                    className={`flex-1 pt-2 ${isRTL ? "text-right" : "text-left"}`}
+                  {/* Time */}
+                  <span
+                    className={`flex-shrink-0 w-14 text-sm font-semibold text-accent tabular-nums ${
+                      isRTL ? "font-arabic-label text-right" : "font-body tracking-wider text-left"
+                    }`}
                   >
-                    <span
-                      className={`block text-xs text-accent mb-0.5 tabular-nums ${
-                        isRTL ? "font-arabic" : "font-body tracking-wider"
-                      }`}
-                    >
-                      {item.time}
-                    </span>
-                    <span
-                      className={`block text-base text-text-primary leading-snug ${
-                        isRTL ? "font-arabic" : "font-body"
-                      }`}
-                    >
-                      {item.event}
-                    </span>
-                  </div>
+                    {item.time}
+                  </span>
+
+                  {/* Event label */}
+                  <span
+                    className={`flex-1 text-base text-text-primary leading-snug ${
+                      isRTL ? "font-arabic text-right" : "font-body text-left"
+                    }`}
+                  >
+                    {item.event}
+                  </span>
                 </motion.div>
               ))}
             </div>

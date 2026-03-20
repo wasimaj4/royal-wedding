@@ -105,7 +105,8 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { fullName, attendance, companion, plusOneName, songSuggestion } = body;
+    const { fullName, attendance, companion, plusOneName, songSuggestion, admin } = body;
+    const isAdmin = admin === true;
 
     if (!fullName || !attendance) {
       return NextResponse.json(
@@ -141,9 +142,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ── Duplicate check (by normalized name) ──────────────
+    // ── Duplicate check (by normalized name) — skipped for admin ──
     const nameKey = `rsvp-name:${cleanName.toLowerCase().replace(/\s+/g, "-")}`;
-    if (redis) {
+    if (redis && !isAdmin) {
       const existing = await redis.get<string>(nameKey);
       if (existing) {
         return NextResponse.json(

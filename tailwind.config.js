@@ -31,6 +31,7 @@ module.exports = {
         script: ["var(--font-great-vibes)", "cursive"],
         serif: ["var(--font-playfair)", "Georgia", "serif"],
         arabic: ["var(--font-amiri)", "serif"],
+        "arabic-label": ["var(--font-cairo)", "sans-serif"],
         "arabic-decorative": ["var(--font-aref-ruqaa)", "serif"],
         body: ["var(--font-cormorant)", "serif"],
       },

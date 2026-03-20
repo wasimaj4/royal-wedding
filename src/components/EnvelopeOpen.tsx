@@ -49,7 +49,7 @@ interface EnvelopeOpenProps {
 }
 
 export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
-  const { t } = useLanguage();
+  const { t, isRTL } = useLanguage();
   const [phase, setPhase] = useState<
     "idle" | "pressed" | "waiting" | "breaking" | "opening" | "revealing" | "done"
   >("idle");
@@ -83,7 +83,7 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
     // dissolve out
     setTimeout(() => {
       setPhase("done");
-      setTimeout(onOpen, 500);
+      onOpen();
     }, 5400);
   }, [phase, onOpen]);
 
@@ -881,11 +881,16 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
             {/* ── "Tap to open" ── */}
             {phase === "idle" && (
               <motion.p
-                className="absolute left-0 right-0 text-center text-xs sm:text-sm tracking-[0.32em] uppercase font-body z-30 pointer-events-none"
+                className={`absolute left-0 right-0 text-center z-30 pointer-events-none ${
+                  isRTL
+                    ? "font-arabic-label text-base sm:text-lg tracking-wide"
+                    : "font-body text-xs sm:text-sm tracking-[0.32em] uppercase"
+                }`}
                 style={{
                   top: `calc(${FLAP_PCT}% + ${HALF + 28}px)`,
-                  color: "rgba(80,68,52,0.95)",
-                  textShadow: "0 1px 3px rgba(255,252,245,0.7), 0 0 12px rgba(255,250,235,0.5)",
+                  color: "rgba(62,39,35,1)",
+                  textShadow: "0 1px 4px rgba(255,252,245,0.9), 0 0 16px rgba(255,250,235,0.6)",
+                  fontWeight: isRTL ? 700 : undefined,
                 }}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: [0, 1], y: 0 }}

@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "npx tsx scripts/test-rsvp.ts",
+    "test:prod": "npx tsx scripts/test-rsvp.ts https://wasimenrayan.com",
+    "db:clean": "npx tsx scripts/clean-db.ts",
+    "db:clean:dry": "npx tsx scripts/clean-db.ts --dry-run"
   },
   "dependencies": {
     "@upstash/redis": "^1.36.2",

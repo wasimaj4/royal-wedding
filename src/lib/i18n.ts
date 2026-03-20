@@ -71,6 +71,9 @@ export interface Translations {
   foodNote: string;
   faqTitle: string;
   faqItems: { question: string; answer: string }[];
+  contactTitle: string;
+  contactCall: string;
+  contactWhatsApp: string;
 }
 
 export const translations: Record<Locale, Translations> = {
@@ -79,11 +82,11 @@ export const translations: Record<Locale, Translations> = {
     groomName: "Wasim",
     brideName: "Rayan",
     and: "&",
-    groomParent: "Son of Mr. Jamal Majani",
+    groomParent: "Son of Mr. Jamal Majanni",
     brideParent: "Daughter of the late Mahmoud Samman",
     coupleNames: "Wasim & Rayan",
     invitationText: "Together with our families, and by the grace of Allah,\nWe are honored to invite you to our wedding celebration.",
-    eventDate: "Saturday, 17 May 2026",
+    eventDate: "Sunday, 17 May 2026",
     eventLocation: "Vlaardingen, The Netherlands",
     eventDetails: "Event Details",
     date: "Date",
@@ -108,7 +111,7 @@ export const translations: Record<Locale, Translations> = {
     hours: "Hours",
     minutes: "Minutes",
     seconds: "Seconds",
-    rsvpTitle: "Event Details & RSVP",
+    rsvpTitle: "RSVP",
     rsvpSubtitle: "We would be truly honoured by your presence at our celebration",
     fullName: "Full Name",
     attendance: "Will you attend?",
@@ -133,9 +136,9 @@ export const translations: Record<Locale, Translations> = {
     rsvpDeadline: "(Please confirm your attendance before 01/05/2026)",
     cancellationNotice: "Please inform us at least 15 days in advance if you cannot attend",
     saveQRCode: "Save QR Code",
-    alreadySubmitted: "You have already submitted your response",
+    alreadySubmitted: "You have already registered, thank you",
     invitation: "Invitation",
-    rsvp: "Event Details & RSVP",
+    rsvp: "RSVP",
     playMusic: "Play music",
     pauseMusic: "Pause music",
     metaTitle: "Wasim & Rayan \u2014 Wedding Invitation",
@@ -156,17 +159,20 @@ export const translations: Record<Locale, Translations> = {
       { question: "Is the wedding mixed?", answer: "No, the celebration will be in separate sections." },
       { question: "Is there dinner at the wedding?", answer: "Yes, dinner and open beverages will be served." },
     ],
+    contactTitle: "Contact",
+    contactCall: "Call",
+    contactWhatsApp: "WhatsApp",
   },
   ar: {
     youAreInvited: "نتشرف بدعوتكم لحضور حفل زفاف",
     groomName: "\u0648\u0633\u064A\u0645",
-    brideName: "\u0631\u064A\u0627\u0646",
+    brideName: "ريّان",
     and: "\u0648",
-    groomParent: "ابن السيد جمال مجني",
-    brideParent: "ابنة المرحوم محمود سمان",
-    coupleNames: "\u0648\u0633\u064A\u0645 \u0648 \u0631\u064A\u0627\u0646",
+    groomParent: "ابن السيد جمال مجنّي",
+    brideParent: "ابنة المرحوم محمود سمّان",
+    coupleNames: "\u0648\u0633\u064A\u0645 \u0648 \u0631\u064A\u0651\u0627\u0646",
     invitationText: "\u0645\u0639 \u0639\u0627\u0626\u0644\u062A\u064A\u0646\u0627\u060C \u0648\u0628\u0641\u0636\u0644 \u0627\u0644\u0644\u0647\u060C\n\u064A\u0633\u0639\u062F\u0646\u0627 \u0648\u064A\u0634\u0631\u0651\u0641\u0646\u0627 \u0623\u0646 \u0646\u062F\u0639\u0648\u0643\u0645 \u0625\u0644\u0649 \u062D\u0641\u0644 \u0632\u0641\u0627\u0641\u0646\u0627.",
-    eventDate: "\u0627\u0644\u0633\u0628\u062A\u060C \u0661\u0667 \u0623\u064A\u0627\u0631 \u0662\u0660\u0662\u0666",
+    eventDate: "\u0627\u0644\u0623\u062D\u062F\u060C \u0661\u0667 \u0623\u064A\u0627\u0631 \u0662\u0660\u0662\u0666",
     eventLocation: "\u0641\u0644\u0627\u0631\u062F\u064A\u0646\u062E\u0646\u060C \u0647\u0648\u0644\u0646\u062F\u0627",
     eventDetails: "\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u062D\u0641\u0644",
     date: "\u0627\u0644\u062A\u0627\u0631\u064A\u062E",
@@ -191,7 +197,7 @@ export const translations: Record<Locale, Translations> = {
     hours: "\u0633\u0627\u0639\u0629",
     minutes: "\u062F\u0642\u064A\u0642\u0629",
     seconds: "\u062B\u0627\u0646\u064A\u0629",
-    rsvpTitle: "تفاصيل الحفل وتأكيد الحضور",
+    rsvpTitle: "تأكيد الحضور",
     rsvpSubtitle: "",
     fullName: "\u0627\u0644\u0627\u0633\u0645 \u0627\u0644\u0643\u0627\u0645\u0644",
     attendance: "هل سوف تحضر؟",
@@ -216,7 +222,7 @@ export const translations: Record<Locale, Translations> = {
     rsvpDeadline: "(يرجى تأكيد الحضور قبل 01/05/2026)",
     cancellationNotice: "يرجى إبلاغنا في حال حدوث ظرف يمنع حضوركم قبل 15 يوم على الأقل",
     saveQRCode: "\u062D\u0641\u0638 \u0627\u0644\u0631\u0645\u0632",
-    alreadySubmitted: "\u064A\u0627 \u0639\u0645\u064A \u0631\u062F\u0643 \u0648\u0635\u0644 \u0642\u0628\u0644 \u0647\u064A\u0643",
+    alreadySubmitted: "تم تسجيلك مسبقًا، شكرًا لك",
     invitation: "\u0627\u0644\u062F\u0639\u0648\u0629",
     rsvp: "\u062A\u0623\u0643\u064A\u062F \u0627\u0644\u062D\u0636\u0648\u0631",
     playMusic: "\u062A\u0634\u063A\u064A\u0644 \u0627\u0644\u0645\u0648\u0633\u064A\u0642\u0649",
@@ -239,6 +245,9 @@ export const translations: Record<Locale, Translations> = {
       { question: "هل الحفل مختلط؟", answer: "لا، الحفل منفصل" },
       { question: "هل الحفل بعشاء؟", answer: "نعم، حفل مع عشاء و مشروبات مفتوحة" },
     ],
+    contactTitle: "تواصل معنا",
+    contactCall: "اتصل بنا",
+    contactWhatsApp: "واتساب",
   },
 };
 
