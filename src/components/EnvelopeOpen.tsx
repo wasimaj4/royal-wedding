@@ -23,9 +23,32 @@ import { useLanguage } from "@/context/LanguageContext";
    ═══════════════════════════════════════════════════════════════════ */
 
 /* ── Layout ── */
-const SEAL = 120;
-const HALF = SEAL / 2;
-const FLAP_PCT = 40; // flap apex at 40% of viewport height
+const FLAP_PCT = 40; // flap triangle tip at 40% of viewport height
+
+/* ═══════════════════════════════════════════════════════════════
+   RING GEOMETRY — Precise calculations from SVG viewBox
+   ═══════════════════════════════════════════════════════════════
+   SVG viewBox: 0 0 80 70  →  rendered: 144 × 126 px (scale 1.8×)
+
+   Ring ellipses:
+     Left:  center(30, 35)  semi-axes(17, 21)  rotation −14°
+     Right: center(50, 35)  semi-axes(17, 21)  rotation +14°
+     strokeWidth: 5.5  →  half-stroke = 2.75 viewBox units
+
+   Key Y coordinates (viewBox → pixels from SVG top):
+     Ring top (stroke outer):      ≈ 11.5  →  20.7 px
+     Ring center:                    35.0  →  63.0 px
+     Ring crossing (bottom):       ≈ 53.0  →  95.4 px
+     Ring bottom (stroke center):  ≈ 55.8  → 100.4 px
+     Ring bottom (stroke outer):   ≈ 58.5  → 105.3 px
+     Cast shadow bottom:             67.0  → 120.6 px
+   ═══════════════════════════════════════════════════════════════ */
+const RING_CENTER_Y = 63;       // px: ring vertical center from SVG top
+const RING_BOTTOM_Y = 105;      // px: ring outer-stroke bottom from SVG top
+const CIRCLE_SIZE = 60;         // px: transparent glow circle diameter
+const CIRCLE_TOP = RING_CENTER_Y - CIRCLE_SIZE / 2; // 33px
+const RING_ABOVE_TIP = 8;       // px: ring bottom floats above triangle tip
+const TAP_TEXT_OFFSET = 88;     // px: "tap to open" below triangle tip
 
 /* ── Easing ── */
 const EASE_CINEMATIC = [0.22, 0.61, 0.36, 1] as const;
@@ -507,471 +530,228 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
               />
             </div>
 
-            {/* ═══════════════════════════════════════════════
-                WAX SEAL — at the exact flap junction
-                Positioned at top: FLAP_PCT%, left: 50%
-                ═══════════════════════════════════════════════ */}
-            <AnimatePresence>
-              {(phase === "idle" || phase === "pressed" || phase === "waiting") && (
-                <>
-                  {/* ═══ PREMIUM WAX SEAL ═══ */}
+            {/* ═══════════════════════════════════════════════════════════
+                WEDDING MONOGRAM — W 💍💍 R
 
-                  {/* Seal ambient glow (breathing gold pulse) */}
-                  <motion.div
-                    className="absolute z-20 pointer-events-none"
+                ALIGNMENT (whole block moves as one unit):
+                ════════════════════════════════════════════════════════════
+                1. Ring outer bottom = RING_ABOVE_TIP px above triangle tip
+                   CSS top  = FLAP_PCT% − RING_ABOVE_TIP
+                   Framer y = −RING_BOTTOM_Y  → shifts block up so ring
+                             outer bottom sits at (FLAP_PCT% − 8px)
+
+                2. LETTERS TOP = CIRCLE TOP (independent inner alignment)
+                   Circle top  = RING_CENTER_Y − CIRCLE_SIZE/2 = 33px
+                   Letters top = 33px (same as circle)
+                ═══════════════════════════════════════════════════════════ */}
+            <AnimatePresence>
+              {(phase === "idle" || phase === "pressed" || phase === "waiting" || phase === "breaking") && (
+                <motion.div
+                  className="absolute z-20 pointer-events-auto"
+                  style={{
+                    left: "50%",
+                    top: `calc(${FLAP_PCT}% - ${RING_ABOVE_TIP}px)`,
+                    x: "-50%",
+                    cursor: phase === "idle" ? "pointer" : "default",
+                  }}
+                  onClick={handleClick}
+                  initial={{ opacity: 1, y: -RING_BOTTOM_Y }}
+                  animate={
+                    phase === "breaking"
+                      ? { opacity: 0, y: -(RING_BOTTOM_Y + 10) }
+                      : { opacity: 1, y: -RING_BOTTOM_Y }
+                  }
+                  exit={{ opacity: 0, y: -(RING_BOTTOM_Y + 10) }}
+                  transition={
+                    phase === "breaking"
+                      ? { duration: 0.5, ease: "easeOut" }
+                      : { duration: 0.3 }
+                  }
+                >
+                  {/* ── Interlocked Wedding Rings — positioned at top of container ── */}
+                  <motion.svg
+                    className="pointer-events-none"
+                    viewBox="0 0 80 70"
                     style={{
-                      width: SEAL + 32,
-                      height: SEAL + 32,
-                      left: "50%",
-                      top: `${FLAP_PCT}%`,
-                      marginLeft: -(SEAL + 32) / 2,
-                      marginTop: -(SEAL + 32) / 2,
-                      borderRadius: "50%",
+                      display: "block",
+                      margin: "0 auto",
+                      width: 144,
+                      height: 126,
+                      zIndex: 2,
+                      overflow: "visible",
+                      filter: "drop-shadow(0 0 20px rgba(212,175,55,0.25)) drop-shadow(0 10px 25px rgba(0,0,0,0.15))",
                     }}
-                    animate={
-                      phase === "idle"
-                        ? {
-                            boxShadow: [
-                              "0 0 24px 8px rgba(196,162,101,0.12), 0 0 60px 20px rgba(196,162,101,0.06)",
-                              "0 0 48px 18px rgba(196,162,101,0.30), 0 0 80px 30px rgba(196,162,101,0.12)",
-                              "0 0 24px 8px rgba(196,162,101,0.12), 0 0 60px 20px rgba(196,162,101,0.06)",
-                            ],
-                            scale: [1, 1.04, 1],
-                          }
-                        : phase === "pressed" || phase === "waiting"
-                        ? {
-                            boxShadow: "0 0 60px 24px rgba(196,162,101,0.40), 0 0 100px 40px rgba(196,162,101,0.18)",
-                            scale: 1.12,
-                          }
-                        : {
-                            boxShadow: "0 0 14px 5px rgba(196,162,101,0.08)",
-                            scale: 1,
-                          }
-                    }
-                    transition={
-                      phase === "idle"
-                        ? { duration: 3.2, repeat: Infinity, ease: "easeInOut" }
-                        : { duration: 0.3, ease: "easeOut" }
-                    }
+                    animate={{
+                      rotate:
+                        phase === "pressed" || phase === "waiting"
+                          ? [0, 8, -4, 0]
+                          : 0,
+                      scale:
+                        phase === "pressed" || phase === "waiting"
+                          ? 0.94
+                          : 1,
+                    }}
+                    transition={{
+                      rotate: { duration: 0.8, ease: "easeInOut" },
+                      scale: { duration: 0.3, ease: "easeOut" },
+                    }}
+                  >
+                    <defs>
+                      <linearGradient id="rg-base" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor="#F5E4B0" />
+                        <stop offset="26%" stopColor="#E2C575" />
+                        <stop offset="52%" stopColor="#D4AF37" />
+                        <stop offset="76%" stopColor="#B8954E" />
+                        <stop offset="100%" stopColor="#DAC07A" />
+                      </linearGradient>
+                      <linearGradient id="rg-hi" x1="0.15" y1="0" x2="0.85" y2="1">
+                        <stop offset="0%" stopColor="rgba(255,252,240,0.55)" />
+                        <stop offset="30%" stopColor="rgba(255,252,240,0.04)" />
+                        <stop offset="60%" stopColor="rgba(255,252,240,0.28)" />
+                        <stop offset="100%" stopColor="rgba(255,252,240,0.0)" />
+                      </linearGradient>
+                      <linearGradient id="rg-dp" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor="rgba(100,75,25,0.38)" />
+                        <stop offset="45%" stopColor="rgba(100,75,25,0.06)" />
+                        <stop offset="100%" stopColor="rgba(100,75,25,0.32)" />
+                      </linearGradient>
+                      <clipPath id="rg-top">
+                        <rect x="-10" y="-10" width="100" height="45" />
+                      </clipPath>
+                      <clipPath id="rg-bot">
+                        <rect x="-10" y="35" width="100" height="45" />
+                      </clipPath>
+                    </defs>
+
+                    {/* Soft cast shadow */}
+                    <ellipse cx="40" cy="63" rx="22" ry="4" fill="rgba(0,0,0,0.08)" />
+
+                    {/* RIGHT RING: bottom half (BEHIND left ring) */}
+                    <g clipPath="url(#rg-bot)">
+                      <motion.g
+                        animate={{
+                          x: phase === "pressed" || phase === "waiting" ? -6 : 0,
+                        }}
+                        transition={{ type: "spring", stiffness: 200, damping: 16, mass: 0.7 }}
+                      >
+                        <ellipse cx="50" cy="35" rx="17" ry="21" fill="none" stroke="url(#rg-base)" strokeWidth="5.5" transform="rotate(14, 50, 35)" />
+                        <ellipse cx="50" cy="35" rx="17" ry="21" fill="none" stroke="url(#rg-dp)" strokeWidth="2.8" transform="rotate(14, 50, 35)" />
+                      </motion.g>
+                    </g>
+
+                    {/* LEFT RING: full circle (middle layer) */}
+                    <motion.g
+                      animate={{
+                        x: phase === "pressed" || phase === "waiting" ? 6 : 0,
+                      }}
+                      transition={{ type: "spring", stiffness: 200, damping: 16, mass: 0.7 }}
+                    >
+                      <ellipse cx="30" cy="35" rx="17" ry="21" fill="none" stroke="url(#rg-base)" strokeWidth="5.5" transform="rotate(-14, 30, 35)" />
+                      <ellipse cx="30" cy="35" rx="17" ry="21" fill="none" stroke="url(#rg-dp)" strokeWidth="2.8" transform="rotate(-14, 30, 35)" />
+                      <ellipse cx="30" cy="35" rx="17" ry="21" fill="none" stroke="url(#rg-hi)" strokeWidth="1.6" transform="rotate(-14, 30, 35)" />
+                    </motion.g>
+
+                    {/* RIGHT RING: top half (IN FRONT of left ring) */}
+                    <g clipPath="url(#rg-top)">
+                      <motion.g
+                        animate={{
+                          x: phase === "pressed" || phase === "waiting" ? -6 : 0,
+                        }}
+                        transition={{ type: "spring", stiffness: 200, damping: 16, mass: 0.7 }}
+                      >
+                        <ellipse cx="50" cy="35" rx="17" ry="21" fill="none" stroke="url(#rg-base)" strokeWidth="5.5" transform="rotate(14, 50, 35)" />
+                        <ellipse cx="50" cy="35" rx="17" ry="21" fill="none" stroke="url(#rg-hi)" strokeWidth="1.6" transform="rotate(14, 50, 35)" />
+                      </motion.g>
+                    </g>
+                  </motion.svg>
+
+                  {/* ── Background circle — TOP aligned with letters ── */}
+                  <div
+                    className="absolute pointer-events-none"
+                    style={{
+                      left: "50%",
+                      top: CIRCLE_TOP, // 33px = RING_CENTER_Y − CIRCLE_SIZE/2
+                      width: CIRCLE_SIZE,
+                      height: CIRCLE_SIZE,
+                      transform: "translateX(-50%)",
+                      borderRadius: "50%",
+                      background: "radial-gradient(circle, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 70%, transparent 100%)",
+                      zIndex: 1,
+                    }}
                   />
 
-                  {/* ── Seal disc ── */}
-                  <motion.div
-                    className="absolute z-20 flex items-center justify-center"
+                  {/* ── Letter W — TOP = CIRCLE_TOP (locked alignment) ── */}
+                  <motion.span
+                    className="absolute select-none pointer-events-none"
                     style={{
-                      width: SEAL,
-                      height: SEAL,
-                      left: "50%",
-                      top: `${FLAP_PCT}%`,
-                      marginLeft: -HALF,
-                      marginTop: -HALF,
-                      borderRadius: "50%",
-                      background: SEAL_BG,
-                      boxShadow: `
-                        0 10px 32px rgba(0,0,0,0.38),
-                        0 4px 10px rgba(0,0,0,0.26),
-                        0 18px 48px rgba(80,60,20,0.22),
-                        inset 0 3px 10px rgba(255,245,215,0.45),
-                        inset 0 -6px 18px rgba(0,0,0,0.3),
-                        inset 5px 0 10px rgba(0,0,0,0.1),
-                        inset -5px 0 10px rgba(0,0,0,0.1)
-                      `,
-                      willChange: "transform",
+                      right: "calc(50% + 58px)",
+                      top: CIRCLE_TOP, // 33px — same as circle top ✓
+                      fontFamily: "var(--font-great-vibes), 'Great Vibes', cursive",
+                      fontSize: "140px",
+                      fontWeight: 400,
+                      color: "rgba(255,255,255,0.25)",
+                      lineHeight: 1,
                     }}
                     animate={
                       phase === "pressed" || phase === "waiting"
-                        ? {
-                            scale: 0.91,
-                            rotate: -2,
-                            boxShadow: `
-                              0 4px 16px rgba(0,0,0,0.50),
-                              0 2px 6px rgba(0,0,0,0.34),
-                              0 8px 24px rgba(80,60,20,0.28),
-                              0 0 40px 12px rgba(196,162,101,0.25),
-                              inset 0 3px 10px rgba(255,245,215,0.50),
-                              inset 0 -6px 18px rgba(0,0,0,0.35),
-                              inset 5px 0 10px rgba(0,0,0,0.12),
-                              inset -5px 0 10px rgba(0,0,0,0.12)
-                            `,
-                          }
-                        : {
-                            scale: 1,
-                            rotate: 0,
-                            boxShadow: `
-                              0 10px 32px rgba(0,0,0,0.38),
-                              0 4px 10px rgba(0,0,0,0.26),
-                              0 18px 48px rgba(80,60,20,0.22),
-                              inset 0 3px 10px rgba(255,245,215,0.45),
-                              inset 0 -6px 18px rgba(0,0,0,0.3),
-                              inset 5px 0 10px rgba(0,0,0,0.1),
-                              inset -5px 0 10px rgba(0,0,0,0.1)
-                            `,
-                          }
+                        ? { scale: 0.96 }
+                        : { scale: 1 }
                     }
-                    whileHover={
-                      phase === "idle"
-                        ? {
-                            scale: 1.06,
-                            rotate: 0.5,
-                            boxShadow: `
-                              0 14px 42px rgba(0,0,0,0.42),
-                              0 4px 10px rgba(0,0,0,0.26),
-                              0 22px 60px rgba(80,60,20,0.28),
-                              0 0 36px 10px rgba(196,162,101,0.24),
-                              inset 0 3px 10px rgba(255,245,215,0.55),
-                              inset 0 -6px 18px rgba(0,0,0,0.3),
-                              inset 5px 0 10px rgba(0,0,0,0.1),
-                              inset -5px 0 10px rgba(0,0,0,0.1)
-                            `,
-                          }
-                        : {}
+                    transition={{ duration: 0.3 }}
+                  >
+                    W
+                  </motion.span>
+
+                  {/* ── Letter R — TOP = CIRCLE_TOP (locked alignment) ── */}
+                  <motion.span
+                    className="absolute select-none pointer-events-none"
+                    style={{
+                      left: "calc(50% + 58px)",
+                      top: CIRCLE_TOP, // 33px — same as circle top ✓
+                      fontFamily: "var(--font-great-vibes), 'Great Vibes', cursive",
+                      fontSize: "140px",
+                      fontWeight: 400,
+                      color: "rgba(255,255,255,0.25)",
+                      lineHeight: 1,
+                    }}
+                    animate={
+                      phase === "pressed" || phase === "waiting"
+                        ? { scale: 0.96 }
+                        : { scale: 1 }
                     }
-                    whileTap={phase === "idle" ? { scale: 0.91, rotate: -2 } : {}}
-                    transition={{
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 18,
-                      mass: 0.8,
-                    }}
+                    transition={{ duration: 0.3 }}
                   >
-                    {/* Wax texture overlay (realistic surface) */}
-                    <div
-                      className="absolute inset-0 rounded-full pointer-events-none overflow-hidden"
-                      style={{
-                        backgroundImage: PAPER_NOISE,
-                        backgroundRepeat: "repeat",
-                        backgroundSize: "180px 180px",
-                        opacity: 0.065,
-                        mixBlendMode: "multiply",
-                      }}
-                    />
+                    R
+                  </motion.span>
 
-                    {/* ── Outer embossed ring ── */}
-                    <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 120 120" style={{ zIndex: 1 }}>
-                      <circle cx="60" cy="60" r="53" fill="none" stroke="rgba(255,240,200,0.22)" strokeWidth="2.5" />
-                    </svg>
-
-                    {/* Specular highlight — top-left (studio light reflection) */}
-                    <div
-                      className="absolute top-[7px] left-[12px] w-[44px] h-[26px] rounded-full pointer-events-none"
-                      style={{
-                        background: "linear-gradient(145deg, rgba(255,253,240,0.55) 0%, rgba(255,250,225,0.18) 55%, transparent 100%)",
-                        filter: "blur(4.5px)",
-                      }}
-                    />
-
-                    {/* Secondary rim catch light (bottom-right) */}
-                    <div
-                      className="absolute bottom-[14px] right-[10px] w-[20px] h-[12px] rounded-full pointer-events-none"
-                      style={{
-                        background: "linear-gradient(320deg, rgba(255,252,240,0.2) 0%, transparent 100%)",
-                        filter: "blur(3px)",
-                      }}
-                    />
-
-                    {/* Edge imperfections — handcrafted wax character */}
-                    <div
-                      className="absolute inset-0 rounded-full pointer-events-none"
-                      style={{
-                        boxShadow: `
-                          inset 3px 1px 4px rgba(0,0,0,0.05),
-                          inset -2px 2px 3px rgba(0,0,0,0.04),
-                          inset 1px -3px 5px rgba(0,0,0,0.06),
-                          inset -1px -1px 2px rgba(255,250,230,0.04)
-                        `,
-                      }}
-                    />
-
-                    {/* ── Luxury Monogram: W 💍💍 R — realistic interlocked rings ── */}
-                    <div
-                      className="flex items-center justify-center select-none pointer-events-none"
-                      style={{
-                        position: "relative",
-                        zIndex: 2,
-                        direction: "ltr",
-                      }}
-                    >
-                      {/* Letter W — Great Vibes signature calligraphy */}
-                      <span
-                        style={{
-                          fontFamily: "var(--font-great-vibes), 'Great Vibes', cursive",
-                          fontSize: "36px",
-                          fontWeight: 400,
-                          color: "rgba(255,248,230,0.72)",
-                          textShadow:
-                            "0 0 10px rgba(212,175,55,0.18), 0 2px 5px rgba(0,0,0,0.30)",
-                          lineHeight: 1,
-                          letterSpacing: "0.02em",
-                          marginRight: "-4px",
-                        }}
-                      >
-                        W
-                      </span>
-
-                      {/* ── Realistic Interlocked Wedding Rings ── */}
-                      <motion.svg
-                        viewBox="0 0 80 70"
-                        style={{ width: 64, height: 56, overflow: "visible" }}
-                        animate={{
-                          filter:
-                            phase === "pressed" || phase === "waiting"
-                              ? "drop-shadow(0 0 18px rgba(212,175,55,0.45)) drop-shadow(0 8px 22px rgba(0,0,0,0.12))"
-                              : "drop-shadow(0 0 8px rgba(212,175,55,0.20)) drop-shadow(0 6px 16px rgba(0,0,0,0.08))",
-                          rotate:
-                            phase === "pressed" || phase === "waiting"
-                              ? [0, 7, -3, 0]
-                              : 0,
-                        }}
-                        transition={{
-                          filter: { duration: 0.5, ease: "easeOut" },
-                          rotate: { duration: 0.85, ease: "easeInOut" },
-                        }}
-                      >
-                        <defs>
-                          {/* Gold band base gradient */}
-                          <linearGradient id="rg-base" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stopColor="#F5E4B0" />
-                            <stop offset="26%" stopColor="#E2C575" />
-                            <stop offset="52%" stopColor="#D4AF37" />
-                            <stop offset="76%" stopColor="#B8954E" />
-                            <stop offset="100%" stopColor="#DAC07A" />
-                          </linearGradient>
-
-                          {/* Specular highlight */}
-                          <linearGradient id="rg-hi" x1="0.15" y1="0" x2="0.85" y2="1">
-                            <stop offset="0%" stopColor="rgba(255,252,240,0.55)" />
-                            <stop offset="30%" stopColor="rgba(255,252,240,0.04)" />
-                            <stop offset="60%" stopColor="rgba(255,252,240,0.28)" />
-                            <stop offset="100%" stopColor="rgba(255,252,240,0.0)" />
-                          </linearGradient>
-
-                          {/* Inner depth / shadow gradient */}
-                          <linearGradient id="rg-dp" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stopColor="rgba(100,75,25,0.38)" />
-                            <stop offset="45%" stopColor="rgba(100,75,25,0.06)" />
-                            <stop offset="100%" stopColor="rgba(100,75,25,0.32)" />
-                          </linearGradient>
-
-                          {/* Clip paths for interlock illusion */}
-                          <clipPath id="rg-top">
-                            <rect x="-10" y="-10" width="100" height="45" />
-                          </clipPath>
-                          <clipPath id="rg-bot">
-                            <rect x="-10" y="35" width="100" height="45" />
-                          </clipPath>
-                        </defs>
-
-                        {/* Soft cast shadow beneath the rings */}
-                        <ellipse cx="40" cy="63" rx="20" ry="3.5" fill="rgba(0,0,0,0.06)" />
-
-                        {/* ─── RIGHT RING: bottom half (BEHIND left ring) ─── */}
-                        <g clipPath="url(#rg-bot)">
-                          <motion.g
-                            animate={{
-                              x: phase === "pressed" || phase === "waiting" ? -5 : 0,
-                            }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 200,
-                              damping: 16,
-                              mass: 0.7,
-                            }}
-                          >
-                            <ellipse
-                              cx="50" cy="35" rx="17" ry="21"
-                              fill="none" stroke="url(#rg-base)" strokeWidth="5.5"
-                              transform="rotate(14, 50, 35)"
-                            />
-                            <ellipse
-                              cx="50" cy="35" rx="17" ry="21"
-                              fill="none" stroke="url(#rg-dp)" strokeWidth="2.8"
-                              transform="rotate(14, 50, 35)"
-                            />
-                          </motion.g>
-                        </g>
-
-                        {/* ─── LEFT RING: full circle (middle layer) ─── */}
-                        <motion.g
-                          animate={{
-                            x: phase === "pressed" || phase === "waiting" ? 5 : 0,
-                          }}
-                          transition={{
-                            type: "spring",
-                            stiffness: 200,
-                            damping: 16,
-                            mass: 0.7,
-                          }}
-                        >
-                          <ellipse
-                            cx="30" cy="35" rx="17" ry="21"
-                            fill="none" stroke="url(#rg-base)" strokeWidth="5.5"
-                            transform="rotate(-14, 30, 35)"
-                          />
-                          <ellipse
-                            cx="30" cy="35" rx="17" ry="21"
-                            fill="none" stroke="url(#rg-dp)" strokeWidth="2.8"
-                            transform="rotate(-14, 30, 35)"
-                          />
-                          <ellipse
-                            cx="30" cy="35" rx="17" ry="21"
-                            fill="none" stroke="url(#rg-hi)" strokeWidth="1.6"
-                            transform="rotate(-14, 30, 35)"
-                          />
-                        </motion.g>
-
-                        {/* ─── RIGHT RING: top half (IN FRONT of left ring) ─── */}
-                        <g clipPath="url(#rg-top)">
-                          <motion.g
-                            animate={{
-                              x: phase === "pressed" || phase === "waiting" ? -5 : 0,
-                            }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 200,
-                              damping: 16,
-                              mass: 0.7,
-                            }}
-                          >
-                            <ellipse
-                              cx="50" cy="35" rx="17" ry="21"
-                              fill="none" stroke="url(#rg-base)" strokeWidth="5.5"
-                              transform="rotate(14, 50, 35)"
-                            />
-                            <ellipse
-                              cx="50" cy="35" rx="17" ry="21"
-                              fill="none" stroke="url(#rg-hi)" strokeWidth="1.6"
-                              transform="rotate(14, 50, 35)"
-                            />
-                          </motion.g>
-                        </g>
-                      </motion.svg>
-
-                      {/* Letter R — Great Vibes signature calligraphy */}
-                      <span
-                        style={{
-                          fontFamily: "var(--font-great-vibes), 'Great Vibes', cursive",
-                          fontSize: "36px",
-                          fontWeight: 400,
-                          color: "rgba(255,248,230,0.72)",
-                          textShadow:
-                            "0 0 10px rgba(212,175,55,0.18), 0 2px 5px rgba(0,0,0,0.30)",
-                          lineHeight: 1,
-                          letterSpacing: "0.02em",
-                          marginLeft: "-4px",
-                        }}
-                      >
-                        R
-                      </span>
-                    </div>
-                  </motion.div>
-                </>
-              )}
-
-              {/* ════════ SEAL BREAK ════════ */}
-              {isAfterBreak && (
-                <>
-                  {/* Crack flash */}
-                  <motion.div
-                    className="absolute z-[22] pointer-events-none"
-                    style={{
-                      width: 2,
-                      height: SEAL - 16,
-                      left: "50%",
-                      top: `${FLAP_PCT}%`,
-                      marginLeft: -1,
-                      marginTop: -(SEAL - 16) / 2,
-                      background: "linear-gradient(to bottom, transparent, rgba(220,195,140,0.7), transparent)",
-                      borderRadius: 1,
-                    }}
-                    initial={{ opacity: 0, scaleY: 0 }}
-                    animate={{ opacity: [0, 1, 0], scaleY: [0, 1, 1] }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                  />
-
-                  {/* Left half */}
-                  <motion.div
-                    className="absolute z-20 overflow-hidden"
-                    style={{
-                      width: HALF,
-                      height: SEAL,
-                      left: "50%",
-                      top: `${FLAP_PCT}%`,
-                      marginLeft: -HALF,
-                      marginTop: -HALF,
-                      borderRadius: `${HALF}px 0 0 ${HALF}px`,
-                    }}
-                    initial={{ x: 0, y: 0, opacity: 1, rotate: 0 }}
-                    animate={{ x: -36, y: 22, opacity: 0, rotate: -24 }}
-                    transition={{ duration: 0.7, ease: [0.35, 0, 0.55, 1] }}
-                  >
-                    <div
-                      style={{
-                        width: SEAL,
-                        height: SEAL,
-                        borderRadius: "50%",
-                        background: SEAL_BG,
-                        boxShadow: "0 5px 16px rgba(0,0,0,0.25), inset 0 2px 6px rgba(255,245,220,0.35)",
-                      }}
-                    />
-                  </motion.div>
-
-                  {/* Right half */}
-                  <motion.div
-                    className="absolute z-20 overflow-hidden"
-                    style={{
-                      width: HALF,
-                      height: SEAL,
-                      left: "50%",
-                      top: `${FLAP_PCT}%`,
-                      marginTop: -HALF,
-                      borderRadius: `0 ${HALF}px ${HALF}px 0`,
-                    }}
-                    initial={{ x: 0, y: 0, opacity: 1, rotate: 0 }}
-                    animate={{ x: 36, y: 22, opacity: 0, rotate: 24 }}
-                    transition={{ duration: 0.7, ease: [0.35, 0, 0.55, 1] }}
-                  >
-                    <div
-                      style={{
-                        width: SEAL,
-                        height: SEAL,
-                        marginLeft: -HALF,
-                        borderRadius: "50%",
-                        background: SEAL_BG,
-                        boxShadow: "0 5px 16px rgba(0,0,0,0.25), inset 0 2px 6px rgba(255,245,220,0.35)",
-                      }}
-                    />
-                  </motion.div>
-
-                  {/* Gold dust */}
-                  {particles.map((p, i) => (
+                  {/* Ambient glow (breathing pulse) — idle only */}
+                  {phase === "idle" && (
                     <motion.div
-                      key={i}
-                      className="absolute z-[21] rounded-full"
+                      className="absolute pointer-events-none"
                       style={{
-                        width: p.size,
-                        height: p.size,
                         left: "50%",
-                        top: `${FLAP_PCT}%`,
-                        marginLeft: -p.size / 2,
-                        marginTop: -p.size / 2,
-                        background: `rgba(${p.r}, ${p.g}, ${p.b}, 0.85)`,
-                        willChange: "transform, opacity",
+                      top: RING_CENTER_Y, // 63px — ring center
+                        width: 180,
+                        height: 140,
+                        transform: "translate(-50%, -50%)",
+                        borderRadius: "50%",
+                        zIndex: 0,
                       }}
-                      initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
                       animate={{
-                        x: Math.cos(p.angle) * p.dist,
-                        y: Math.sin(p.angle) * p.dist + 16,
-                        opacity: 0,
-                        scale: 0.1,
+                        boxShadow: [
+                          "0 0 25px 8px rgba(212,175,55,0.06)",
+                          "0 0 50px 18px rgba(212,175,55,0.14)",
+                          "0 0 25px 8px rgba(212,175,55,0.06)",
+                        ],
                       }}
                       transition={{
-                        duration: 0.9,
-                        delay: p.delay,
-                        ease: [0.15, 0, 0.5, 1],
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut",
                       }}
                     />
-                  ))}
-                </>
+                  )}
+                </motion.div>
               )}
             </AnimatePresence>
 
@@ -984,7 +764,7 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
                     : "font-body text-xs sm:text-sm tracking-[0.32em] uppercase"
                 }`}
                 style={{
-                  top: `calc(${FLAP_PCT}% + ${HALF + 28}px)`,
+                  top: `calc(${FLAP_PCT}% + ${TAP_TEXT_OFFSET}px)`,
                   color: "rgba(62,39,35,1)",
                   textShadow: "0 1px 4px rgba(255,252,245,0.9), 0 0 16px rgba(255,250,235,0.6)",
                   fontWeight: isRTL ? 600 : undefined,
