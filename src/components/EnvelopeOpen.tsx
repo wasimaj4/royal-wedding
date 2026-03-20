@@ -932,18 +932,26 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
               <motion.p
                 className={`absolute left-0 right-0 text-center z-30 pointer-events-none ${
                   isRTL
-                    ? "font-arabic-label text-base sm:text-lg tracking-wide"
+                    ? "font-arabic-label text-[1.1rem] sm:text-[1.25rem] tracking-wide"
                     : "font-body text-xs sm:text-sm tracking-[0.32em] uppercase"
                 }`}
                 style={{
                   top: `calc(${FLAP_PCT}% + ${HALF + 28}px)`,
                   color: "rgba(62,39,35,1)",
                   textShadow: "0 1px 4px rgba(255,252,245,0.9), 0 0 16px rgba(255,250,235,0.6)",
-                  fontWeight: isRTL ? 700 : undefined,
+                  fontWeight: isRTL ? 600 : undefined,
+                  letterSpacing: isRTL ? "0.5px" : undefined,
                 }}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: [0, 1], y: 0 }}
-                transition={{ delay: 2, duration: 1.4, ease: "easeOut" }}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: [0, 1, 1, 0.85, 1], y: 0 }}
+                transition={{
+                  delay: 2,
+                  duration: 3,
+                  ease: "easeOut",
+                  times: [0, 0.3, 0.6, 0.8, 1],
+                  repeat: Infinity,
+                  repeatDelay: 1.5,
+                }}
               >
                 {t.tapToOpen}
               </motion.p>

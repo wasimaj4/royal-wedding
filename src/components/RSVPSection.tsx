@@ -419,44 +419,59 @@ export default function RSVPSection() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ delay: 1, duration: 0.8, ease: "easeOut" }}
                 >
-                  <div className="section-divider mb-6" />
+                  <div className="section-divider mb-8" />
 
-                  <p
-                    className={`text-xs mb-4 tracking-wider ${
-                      isRTL ? "font-arabic-label text-text-muted" : "font-body text-text-muted"
-                    }`}
+                  {/* ── Premium Entry Pass Card ── */}
+                  <motion.div
+                    className="mx-auto max-w-[280px] rounded-2xl px-5 py-6 sm:px-6 sm:py-7 text-center"
+                    style={{
+                      background: "#f8f5f0",
+                      border: "1px solid rgba(196,162,101,0.3)",
+                      boxShadow: "0 8px 24px rgba(0,0,0,0.05)",
+                    }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.99 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
-                    {t.qrEntryPass}
-                  </p>
+                    {/* Entry Pass title */}
+                    <p
+                      className={`text-xs sm:text-[13px] font-medium tracking-wider mb-4 ${
+                        isRTL ? "font-arabic-label text-text-primary/80" : "font-body uppercase text-text-primary/80"
+                      }`}
+                    >
+                      {isRTL ? "\u0628\u0637\u0627\u0642\u0629 \u0627\u0644\u062F\u062E\u0648\u0644" : "Entry Pass"}
+                    </p>
 
-                  <QRCodeDisplay
-                    data={qrPayload}
-                    size={160}
-                    guestName={formData.fullName}
-                    rsvpId={rsvpId}
-                  />
+                    <QRCodeDisplay
+                      data={qrPayload}
+                      size={160}
+                      guestName={formData.fullName}
+                      rsvpId={rsvpId}
+                    />
 
-                  <p
-                    className={`text-xs mt-4 leading-relaxed max-w-xs mx-auto ${
-                      isRTL ? "font-arabic-label text-text-muted" : "font-body text-text-muted italic"
-                    }`}
-                  >
-                    {t.qrPresentAtEntrance}
-                  </p>
-
-                  {/* No children notice — moved to section footer */}
+                    {/* Present at entrance subtitle */}
+                    <p
+                      className={`text-[11px] sm:text-xs mt-4 leading-relaxed max-w-[220px] mx-auto ${
+                        isRTL ? "font-arabic-label text-text-primary/55" : "font-body text-text-primary/55"
+                      }`}
+                    >
+                      {isRTL ? "\u064A\u0631\u062C\u0649 \u0625\u0628\u0631\u0627\u0632 \u0627\u0644\u0631\u0645\u0632 \u0639\u0646\u062F \u0627\u0644\u062F\u062E\u0648\u0644" : "Please present this code at the entrance"}
+                    </p>
+                  </motion.div>
 
                   {/* Cancellation notice */}
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.8, duration: 0.8 }}
-                    className={`mt-6 text-[11px] leading-relaxed max-w-xs mx-auto ${
-                      isRTL ? "font-arabic-label text-text-muted/80" : "font-body italic text-text-muted/80"
-                    }`}
-                  >
-                    {t.cancellationNotice}
-                  </motion.p>
+                  <div className="mt-6 pt-5 border-t border-border/40 max-w-xs mx-auto">
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 1.8, duration: 0.8 }}
+                      className={`text-xs sm:text-[13px] font-medium leading-relaxed ${
+                        isRTL ? "font-arabic-label text-text-primary/70" : "font-body text-text-primary/70"
+                      }`}
+                    >
+                      {t.cancellationNotice}
+                    </motion.p>
+                  </div>
                 </motion.div>
               )}
             </motion.div>

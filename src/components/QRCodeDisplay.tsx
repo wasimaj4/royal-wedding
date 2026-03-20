@@ -69,9 +69,9 @@ export default function QRCodeDisplay({
   };
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="p-3 bg-white border border-border inline-block">
-        <canvas ref={canvasRef} />
+    <div className="flex flex-col items-center gap-3">
+      <div className="inline-block rounded-lg overflow-hidden" style={{ padding: 0 }}>
+        <canvas ref={canvasRef} className="block" />
       </div>
 
       <button
