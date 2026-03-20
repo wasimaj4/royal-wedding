@@ -85,17 +85,17 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
     setPhase("pressed");
     // 0.3s pause — let the press register visually
     setTimeout(() => setPhase("waiting"), 300);
-    // seal break after pause
-    setTimeout(() => setPhase("breaking"), 700);
+    // seal break — after rings interlock and settle
+    setTimeout(() => setPhase("breaking"), 1300);
     // flap begins opening — slow, cinematic
-    setTimeout(() => setPhase("opening"), 1200);
+    setTimeout(() => setPhase("opening"), 1800);
     // content reveal after flap is well open
-    setTimeout(() => setPhase("revealing"), 3800);
+    setTimeout(() => setPhase("revealing"), 4400);
     // dissolve out
     setTimeout(() => {
       setPhase("done");
       onOpen();
-    }, 5400);
+    }, 6000);
   }, [phase, onOpen, audioRef]);
 
   const isAfterBreak = phase === "breaking" || phase === "opening" || phase === "revealing";
@@ -646,67 +646,9 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
                       }}
                     />
 
-                    {/* ── Jasmine flower + outer seal ring ── */}
+                    {/* ── Outer embossed ring ── */}
                     <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 120 120" style={{ zIndex: 1 }}>
-                      {/* Embossed outer ring */}
                       <circle cx="60" cy="60" r="53" fill="none" stroke="rgba(255,240,200,0.22)" strokeWidth="2.5" />
-                      <circle cx="60" cy="60" r="53" fill="none" stroke="rgba(0,0,0,0.0)" strokeWidth="0"
-                        style={{ filter: "drop-shadow(0 1.5px 3px rgba(255,240,200,0.14))" }}
-                      />
-
-                      {/* ── Jasmine: 5 outer petals ── */}
-                      <g transform="translate(60,60) rotate(0)">
-                        <path d="M 0 0 C 11 -9, 13 -30, 0 -45 C -13 -30, -11 -9, 0 0 Z"
-                          fill="rgba(255,242,195,0.30)" stroke="rgba(255,240,200,0.40)" strokeWidth="0.8" strokeLinejoin="round" />
-                      </g>
-                      <g transform="translate(60,60) rotate(72)">
-                        <path d="M 0 0 C 11 -9, 13 -30, 0 -45 C -13 -30, -11 -9, 0 0 Z"
-                          fill="rgba(255,242,195,0.30)" stroke="rgba(255,240,200,0.40)" strokeWidth="0.8" strokeLinejoin="round" />
-                      </g>
-                      <g transform="translate(60,60) rotate(144)">
-                        <path d="M 0 0 C 11 -9, 13 -30, 0 -45 C -13 -30, -11 -9, 0 0 Z"
-                          fill="rgba(255,242,195,0.30)" stroke="rgba(255,240,200,0.40)" strokeWidth="0.8" strokeLinejoin="round" />
-                      </g>
-                      <g transform="translate(60,60) rotate(216)">
-                        <path d="M 0 0 C 11 -9, 13 -30, 0 -45 C -13 -30, -11 -9, 0 0 Z"
-                          fill="rgba(255,242,195,0.30)" stroke="rgba(255,240,200,0.40)" strokeWidth="0.8" strokeLinejoin="round" />
-                      </g>
-                      <g transform="translate(60,60) rotate(288)">
-                        <path d="M 0 0 C 11 -9, 13 -30, 0 -45 C -13 -30, -11 -9, 0 0 Z"
-                          fill="rgba(255,242,195,0.30)" stroke="rgba(255,240,200,0.40)" strokeWidth="0.8" strokeLinejoin="round" />
-                      </g>
-
-                      {/* ── Jasmine: 5 inner petals (offset 36°) ── */}
-                      <g transform="translate(60,60) rotate(36)">
-                        <path d="M 0 0 C 8 -6, 9 -20, 0 -31 C -9 -20, -8 -6, 0 0 Z"
-                          fill="rgba(255,242,195,0.22)" stroke="rgba(255,240,200,0.30)" strokeWidth="0.6" strokeLinejoin="round" />
-                      </g>
-                      <g transform="translate(60,60) rotate(108)">
-                        <path d="M 0 0 C 8 -6, 9 -20, 0 -31 C -9 -20, -8 -6, 0 0 Z"
-                          fill="rgba(255,242,195,0.22)" stroke="rgba(255,240,200,0.30)" strokeWidth="0.6" strokeLinejoin="round" />
-                      </g>
-                      <g transform="translate(60,60) rotate(180)">
-                        <path d="M 0 0 C 8 -6, 9 -20, 0 -31 C -9 -20, -8 -6, 0 0 Z"
-                          fill="rgba(255,242,195,0.22)" stroke="rgba(255,240,200,0.30)" strokeWidth="0.6" strokeLinejoin="round" />
-                      </g>
-                      <g transform="translate(60,60) rotate(252)">
-                        <path d="M 0 0 C 8 -6, 9 -20, 0 -31 C -9 -20, -8 -6, 0 0 Z"
-                          fill="rgba(255,242,195,0.22)" stroke="rgba(255,240,200,0.30)" strokeWidth="0.6" strokeLinejoin="round" />
-                      </g>
-                      <g transform="translate(60,60) rotate(324)">
-                        <path d="M 0 0 C 8 -6, 9 -20, 0 -31 C -9 -20, -8 -6, 0 0 Z"
-                          fill="rgba(255,242,195,0.22)" stroke="rgba(255,240,200,0.30)" strokeWidth="0.6" strokeLinejoin="round" />
-                      </g>
-
-                      {/* ── Center: stamens + pistil ── */}
-                      <circle cx="60" cy="60" r="9.5" fill="rgba(255,245,210,0.28)" stroke="rgba(255,240,200,0.32)" strokeWidth="0.8" />
-                      <circle cx="60" cy="60" r="5" fill="rgba(255,248,220,0.35)" />
-                      {/* 5 stamen dots */}
-                      <circle cx="60" cy="54" r="1.6" fill="rgba(255,245,200,0.50)" />
-                      <circle cx="65.7" cy="58.1" r="1.6" fill="rgba(255,245,200,0.50)" />
-                      <circle cx="63.5" cy="64.9" r="1.6" fill="rgba(255,245,200,0.50)" />
-                      <circle cx="56.5" cy="64.9" r="1.6" fill="rgba(255,245,200,0.50)" />
-                      <circle cx="54.3" cy="58.1" r="1.6" fill="rgba(255,245,200,0.50)" />
                     </svg>
 
                     {/* Specular highlight — top-left (studio light reflection) */}
@@ -740,76 +682,182 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
                       }}
                     />
 
-                    {/* ── Monogram: W ♥ R ── */}
+                    {/* ── Luxury Monogram: W 💍💍 R — realistic interlocked rings ── */}
                     <div
-                      className="flex items-center select-none pointer-events-none"
+                      className="flex items-center justify-center select-none pointer-events-none"
                       style={{
                         position: "relative",
                         zIndex: 2,
-                        gap: "3px",
-                        marginTop: "-1px",
                         direction: "ltr",
                       }}
                     >
-                      {/* Letter W */}
+                      {/* Letter W — Great Vibes signature calligraphy */}
                       <span
                         style={{
                           fontFamily: "var(--font-great-vibes), 'Great Vibes', cursive",
-                          fontSize: "38px",
-                          color: "rgba(255,250,235,0.97)",
-                          textShadow: `
-                            0 3px 5px rgba(0,0,0,0.45),
-                            0 -1.5px 2px rgba(255,248,225,0.32),
-                            0 0 18px rgba(220,195,140,0.30),
-                            0 1.5px 0 rgba(80,62,28,0.55),
-                            0 -0.5px 0 rgba(255,250,235,0.18)
-                          `,
+                          fontSize: "36px",
+                          fontWeight: 400,
+                          color: "rgba(255,248,230,0.72)",
+                          textShadow:
+                            "0 0 10px rgba(212,175,55,0.18), 0 2px 5px rgba(0,0,0,0.30)",
                           lineHeight: 1,
                           letterSpacing: "0.02em",
+                          marginRight: "-4px",
                         }}
                       >
                         W
                       </span>
 
-                      {/* Elegant heart — refined, thin, engraved feel */}
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        style={{
-                          marginTop: "3px",
-                          filter: "drop-shadow(0 2px 2.5px rgba(0,0,0,0.35))",
-                          opacity: 0.88,
+                      {/* ── Realistic Interlocked Wedding Rings ── */}
+                      <motion.svg
+                        viewBox="0 0 80 70"
+                        style={{ width: 64, height: 56, overflow: "visible" }}
+                        animate={{
+                          filter:
+                            phase === "pressed" || phase === "waiting"
+                              ? "drop-shadow(0 0 18px rgba(212,175,55,0.45)) drop-shadow(0 8px 22px rgba(0,0,0,0.12))"
+                              : "drop-shadow(0 0 8px rgba(212,175,55,0.20)) drop-shadow(0 6px 16px rgba(0,0,0,0.08))",
+                          rotate:
+                            phase === "pressed" || phase === "waiting"
+                              ? [0, 7, -3, 0]
+                              : 0,
+                        }}
+                        transition={{
+                          filter: { duration: 0.5, ease: "easeOut" },
+                          rotate: { duration: 0.85, ease: "easeInOut" },
                         }}
                       >
-                        <path
-                          d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                          fill="none"
-                          stroke="rgba(248,232,195,0.8)"
-                          strokeWidth="1.8"
-                        />
-                        <path
-                          d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                          fill="rgba(248,232,195,0.12)"
-                          stroke="none"
-                        />
-                      </svg>
+                        <defs>
+                          {/* Gold band base gradient */}
+                          <linearGradient id="rg-base" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stopColor="#F5E4B0" />
+                            <stop offset="26%" stopColor="#E2C575" />
+                            <stop offset="52%" stopColor="#D4AF37" />
+                            <stop offset="76%" stopColor="#B8954E" />
+                            <stop offset="100%" stopColor="#DAC07A" />
+                          </linearGradient>
 
-                      {/* Letter R */}
+                          {/* Specular highlight */}
+                          <linearGradient id="rg-hi" x1="0.15" y1="0" x2="0.85" y2="1">
+                            <stop offset="0%" stopColor="rgba(255,252,240,0.55)" />
+                            <stop offset="30%" stopColor="rgba(255,252,240,0.04)" />
+                            <stop offset="60%" stopColor="rgba(255,252,240,0.28)" />
+                            <stop offset="100%" stopColor="rgba(255,252,240,0.0)" />
+                          </linearGradient>
+
+                          {/* Inner depth / shadow gradient */}
+                          <linearGradient id="rg-dp" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stopColor="rgba(100,75,25,0.38)" />
+                            <stop offset="45%" stopColor="rgba(100,75,25,0.06)" />
+                            <stop offset="100%" stopColor="rgba(100,75,25,0.32)" />
+                          </linearGradient>
+
+                          {/* Clip paths for interlock illusion */}
+                          <clipPath id="rg-top">
+                            <rect x="-10" y="-10" width="100" height="45" />
+                          </clipPath>
+                          <clipPath id="rg-bot">
+                            <rect x="-10" y="35" width="100" height="45" />
+                          </clipPath>
+                        </defs>
+
+                        {/* Soft cast shadow beneath the rings */}
+                        <ellipse cx="40" cy="63" rx="20" ry="3.5" fill="rgba(0,0,0,0.06)" />
+
+                        {/* ─── RIGHT RING: bottom half (BEHIND left ring) ─── */}
+                        <g clipPath="url(#rg-bot)">
+                          <motion.g
+                            animate={{
+                              x: phase === "pressed" || phase === "waiting" ? -5 : 0,
+                            }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 200,
+                              damping: 16,
+                              mass: 0.7,
+                            }}
+                          >
+                            <ellipse
+                              cx="50" cy="35" rx="17" ry="21"
+                              fill="none" stroke="url(#rg-base)" strokeWidth="5.5"
+                              transform="rotate(14, 50, 35)"
+                            />
+                            <ellipse
+                              cx="50" cy="35" rx="17" ry="21"
+                              fill="none" stroke="url(#rg-dp)" strokeWidth="2.8"
+                              transform="rotate(14, 50, 35)"
+                            />
+                          </motion.g>
+                        </g>
+
+                        {/* ─── LEFT RING: full circle (middle layer) ─── */}
+                        <motion.g
+                          animate={{
+                            x: phase === "pressed" || phase === "waiting" ? 5 : 0,
+                          }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 200,
+                            damping: 16,
+                            mass: 0.7,
+                          }}
+                        >
+                          <ellipse
+                            cx="30" cy="35" rx="17" ry="21"
+                            fill="none" stroke="url(#rg-base)" strokeWidth="5.5"
+                            transform="rotate(-14, 30, 35)"
+                          />
+                          <ellipse
+                            cx="30" cy="35" rx="17" ry="21"
+                            fill="none" stroke="url(#rg-dp)" strokeWidth="2.8"
+                            transform="rotate(-14, 30, 35)"
+                          />
+                          <ellipse
+                            cx="30" cy="35" rx="17" ry="21"
+                            fill="none" stroke="url(#rg-hi)" strokeWidth="1.6"
+                            transform="rotate(-14, 30, 35)"
+                          />
+                        </motion.g>
+
+                        {/* ─── RIGHT RING: top half (IN FRONT of left ring) ─── */}
+                        <g clipPath="url(#rg-top)">
+                          <motion.g
+                            animate={{
+                              x: phase === "pressed" || phase === "waiting" ? -5 : 0,
+                            }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 200,
+                              damping: 16,
+                              mass: 0.7,
+                            }}
+                          >
+                            <ellipse
+                              cx="50" cy="35" rx="17" ry="21"
+                              fill="none" stroke="url(#rg-base)" strokeWidth="5.5"
+                              transform="rotate(14, 50, 35)"
+                            />
+                            <ellipse
+                              cx="50" cy="35" rx="17" ry="21"
+                              fill="none" stroke="url(#rg-hi)" strokeWidth="1.6"
+                              transform="rotate(14, 50, 35)"
+                            />
+                          </motion.g>
+                        </g>
+                      </motion.svg>
+
+                      {/* Letter R — Great Vibes signature calligraphy */}
                       <span
                         style={{
                           fontFamily: "var(--font-great-vibes), 'Great Vibes', cursive",
-                          fontSize: "38px",
-                          color: "rgba(255,250,235,0.97)",
-                          textShadow: `
-                            0 3px 5px rgba(0,0,0,0.45),
-                            0 -1.5px 2px rgba(255,248,225,0.32),
-                            0 0 18px rgba(220,195,140,0.30),
-                            0 1.5px 0 rgba(80,62,28,0.55),
-                            0 -0.5px 0 rgba(255,250,235,0.18)
-                          `,
+                          fontSize: "36px",
+                          fontWeight: 400,
+                          color: "rgba(255,248,230,0.72)",
+                          textShadow:
+                            "0 0 10px rgba(212,175,55,0.18), 0 2px 5px rgba(0,0,0,0.30)",
                           lineHeight: 1,
                           letterSpacing: "0.02em",
+                          marginLeft: "-4px",
                         }}
                       >
                         R
