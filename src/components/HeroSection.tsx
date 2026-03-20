@@ -201,10 +201,25 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
             {t.eventDate}
           </p>
           <p
-            className={`text-xs ${
-              isRTL ? "font-arabic-label text-accent" : "font-body tracking-[0.25em] uppercase text-accent"
+            className={`text-xs flex items-center justify-center ${
+              isRTL ? "font-arabic-label text-accent gap-[6px]" : "font-body tracking-[0.25em] uppercase text-accent gap-[7px]"
             }`}
           >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="shrink-0"
+              style={{ filter: "drop-shadow(0 0 4px rgba(212,175,55,0.3))" }}
+            >
+              <path
+                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                fill="#D4AF37"
+              />
+              <circle cx="12" cy="9" r="2.5" fill="#FEFCF7" />
+            </svg>
             {t.eventLocation}
           </p>
         </motion.div>
