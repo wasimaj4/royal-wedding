@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 
 const VOLUME = 0.02;
-const PLAYBACK_RATE = 0.60;
+const PLAYBACK_RATE = 0.70;
 
 interface MusicPlayerProps {
   audioRef: RefObject<HTMLAudioElement | null>;
