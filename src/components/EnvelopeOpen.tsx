@@ -774,7 +774,7 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: [0, 1, 1, 0.85, 1], y: 0 }}
                 transition={{
-                  delay: 2,
+                  delay: 0.8,
                   duration: 3,
                   ease: "easeOut",
                   times: [0, 0.3, 0.6, 0.8, 1],
