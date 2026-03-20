@@ -77,7 +77,7 @@ export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
             </motion.span>
           </motion.div>
           <span
-            className={`text-[10px] tracking-[0.2em] uppercase mt-2 block ${isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"}`}
+            className={`text-[10px] tracking-[0.2em] uppercase mt-2 block ${isRTL ? "font-arabic-label text-text-muted" : "font-body text-text-muted"}`}
           >
             {unit.label}
           </span>

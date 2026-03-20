@@ -28,7 +28,7 @@ export default function DressCode() {
             custom={0.1}
             variants={fadeUp}
             className={`text-2xl sm:text-3xl mb-8 ${
-              isRTL ? "font-arabic text-text-primary" : "font-serif tracking-[0.15em] uppercase text-text-primary"
+              isRTL ? "font-arabic-label font-semibold text-text-primary" : "font-serif tracking-[0.15em] uppercase text-text-primary"
             }`}
           >
             {t.dressCodeTitle}
@@ -39,7 +39,7 @@ export default function DressCode() {
               <p
                 className={`text-sm sm:text-base leading-relaxed whitespace-pre-line ${
                   isRTL
-                    ? "font-arabic text-text-secondary"
+                    ? "font-arabic-label text-text-secondary"
                     : "font-body text-text-secondary"
                 }`}
               >

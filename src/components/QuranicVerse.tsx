@@ -40,7 +40,7 @@ export default function QuranicVerse() {
           variants={fadeInUp}
           className={`text-base sm:text-lg leading-[2] ${
             isRTL
-              ? "font-arabic text-text-primary"
+              ? "font-arabic-label text-text-primary"
               : "font-body italic text-text-primary"
           }`}
           dir={isRTL ? "rtl" : "ltr"}
@@ -54,7 +54,7 @@ export default function QuranicVerse() {
           <p
             className={`text-xs sm:text-sm tracking-wider ${
               isRTL
-                ? "font-arabic text-accent-dark"
+                ? "font-arabic-label text-accent-dark"
                 : "font-body text-accent-dark"
             }`}
           >

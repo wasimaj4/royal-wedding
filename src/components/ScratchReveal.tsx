@@ -164,10 +164,10 @@ function ScratchCircle({ size, label, value, onRevealed, index }: ScratchCircleP
         style={{ width: size, height: size }}
       >
         <div className={`scratch-content ${revealed ? "visible" : ""}`}>
-          <span className={`scratch-value ${isRTL ? "font-arabic" : "font-serif"}`}>
+          <span className={`scratch-value ${isRTL ? "font-arabic-label" : "font-serif"}`}>
             {value}
           </span>
-          <span className={`scratch-label ${isRTL ? "font-arabic" : "font-body"}`}>
+          <span className={`scratch-label ${isRTL ? "font-arabic-label" : "font-body"}`}>
             {label}
           </span>
         </div>
@@ -254,7 +254,7 @@ export default function ScratchReveal({ onNavigateNext, onNavigateBack }: Scratc
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.35, duration: 0.8 }}
-        className={`scratch-subtitle ${isRTL ? "font-arabic" : "font-body"}`}
+        className={`scratch-subtitle ${isRTL ? "font-arabic-label" : "font-body"}`}
       >
         {isRTL
           ? "بقلوب ملؤها الامتنان،\nنتطلّع لمشاركتكم هذا الاتحاد المبارك."
@@ -313,8 +313,8 @@ export default function ScratchReveal({ onNavigateNext, onNavigateBack }: Scratc
             onClick={onNavigateNext}
             className="scratch-continue-btn"
           >
-            <span className={`${isRTL ? "font-arabic" : "font-serif font-semibold"}`}>
-              {isRTL ? "تأكيد الحضور" : "Confirm Attendance"}
+            <span className={`${isRTL ? "font-arabic-label font-semibold" : "font-serif font-semibold"}`}>
+              {isRTL ? "تفاصيل الحفل وتأكيد الحضور" : "Event Details & RSVP"}
             </span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7" />

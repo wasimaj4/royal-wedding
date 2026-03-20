@@ -28,7 +28,7 @@ export default function FoodDrinks() {
             custom={0.1}
             variants={fadeUp}
             className={`text-2xl sm:text-3xl mb-8 ${
-              isRTL ? "font-arabic text-text-primary" : "font-serif tracking-[0.15em] uppercase text-text-primary"
+              isRTL ? "font-arabic-label font-semibold text-text-primary" : "font-serif tracking-[0.15em] uppercase text-text-primary"
             }`}
           >
             {t.foodDrinksTitle}
@@ -40,7 +40,7 @@ export default function FoodDrinks() {
               <p
                 className={`text-sm sm:text-base mb-4 ${
                   isRTL
-                    ? "font-arabic text-text-primary font-bold text-right"
+                    ? "font-arabic-label font-semibold text-text-primary text-right"
                     : "font-serif text-text-primary font-semibold text-left"
                 }`}
               >
@@ -52,7 +52,7 @@ export default function FoodDrinks() {
                     key={i}
                     className={`text-sm sm:text-base flex items-center gap-2 ${
                       isRTL
-                        ? "font-arabic text-text-secondary flex-row-reverse"
+                        ? "font-arabic-label text-text-secondary flex-row-reverse"
                         : "font-body text-text-secondary"
                     }`}
                   >
@@ -68,7 +68,7 @@ export default function FoodDrinks() {
               <p
                 className={`text-sm sm:text-base mb-4 ${
                   isRTL
-                    ? "font-arabic text-text-primary font-bold text-right"
+                    ? "font-arabic-label font-semibold text-text-primary text-right"
                     : "font-serif text-text-primary font-semibold text-left"
                 }`}
               >
@@ -80,7 +80,7 @@ export default function FoodDrinks() {
                     key={i}
                     className={`text-sm sm:text-base flex items-center gap-2 ${
                       isRTL
-                        ? "font-arabic text-text-secondary flex-row-reverse"
+                        ? "font-arabic-label text-text-secondary flex-row-reverse"
                         : "font-body text-text-secondary"
                     }`}
                   >
@@ -96,7 +96,7 @@ export default function FoodDrinks() {
               <p
                 className={`text-xs sm:text-sm tracking-wider ${
                   isRTL
-                    ? "font-arabic text-text-muted text-center"
+                    ? "font-arabic-label text-text-muted text-center"
                     : "font-body text-text-muted text-center italic"
                 }`}
               >

@@ -1,69 +1,34 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, type RefObject } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 
-const TARGET_VOLUME = 0.75;
-const FADE_IN_MS = 2000;
-const FADE_IN_TOGGLE_MS = 1200;
+const VOLUME = 0.25;
 
-function fadeAudioIn(audio: HTMLAudioElement, duration: number, target: number) {
-  audio.volume = 0;
-  const start = performance.now();
-  const tick = (now: number) => {
-    const progress = Math.min((now - start) / duration, 1);
-    try { audio.volume = progress * target; } catch { /* disposed */ }
-    if (progress < 1) requestAnimationFrame(tick);
-  };
-  requestAnimationFrame(tick);
+interface MusicPlayerProps {
+  audioRef: RefObject<HTMLAudioElement | null>;
 }
 
-export default function MusicPlayer() {
+export default function MusicPlayer({ audioRef }: MusicPlayerProps) {
   const { t } = useLanguage();
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const startedRef = useRef(false);
 
+  /* Sync state with the audio element that page.tsx already started */
   useEffect(() => {
-    const audio = new Audio("/audio/bridal-chorus-hq.mp3");
-    audio.loop = true;
-    audio.volume = 0;
-    audio.preload = "auto";
-    audioRef.current = audio;
-
-    return () => {
-      audio.pause();
-      audio.src = "";
-      audioRef.current = null;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (startedRef.current) return;
     const audio = audioRef.current;
     if (!audio) return;
-    startedRef.current = true;
+    setIsPlaying(!audio.paused);
 
-    const play = () => {
-      audio.play()
-        .then(() => { setIsPlaying(true); fadeAudioIn(audio, FADE_IN_MS, TARGET_VOLUME); })
-        .catch(() => {
-          const handler = () => {
-            audio.play()
-              .then(() => { setIsPlaying(true); fadeAudioIn(audio, FADE_IN_MS, TARGET_VOLUME); })
-              .catch(() => {});
-            document.removeEventListener("click", handler);
-            document.removeEventListener("touchstart", handler);
-          };
-          document.addEventListener("click", handler);
-          document.addEventListener("touchstart", handler);
-        });
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
+    audio.addEventListener("play", onPlay);
+    audio.addEventListener("pause", onPause);
+    return () => {
+      audio.removeEventListener("play", onPlay);
+      audio.removeEventListener("pause", onPause);
     };
-
-    const id = setTimeout(play, 600);
-    return () => clearTimeout(id);
-  }, []);
+  }, [audioRef]);
 
   const togglePlay = useCallback(() => {
     const audio = audioRef.current;
@@ -71,15 +36,11 @@ export default function MusicPlayer() {
 
     if (isPlaying) {
       audio.pause();
-      setIsPlaying(false);
     } else {
-      audio.volume = 0;
-      audio.play().then(() => {
-        setIsPlaying(true);
-        fadeAudioIn(audio, FADE_IN_TOGGLE_MS, TARGET_VOLUME);
-      }).catch(() => setIsPlaying(false));
+      audio.volume = VOLUME;
+      audio.play().catch(() => {});
     }
-  }, [isPlaying]);
+  }, [isPlaying, audioRef]);
 
   return (
     <motion.div

@@ -27,7 +27,7 @@ export default function LanguageSwitcher() {
       <div className="w-px h-5 bg-border" />
       <button
         onClick={() => setLocale("ar")}
-        className={`px-4 py-2 text-xs font-arabic tracking-wider transition-all duration-400 ${
+        className={`px-4 py-2 text-xs font-arabic-label tracking-wider transition-all duration-400 ${
           locale === "ar"
             ? "bg-accent text-white"
             : "text-text-secondary hover:bg-white/5"

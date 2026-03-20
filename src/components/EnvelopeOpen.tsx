@@ -46,9 +46,10 @@ const PAPER_NOISE = `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns=
 
 interface EnvelopeOpenProps {
   onOpen: () => void;
+  audioRef?: React.RefObject<HTMLAudioElement | null>;
 }
 
-export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
+export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
   const { t, isRTL } = useLanguage();
   const [phase, setPhase] = useState<
     "idle" | "pressed" | "waiting" | "breaking" | "opening" | "revealing" | "done"
@@ -71,6 +72,16 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
 
   const handleClick = useCallback(() => {
     if (phase !== "idle") return;
+
+    /* Start music NOW — inside the synchronous click handler
+       so browsers treat this as a user-gesture-initiated play */
+    if (audioRef?.current) {
+      const audio = audioRef.current;
+      audio.currentTime = 0;
+      audio.volume = 0.25;
+      audio.play().catch(() => {});
+    }
+
     setPhase("pressed");
     // 0.3s pause — let the press register visually
     setTimeout(() => setPhase("waiting"), 300);
@@ -85,7 +96,7 @@ export default function EnvelopeOpen({ onOpen }: EnvelopeOpenProps) {
       setPhase("done");
       onOpen();
     }, 5400);
-  }, [phase, onOpen]);
+  }, [phase, onOpen, audioRef]);
 
   const isAfterBreak = phase === "breaking" || phase === "opening" || phase === "revealing";
   const isOpening = phase === "opening" || phase === "revealing";

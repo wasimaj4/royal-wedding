@@ -29,7 +29,7 @@ export default function FAQ() {
             custom={0.1}
             variants={fadeUp}
             className={`text-center text-2xl sm:text-3xl mb-8 ${
-              isRTL ? "font-arabic text-text-primary" : "font-serif tracking-[0.15em] uppercase text-text-primary"
+              isRTL ? "font-arabic-label font-semibold text-text-primary" : "font-serif tracking-[0.15em] uppercase text-text-primary"
             }`}
           >
             {t.faqTitle}
@@ -46,7 +46,7 @@ export default function FAQ() {
                 >
                   <span
                     className={`flex-1 text-sm sm:text-base ${
-                      isRTL ? "font-arabic" : "font-body"
+                      isRTL ? "font-arabic-label" : "font-body"
                     }`}
                   >
                     {item.question}
@@ -81,7 +81,7 @@ export default function FAQ() {
                         <p
                           className={`text-sm sm:text-base leading-relaxed ${
                             isRTL
-                              ? "font-arabic text-text-secondary"
+                              ? "font-arabic-label text-text-secondary"
                               : "font-body text-text-secondary"
                           }`}
                         >

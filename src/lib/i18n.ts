@@ -32,6 +32,7 @@ export interface Translations {
   minutes: string;
   seconds: string;
   rsvpTitle: string;
+  rsvpSectionTitle: string;
   rsvpSubtitle: string;
   fullName: string;
   attendance: string;
@@ -118,6 +119,7 @@ export const translations: Record<Locale, Translations> = {
     minutes: "Minutes",
     seconds: "Seconds",
     rsvpTitle: "Event Details & RSVP",
+    rsvpSectionTitle: "RSVP",
     rsvpSubtitle: "We would be truly honoured by your presence at our celebration",
     fullName: "Full Name",
     attendance: "Will you attend?",
@@ -160,7 +162,6 @@ export const translations: Record<Locale, Translations> = {
     foodNote: "No alcoholic drinks will be served.",
     faqTitle: "FAQ",
     faqItems: [
-      { question: "Can I bring a plus one?", answer: "Yes, guests are welcome to bring a companion." },
       { question: "Are children invited?", answer: "We kindly ask that the event remains adults only." },
       { question: "Is the wedding mixed?", answer: "No, the celebration will be in separate sections." },
       { question: "Is there dinner at the wedding?", answer: "Yes, dinner and open beverages will be served." },
@@ -206,7 +207,8 @@ export const translations: Record<Locale, Translations> = {
     hours: "\u0633\u0627\u0639\u0629",
     minutes: "\u062F\u0642\u064A\u0642\u0629",
     seconds: "\u062B\u0627\u0646\u064A\u0629",
-    rsvpTitle: "تأكيد الحضور",
+    rsvpTitle: "تفاصيل الحفل وتأكيد الحضور",
+    rsvpSectionTitle: "تأكيد الحضور",
     rsvpSubtitle: "",
     fullName: "\u0627\u0644\u0627\u0633\u0645 \u0627\u0644\u0643\u0627\u0645\u0644",
     attendance: "هل سوف تحضر؟",
@@ -249,7 +251,6 @@ export const translations: Record<Locale, Translations> = {
     foodNote: "لا يتم تقديم أي مشروبات كحولية.",
     faqTitle: "الأسئلة الشائعة",
     faqItems: [
-      { question: "هل يمكنني إحضار مرافق؟", answer: "نعم، يمكنكم إحضار مرافق معكم." },
       { question: "هل الأطفال مدعوون؟", answer: "نعتذر، الحفل مخصص للبالغين فقط." },
       { question: "هل الحفل مختلط؟", answer: "لا، الحفل منفصل" },
       { question: "هل الحفل بعشاء؟", answer: "نعم، حفل مع عشاء و مشروبات مفتوحة" },

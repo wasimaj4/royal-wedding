@@ -117,7 +117,7 @@ export default function ProgramTimeline() {
                   {/* Event label */}
                   <span
                     className={`flex-1 text-base text-text-primary leading-snug ${
-                      isRTL ? "font-arabic text-right" : "font-body text-left"
+                      isRTL ? "font-arabic-label text-right" : "font-body text-left"
                     }`}
                   >
                     {item.event}

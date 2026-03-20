@@ -31,7 +31,7 @@ export default function ContactSection() {
             variants={fadeUp}
             className={`text-center text-2xl sm:text-3xl mb-10 ${
               isRTL
-                ? "font-arabic text-text-primary"
+                ? "font-arabic-label font-semibold text-text-primary"
                 : "font-serif tracking-[0.15em] uppercase text-text-primary"
             }`}
           >

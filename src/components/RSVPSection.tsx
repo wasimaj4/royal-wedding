@@ -117,10 +117,10 @@ export default function RSVPSection() {
   };
 
   const labelCls = `block text-xs tracking-[0.15em] uppercase mb-2 ${
-    isRTL ? "font-arabic text-right text-text-muted" : "font-body text-text-muted"
+    isRTL ? "font-arabic-label text-right text-text-muted" : "font-body text-text-muted"
   }`;
   const labelCls3 = `block text-xs tracking-[0.15em] uppercase mb-3 ${
-    isRTL ? "font-arabic text-right text-text-muted" : "font-body text-text-muted"
+    isRTL ? "font-arabic-label text-right text-text-muted" : "font-body text-text-muted"
   }`;
 
   return (
@@ -136,17 +136,17 @@ export default function RSVPSection() {
             custom={0.1}
             variants={fadeInUp}
             className={`text-2xl sm:text-3xl mb-3 ${
-              isRTL ? "font-arabic text-text-primary" : "font-serif tracking-[0.15em] uppercase text-text-primary"
+              isRTL ? "font-arabic-label font-semibold text-text-primary" : "font-serif tracking-[0.15em] uppercase text-text-primary"
             }`}
           >
-            {t.rsvpTitle}
+            {t.rsvpSectionTitle}
           </motion.h2>
 
           <motion.p
             custom={0.2}
             variants={fadeInUp}
             className={`text-sm leading-relaxed max-w-sm mx-auto ${
-              isRTL ? "font-arabic text-text-secondary" : "font-body text-text-secondary"
+              isRTL ? "font-arabic-label text-text-secondary" : "font-body text-text-secondary"
             }`}
           >
             {t.rsvpSubtitle}
@@ -167,7 +167,7 @@ export default function RSVPSection() {
                   <path d="M10 20 L17 27 L30 13" stroke="#C4A265" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
-              <p className={`text-sm leading-relaxed ${isRTL ? "font-arabic text-text-secondary" : "font-body text-text-secondary"}`}>
+              <p className={`text-sm leading-relaxed ${isRTL ? "font-arabic-label text-text-secondary" : "font-body text-text-secondary"}`}>
                 {t.alreadySubmitted}
               </p>
             </motion.div>
@@ -195,7 +195,7 @@ export default function RSVPSection() {
                     onChange={(e) =>
                       setFormData({ ...formData, fullName: e.target.value })
                     }
-                    className={`form-input ${isRTL ? "font-arabic text-right" : "font-body"}`}
+                    className={`form-input ${isRTL ? "font-arabic-label text-right" : "font-body"}`}
                     placeholder={isRTL ? "الاسم الكامل" : "Your full name"}
                   />
                 </div>
@@ -216,7 +216,7 @@ export default function RSVPSection() {
                           formData.attendance === val
                             ? "border-accent bg-accent/8 text-accent-dark"
                             : "border-border text-text-muted hover:border-accent/40"
-                        } ${isRTL ? "font-arabic" : "font-body"}`}
+                        } ${isRTL ? "font-arabic-label" : "font-body"}`}
                       >
                         {val === "yes" ? t.attendanceYes : t.attendanceNo}
                       </button>
@@ -257,7 +257,7 @@ export default function RSVPSection() {
                                 formData.companion === val
                                   ? "border-accent bg-accent/8 text-accent-dark"
                                   : "border-border text-text-muted hover:border-accent/40"
-                              } ${isRTL ? "font-arabic" : "font-body"}`}
+                              } ${isRTL ? "font-arabic-label" : "font-body"}`}
                             >
                               {val === "yes" ? t.companionYes : t.companionNo}
                             </button>
@@ -283,7 +283,7 @@ export default function RSVPSection() {
                               onChange={(e) =>
                                 setFormData({ ...formData, plusOneName: e.target.value })
                               }
-                              className={`form-input ${isRTL ? "font-arabic text-right" : "font-body"}`}
+                              className={`form-input ${isRTL ? "font-arabic-label text-right" : "font-body"}`}
                               placeholder={isRTL ? t.companionNamePlaceholder : t.companionNamePlaceholder}
                             />
                           </motion.div>
@@ -299,7 +299,7 @@ export default function RSVPSection() {
                           onChange={(e) =>
                             setFormData({ ...formData, songSuggestion: e.target.value })
                           }
-                          className={`form-input ${isRTL ? "font-arabic text-right" : "font-body"}`}
+                          className={`form-input ${isRTL ? "font-arabic-label text-right" : "font-body"}`}
                           placeholder={t.songPlaceholder}
                         />
                       </div>
@@ -315,7 +315,7 @@ export default function RSVPSection() {
                     className="p-3 border border-damascus-rose/30 bg-damascus-rose/5 text-damascus-rose text-sm text-center"
                     role="alert"
                   >
-                    <p className={isRTL ? "font-arabic" : "font-body"}>
+                    <p className={isRTL ? "font-arabic-label" : "font-body"}>
                       {submitError}
                     </p>
                   </motion.div>
@@ -326,7 +326,7 @@ export default function RSVPSection() {
                   type="submit"
                   disabled={!canSubmit}
                   className={`w-full btn-primary mt-4 ${
-                    isRTL ? "font-arabic" : "font-serif font-semibold"
+                    isRTL ? "font-arabic-label font-semibold" : "font-serif font-semibold"
                   }`}
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
@@ -363,7 +363,7 @@ export default function RSVPSection() {
                 {/* RSVP deadline */}
                 <p
                   className={`text-center text-[11px] leading-relaxed ${
-                    isRTL ? "font-arabic text-text-muted/70" : "font-body italic text-text-muted/70"
+                    isRTL ? "font-arabic-label text-text-muted/70" : "font-body italic text-text-muted/70"
                   }`}
                 >
                   {t.rsvpDeadline}
@@ -407,7 +407,7 @@ export default function RSVPSection() {
 
               <p
                 className={`text-sm leading-relaxed max-w-sm mx-auto mb-8 ${
-                  isRTL ? "font-arabic text-text-secondary" : "font-body text-text-secondary"
+                  isRTL ? "font-arabic-label text-text-secondary" : "font-body text-text-secondary"
                 }`}
               >
                 {t.confirmationMessage}
@@ -423,7 +423,7 @@ export default function RSVPSection() {
 
                   <p
                     className={`text-xs mb-4 tracking-wider ${
-                      isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"
+                      isRTL ? "font-arabic-label text-text-muted" : "font-body text-text-muted"
                     }`}
                   >
                     {t.qrEntryPass}
@@ -438,7 +438,7 @@ export default function RSVPSection() {
 
                   <p
                     className={`text-xs mt-4 leading-relaxed max-w-xs mx-auto ${
-                      isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted italic"
+                      isRTL ? "font-arabic-label text-text-muted" : "font-body text-text-muted italic"
                     }`}
                   >
                     {t.qrPresentAtEntrance}
@@ -452,7 +452,7 @@ export default function RSVPSection() {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1.8, duration: 0.8 }}
                     className={`mt-6 text-[11px] leading-relaxed max-w-xs mx-auto ${
-                      isRTL ? "font-arabic text-text-muted/80" : "font-body italic text-text-muted/80"
+                      isRTL ? "font-arabic-label text-text-muted/80" : "font-body italic text-text-muted/80"
                     }`}
                   >
                     {t.cancellationNotice}
@@ -486,7 +486,7 @@ export default function RSVPSection() {
 
               <p
                 className={`text-sm leading-relaxed max-w-sm mx-auto ${
-                  isRTL ? "font-arabic text-text-secondary" : "font-body text-text-secondary"
+                  isRTL ? "font-arabic-label text-text-secondary" : "font-body text-text-secondary"
                 }`}
               >
                 {t.declineMessage}
@@ -502,7 +502,7 @@ export default function RSVPSection() {
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.4 }}
           className={`mt-8 text-xs text-center text-[#C0392B] ${
-            isRTL ? "font-arabic" : "font-body italic"
+            isRTL ? "font-arabic-label" : "font-body italic"
           }`}
         >
           {t.noChildrenNotice}

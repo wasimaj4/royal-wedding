@@ -18,6 +18,21 @@ function WeddingApp() {
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const page2Ref = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  /* Pre-create audio so it's ready when envelope opens */
+  useEffect(() => {
+    const audio = new Audio("/audio/bridal-chorus-clean.mp3");
+    audio.loop = true;
+    audio.volume = 0.25;
+    audio.preload = "auto";
+    audioRef.current = audio;
+    return () => { audio.pause(); audio.src = ""; audioRef.current = null; };
+  }, []);
+
+  const handleEnvelopeOpen = () => {
+    setEnvelopeOpened(true);
+  };
 
   useEffect(() => {
     document.documentElement.lang = locale;
@@ -45,7 +60,7 @@ function WeddingApp() {
       {/* Envelope opening — shown once before the invitation */}
       <AnimatePresence mode="wait">
         {!envelopeOpened && (
-          <EnvelopeOpen onOpen={() => setEnvelopeOpened(true)} />
+          <EnvelopeOpen onOpen={handleEnvelopeOpen} audioRef={audioRef} />
         )}
       </AnimatePresence>
 
@@ -53,7 +68,7 @@ function WeddingApp() {
       {envelopeOpened && (
         <>
           <LanguageSwitcher />
-          <MusicPlayer />
+          <MusicPlayer audioRef={audioRef} />
         </>
       )}
 
@@ -117,7 +132,7 @@ function WeddingApp() {
 
                   {/* Footer */}
                   <footer className="text-center py-16 sm:py-20 px-6">
-                    <p className={`text-[11px] tracking-[0.25em] uppercase ${isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"}`}>
+                    <p className={`text-[11px] tracking-[0.25em] uppercase ${isRTL ? "font-arabic-label text-text-muted" : "font-body text-text-muted"}`}>
                       {isRTL ? "وسيم و ريّان \u2014 ٢٠٢٦" : "Wasim & Rayan \u2014 2026"}
                     </p>
                   </footer>

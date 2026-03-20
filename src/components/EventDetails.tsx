@@ -32,7 +32,7 @@ export default function EventDetails() {
             custom={0.1}
             variants={fadeInUp}
             className={`text-2xl sm:text-3xl ${
-              isRTL ? "font-arabic text-text-primary" : "font-serif tracking-[0.15em] uppercase text-text-primary"
+              isRTL ? "font-arabic-label font-semibold text-text-primary" : "font-serif tracking-[0.15em] uppercase text-text-primary"
             }`}
           >
             {t.eventDetails}
@@ -50,7 +50,7 @@ export default function EventDetails() {
             <p className={`${isRTL ? "text-sm font-arabic-label font-medium text-text-muted" : "text-xs font-body tracking-[0.3em] uppercase text-text-muted"}`}>
               {t.date}
             </p>
-            <p className={`text-2xl sm:text-3xl ${isRTL ? "font-arabic text-text-primary" : "font-serif text-text-primary font-medium"}`}>
+            <p className={`text-2xl sm:text-3xl ${isRTL ? "font-arabic-label font-medium text-text-primary" : "font-serif text-text-primary font-medium"}`}>
               {t.dateValue}
             </p>
           </motion.div>
@@ -63,7 +63,7 @@ export default function EventDetails() {
             <p className={`${isRTL ? "text-sm font-arabic-label font-medium text-text-muted" : "text-xs font-body tracking-[0.3em] uppercase text-text-muted"}`}>
               {t.time}
             </p>
-            <p className={`text-2xl sm:text-3xl ${isRTL ? "font-arabic text-text-primary" : "font-serif text-text-primary font-medium"}`}>
+            <p className={`text-2xl sm:text-3xl ${isRTL ? "font-arabic-label font-medium text-text-primary" : "font-serif text-text-primary font-medium"}`}>
               {t.timeValue}
             </p>
           </motion.div>
@@ -86,10 +86,10 @@ export default function EventDetails() {
               rel="noopener noreferrer"
               className="group block mb-4"
             >
-              <p className={`text-base sm:text-lg text-text-primary group-hover:text-accent transition-colors duration-300 mb-1 ${isRTL ? "font-arabic font-bold" : "font-serif font-medium"}`}>
+              <p className={`text-base sm:text-lg text-text-primary group-hover:text-accent transition-colors duration-300 mb-1 ${isRTL ? "font-arabic-label font-semibold" : "font-serif font-medium"}`}>
                 Kon. Wilhelminahaven ZZ 10
               </p>
-              <p className={`text-sm text-text-secondary group-hover:text-accent transition-colors duration-300 ${isRTL ? "font-arabic" : "font-body"}`}>
+              <p className={`text-sm text-text-secondary group-hover:text-accent transition-colors duration-300 ${isRTL ? "font-arabic-label" : "font-body"}`}>
                 3134 KC Vlaardingen
               </p>
             </a>
@@ -98,7 +98,7 @@ export default function EventDetails() {
               target="_blank"
               rel="noopener noreferrer"
               className={`inline-flex items-center gap-2 text-accent hover:text-accent-dark transition-colors duration-300 text-sm tracking-wider ${
-                isRTL ? "font-arabic" : "font-body"
+                isRTL ? "font-arabic-label" : "font-body"
               }`}
             >
               <MapPinIcon />

@@ -195,14 +195,14 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
         >
           <p
             className={`text-base sm:text-lg font-semibold tracking-wide ${
-              isRTL ? "font-arabic text-text-primary" : "font-serif text-text-primary"
+              isRTL ? "font-arabic-label font-medium text-text-primary" : "font-serif text-text-primary"
             }`}
           >
             {t.eventDate}
           </p>
           <p
             className={`text-xs ${
-              isRTL ? "font-arabic text-accent" : "font-body tracking-[0.25em] uppercase text-accent"
+              isRTL ? "font-arabic-label text-accent" : "font-body tracking-[0.25em] uppercase text-accent"
             }`}
           >
             {t.eventLocation}
@@ -215,7 +215,7 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
             <blockquote
               className={`text-xs sm:text-sm leading-[1.8] ${
                 isRTL
-                  ? "font-arabic text-text-primary"
+                  ? "font-arabic-label text-text-primary"
                   : "font-body italic text-text-primary"
               }`}
               dir={isRTL ? "rtl" : "ltr"}
@@ -227,7 +227,7 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
               <p
                 className={`text-[10px] sm:text-xs tracking-wider ${
                   isRTL
-                    ? "font-arabic text-accent-dark"
+                    ? "font-arabic-label text-accent-dark"
                     : "font-body text-accent-dark"
                 }`}
               >
@@ -242,7 +242,7 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
           <p
             className={`text-[10px] sm:text-[11px] mb-4 ${
               isRTL
-                ? "font-arabic text-text-muted"
+                ? "font-arabic-label text-text-muted"
                 : "font-body tracking-[0.3em] uppercase text-text-muted"
             }`}
           >
