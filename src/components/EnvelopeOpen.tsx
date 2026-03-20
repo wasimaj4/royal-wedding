@@ -689,7 +689,7 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
                       fontFamily: "var(--font-great-vibes), 'Great Vibes', cursive",
                       fontSize: "140px",
                       fontWeight: 400,
-                      color: "rgba(255,255,255,0.25)",
+                      color: "rgba(255,255,255,0.45)",
                       lineHeight: 1,
                     }}
                     animate={
@@ -711,7 +711,7 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
                       fontFamily: "var(--font-great-vibes), 'Great Vibes', cursive",
                       fontSize: "140px",
                       fontWeight: 400,
-                      color: "rgba(255,255,255,0.25)",
+                      color: "rgba(255,255,255,0.45)",
                       lineHeight: 1,
                     }}
                     animate={
