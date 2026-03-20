@@ -362,8 +362,8 @@ export default function RSVPSection() {
 
                 {/* RSVP deadline */}
                 <p
-                  className={`text-center text-[11px] leading-relaxed ${
-                    isRTL ? "font-arabic-label text-text-muted/70" : "font-body italic text-text-muted/70"
+                  className={`text-center text-xs sm:text-[13px] font-medium leading-relaxed mt-2 ${
+                    isRTL ? "font-arabic-label text-text-primary/70" : "font-body text-text-primary/70"
                   }`}
                 >
                   {t.rsvpDeadline}
@@ -501,8 +501,8 @@ export default function RSVPSection() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.4 }}
-          className={`mt-8 text-xs text-center text-[#C0392B] ${
-            isRTL ? "font-arabic-label" : "font-body italic"
+          className={`mt-10 text-[13px] sm:text-sm font-medium text-center text-[#A93226] ${
+            isRTL ? "font-arabic-label" : "font-body"
           }`}
         >
           {t.noChildrenNotice}
