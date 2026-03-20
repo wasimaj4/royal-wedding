@@ -126,8 +126,8 @@ export default function RSVPSection() {
           <motion.h2
             custom={0.1}
             variants={fadeInUp}
-            className={`text-2xl sm:text-3xl tracking-[0.15em] uppercase mb-3 ${
-              isRTL ? "font-arabic text-text-primary" : "font-serif text-text-primary"
+            className={`text-2xl sm:text-3xl mb-3 ${
+              isRTL ? "font-arabic text-text-primary" : "font-serif tracking-[0.15em] uppercase text-text-primary"
             }`}
           >
             {t.rsvpTitle}
@@ -350,6 +350,16 @@ export default function RSVPSection() {
                     t.submit
                   )}
                 </motion.button>
+
+                {/* RSVP deadline */}
+                <p
+                  className={`text-center text-[11px] leading-relaxed ${
+                    isRTL ? "font-arabic text-text-muted/70" : "font-body italic text-text-muted/70"
+                  }`}
+                >
+                  {t.rsvpDeadline}
+                </p>
+
               </motion.form>
             </motion.div>
           ) : formData.attendance === "yes" ? (
@@ -425,16 +435,19 @@ export default function RSVPSection() {
                     {t.qrPresentAtEntrance}
                   </p>
 
-                  {/* No children notice */}
-                  <div className="mt-6 pt-5 border-t border-border">
-                    <p
-                      className={`text-xs tracking-wider ${
-                        isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"
-                      }`}
-                    >
-                      {t.noChildrenNotice}
-                    </p>
-                  </div>
+                  {/* No children notice — moved to section footer */}
+
+                  {/* Cancellation notice */}
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.8, duration: 0.8 }}
+                    className={`mt-6 text-[11px] leading-relaxed max-w-xs mx-auto ${
+                      isRTL ? "font-arabic text-text-muted/80" : "font-body italic text-text-muted/80"
+                    }`}
+                  >
+                    {t.cancellationNotice}
+                  </motion.p>
                 </motion.div>
               )}
             </motion.div>
@@ -472,6 +485,19 @@ export default function RSVPSection() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Children-welcome note */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, delay: 0.4 }}
+          className={`mt-8 text-xs text-center text-[#C0392B] ${
+            isRTL ? "font-arabic" : "font-body italic"
+          }`}
+        >
+          {t.noChildrenNotice}
+        </motion.p>
       </div>
     </section>
   );

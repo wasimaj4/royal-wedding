@@ -28,8 +28,8 @@ export default function FAQ() {
           <motion.h2
             custom={0.1}
             variants={fadeUp}
-            className={`text-center text-2xl sm:text-3xl tracking-[0.15em] uppercase mb-8 ${
-              isRTL ? "font-arabic text-text-primary" : "font-serif text-text-primary"
+            className={`text-center text-2xl sm:text-3xl mb-8 ${
+              isRTL ? "font-arabic text-text-primary" : "font-serif tracking-[0.15em] uppercase text-text-primary"
             }`}
           >
             {t.faqTitle}

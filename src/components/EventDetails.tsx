@@ -31,8 +31,8 @@ export default function EventDetails() {
           <motion.h2
             custom={0.1}
             variants={fadeInUp}
-            className={`text-2xl sm:text-3xl tracking-[0.15em] uppercase ${
-              isRTL ? "font-arabic text-text-primary" : "font-serif text-text-primary"
+            className={`text-2xl sm:text-3xl ${
+              isRTL ? "font-arabic text-text-primary" : "font-serif tracking-[0.15em] uppercase text-text-primary"
             }`}
           >
             {t.eventDetails}
@@ -47,7 +47,7 @@ export default function EventDetails() {
           className="text-center mb-12 space-y-6"
         >
           <motion.div custom={0.2} variants={fadeInUp} className="space-y-2">
-            <p className={`text-xs tracking-[0.3em] uppercase ${isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"}`}>
+            <p className={`text-xs ${isRTL ? "font-arabic text-text-muted" : "font-body tracking-[0.3em] uppercase text-text-muted"}`}>
               {t.date}
             </p>
             <p className={`text-2xl sm:text-3xl ${isRTL ? "font-arabic text-text-primary" : "font-serif text-text-primary font-medium"}`}>
@@ -60,7 +60,7 @@ export default function EventDetails() {
           </motion.div>
 
           <motion.div custom={0.4} variants={fadeInUp} className="space-y-2">
-            <p className={`text-xs tracking-[0.3em] uppercase ${isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"}`}>
+            <p className={`text-xs ${isRTL ? "font-arabic text-text-muted" : "font-body tracking-[0.3em] uppercase text-text-muted"}`}>
               {t.time}
             </p>
             <p className={`text-2xl sm:text-3xl ${isRTL ? "font-arabic text-text-primary" : "font-serif text-text-primary font-medium"}`}>
@@ -77,7 +77,7 @@ export default function EventDetails() {
           className="mb-14"
         >
           <motion.div custom={0.2} variants={fadeInUp} className="text-center">
-            <p className={`text-xs tracking-[0.25em] uppercase mb-3 ${isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"}`}>
+            <p className={`text-xs mb-3 ${isRTL ? "font-arabic text-text-muted" : "font-body tracking-[0.25em] uppercase text-text-muted"}`}>
               {isRTL ? "مكان الحفل" : "Venue"}
             </p>
             <p className={`text-base sm:text-lg text-text-primary mb-1 ${isRTL ? "font-arabic font-bold" : "font-serif font-medium"}`}>
@@ -131,61 +131,6 @@ export default function EventDetails() {
           </motion.div>
         </motion.div>
 
-        {/* Program Timeline */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-40px" }}
-          className="mt-4"
-        >
-          <motion.p
-            custom={0.1}
-            variants={fadeInUp}
-            className={`text-center text-xs tracking-[0.25em] uppercase mb-8 ${
-              isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"
-            }`}
-          >
-            {t.programTimeline}
-          </motion.p>
-
-          <div className="relative max-w-sm mx-auto">
-            {/* Vertical line */}
-            <div
-              className={`absolute top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-border to-transparent ${
-                isRTL ? "right-4" : "left-4"
-              }`}
-            />
-
-            <div className="space-y-6">
-              {t.timeline.map((item, index) => (
-                <motion.div
-                  key={index}
-                  custom={0.2 + index * 0.18}
-                  variants={fadeInUp}
-                  className={`flex items-start gap-6 ${isRTL ? "flex-row-reverse" : ""}`}
-                >
-                  {/* Dot with subtle pulse */}
-                  <div className="flex-shrink-0 w-8 flex items-center justify-center pt-1">
-                    <div
-                      className="w-2 h-2 bg-accent rounded-full"
-                    />
-                  </div>
-
-                  {/* Content */}
-                  <div className={`flex-1 pb-2 ${isRTL ? "text-right" : ""}`}>
-                    <span className={`block text-xs tracking-wider text-accent mb-0.5 ${isRTL ? "font-arabic" : "font-body"}`}>
-                      {item.time}
-                    </span>
-                    <span className={`block text-base text-text-primary ${isRTL ? "font-arabic" : "font-body"}`}>
-                      {item.event}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-
         {/* Countdown */}
         <motion.div
           initial="hidden"
@@ -196,8 +141,8 @@ export default function EventDetails() {
           <motion.p
             custom={0.1}
             variants={fadeInUp}
-            className={`text-center text-xs tracking-[0.25em] uppercase mb-8 ${
-              isRTL ? "font-arabic text-text-muted" : "font-body text-text-muted"
+            className={`text-center text-xs mb-8 ${
+              isRTL ? "font-arabic text-text-muted" : "font-body tracking-[0.25em] uppercase text-text-muted"
             }`}
           >
             {t.countdown}
@@ -207,6 +152,8 @@ export default function EventDetails() {
             <CountdownTimer targetDate="2026-05-17T17:00:00" />
           </motion.div>
         </motion.div>
+
+        {/* Countdown — removed from here, moved above Timeline */}
       </div>
     </section>
   );

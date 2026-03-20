@@ -9,9 +9,8 @@ import RSVPSection from "@/components/RSVPSection";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import MusicPlayer from "@/components/MusicPlayer";
 import EnvelopeOpen from "@/components/EnvelopeOpen";
-import DressCode from "@/components/DressCode";
-import FoodDrinks from "@/components/FoodDrinks";
 import FAQ from "@/components/FAQ";
+import ProgramTimeline from "@/components/ProgramTimeline";
 
 function WeddingApp() {
   const { locale, isRTL } = useLanguage();
@@ -103,13 +102,11 @@ function WeddingApp() {
                 <main className="max-w-2xl mx-auto">
                   <EventDetails />
                   <div className="section-divider" />
-                  <DressCode />
+                  <RSVPSection />
                   <div className="section-divider" />
-                  <FoodDrinks />
+                  <ProgramTimeline />
                   <div className="section-divider" />
                   <FAQ />
-                  <div className="section-divider" />
-                  <RSVPSection />
 
                   {/* Footer */}
                   <footer className="text-center py-16 sm:py-20 px-6">

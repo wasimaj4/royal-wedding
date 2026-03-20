@@ -56,10 +56,10 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
         <motion.p
           custom={0.4}
           variants={slideUp}
-          className={`text-[11px] sm:text-xs tracking-[0.4em] uppercase mb-6 sm:mb-8 ${
+          className={`text-[11px] sm:text-xs mb-6 sm:mb-8 ${
             isRTL
               ? "font-arabic text-text-muted"
-              : "font-body text-text-muted"
+              : "font-body tracking-[0.4em] uppercase text-text-muted"
           }`}
         >
           {t.youAreInvited}
@@ -162,8 +162,8 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
             {t.eventDate}
           </p>
           <p
-            className={`text-xs tracking-[0.25em] uppercase ${
-              isRTL ? "font-arabic text-accent" : "font-body text-accent"
+            className={`text-xs ${
+              isRTL ? "font-arabic text-accent" : "font-body tracking-[0.25em] uppercase text-accent"
             }`}
           >
             {t.eventLocation}
@@ -201,10 +201,10 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
         {/* "CONFIRM YOUR ATTENDANCE" + Down Arrow */}
         <motion.div custom={3.5} variants={slideUp} className="mt-8 sm:mt-10">
           <p
-            className={`text-[10px] sm:text-[11px] tracking-[0.3em] uppercase mb-4 ${
+            className={`text-[10px] sm:text-[11px] mb-4 ${
               isRTL
                 ? "font-arabic text-text-muted"
-                : "font-body text-text-muted"
+                : "font-body tracking-[0.3em] uppercase text-text-muted"
             }`}
           >
             {t.rsvpTitle}

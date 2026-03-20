@@ -12,18 +12,34 @@ export default function MusicPlayer() {
   useEffect(() => {
     const audio = new Audio("/music.mp3");
     audio.loop = true;
-    audio.volume = 0.4;
+    audio.volume = 0;
     audioRef.current = audio;
+
+    const TARGET_VOLUME = 0.25;
+    const FADE_DURATION = 2000; // ms
+
+    const fadeIn = () => {
+      const start = performance.now();
+      const tick = (now: number) => {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / FADE_DURATION, 1);
+        if (audioRef.current) {
+          audioRef.current.volume = progress * TARGET_VOLUME;
+        }
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
 
     let handler: (() => void) | null = null;
 
     // Try immediate autoplay
     audio.play()
-      .then(() => setIsPlaying(true))
+      .then(() => { setIsPlaying(true); fadeIn(); })
       .catch(() => {
         // Autoplay blocked — play on first user interaction
         handler = () => {
-          audio.play().then(() => setIsPlaying(true)).catch(() => {});
+          audio.play().then(() => { setIsPlaying(true); fadeIn(); }).catch(() => {});
           document.removeEventListener("click", handler!);
           document.removeEventListener("touchstart", handler!);
         };
@@ -48,8 +64,19 @@ export default function MusicPlayer() {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
+      audioRef.current.volume = 0;
       audioRef.current.play().then(() => {
         setIsPlaying(true);
+        const TARGET_VOLUME = 0.25;
+        const FADE_DURATION = 1500;
+        const start = performance.now();
+        const tick = (now: number) => {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / FADE_DURATION, 1);
+          if (audioRef.current) audioRef.current.volume = progress * TARGET_VOLUME;
+          if (progress < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
       }).catch(() => {
         setIsPlaying(false);
       });
