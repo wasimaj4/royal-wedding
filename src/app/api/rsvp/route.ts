@@ -10,7 +10,11 @@ const SENDER_EMAIL = process.env.SENDER_EMAIL ?? "waseemaj4@gmail.com";
 const QR_SECRET = process.env.QR_SECRET || "wedding-default-secret-change-me";
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
-  : []; // empty = allow all (dev-friendly default)
+  : ["https://wasimandrayan.eu"]; // locked to production domain
+
+// Rate-limit: max POST requests per IP within window
+const RATE_LIMIT_MAX = 5;       // max 5 RSVP attempts
+const RATE_LIMIT_WINDOW = 3600; // per hour (seconds)
 
 // Upstash Redis — optional, gracefully degrades if not configured
 let redis: Redis | null = null;
@@ -48,10 +52,23 @@ interface EmailData {
 /* ─── GET /api/rsvp — Retrieve all RSVPs (admin) ─────────── */
 
 export async function GET(request: NextRequest) {
-  // Simple admin key check
+  // Admin key check
   const adminKey = request.headers.get("x-admin-key");
   if (adminKey !== process.env.ADMIN_KEY || !process.env.ADMIN_KEY) {
+    // Intentional delay to slow brute-force attempts
+    await new Promise((r) => setTimeout(r, 1000));
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Optional: IP allowlist for admin endpoint
+  const adminIPs = process.env.ADMIN_ALLOWED_IPS
+    ? process.env.ADMIN_ALLOWED_IPS.split(",").map((ip) => ip.trim())
+    : []; // empty = no IP restriction
+  if (adminIPs.length > 0) {
+    const clientIP = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "";
+    if (!adminIPs.includes(clientIP)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
   }
 
   if (!redis) {
@@ -105,9 +122,35 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // ── Rate limiting (per IP, via Redis) ─────────────────
+    const clientIP = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    if (redis) {
+      const rateLimitKey = `ratelimit:${clientIP}`;
+      const currentCount = await redis.incr(rateLimitKey);
+      if (currentCount === 1) {
+        await redis.expire(rateLimitKey, RATE_LIMIT_WINDOW);
+      }
+      if (currentCount > RATE_LIMIT_MAX) {
+        return NextResponse.json(
+          { error: "Too many requests. Please try again later." },
+          { status: 429 }
+        );
+      }
+    }
+
     const body = await request.json();
     const { fullName, attendance, companion, plusOneName, songSuggestion, admin } = body;
     const isAdmin = admin === true;
+
+    // ── Honeypot check — reject if hidden field is filled ──
+    if (body._website || body._email_confirm) {
+      // Bot detected — return fake success to not reveal detection
+      return NextResponse.json({
+        success: true,
+        rsvpId: "BOT-" + Math.random().toString(36).slice(2, 8).toUpperCase(),
+        emailSent: true,
+      });
+    }
 
     if (!fullName || !attendance) {
       return NextResponse.json(
@@ -236,9 +279,17 @@ export async function POST(request: NextRequest) {
 
 /* ─── Helpers ─────────────────────────────────────────────── */
 
-/** Escape HTML entities to prevent XSS in email templates */
+/** Sanitize input: strip dangerous patterns + escape HTML entities */
 function sanitize(str: string): string {
   return str
+    // Strip script tags and event handlers
+    .replace(/<script[^>]*>.*?<\/script>/gi, "")
+    .replace(/on\w+\s*=\s*["'][^"']*["']/gi, "")
+    // Strip HTML tags entirely
+    .replace(/<[^>]*>/g, "")
+    // Remove null bytes & zero-width characters
+    .replace(/[\x00\u200B\u200C\u200D\uFEFF]/g, "")
+    // Escape remaining HTML entities
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")

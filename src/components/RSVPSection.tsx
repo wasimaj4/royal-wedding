@@ -31,6 +31,8 @@ export default function RSVPSection() {
     companion: "",
     plusOneName: "",
     songSuggestion: "",
+    _website: "",        // honeypot (invisible to users)
+    _email_confirm: "",  // honeypot (invisible to users)
   });
 
   // ── Admin mode: ?admin=1 in URL skips duplicate guards ──
@@ -306,6 +308,26 @@ export default function RSVPSection() {
                     </motion.div>
                   )}
                 </AnimatePresence>
+
+                {/* ── Honeypot fields (invisible to real users, catches bots) ── */}
+                <div aria-hidden="true" tabIndex={-1} style={{ position: "absolute", left: "-9999px", top: "-9999px", height: 0, width: 0, overflow: "hidden" }}>
+                  <input
+                    type="text"
+                    name="_website"
+                    autoComplete="off"
+                    tabIndex={-1}
+                    value={formData._website}
+                    onChange={(e) => setFormData({ ...formData, _website: e.target.value })}
+                  />
+                  <input
+                    type="email"
+                    name="_email_confirm"
+                    autoComplete="off"
+                    tabIndex={-1}
+                    value={formData._email_confirm}
+                    onChange={(e) => setFormData({ ...formData, _email_confirm: e.target.value })}
+                  />
+                </div>
 
                 {/* ── Error ── */}
                 {submitError && (
