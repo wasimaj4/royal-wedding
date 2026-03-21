@@ -200,7 +200,10 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
           >
             {t.eventDate}
           </p>
-          <p
+          <a
+            href="https://maps.google.com/?q=Kon.+Wilhelminahaven+ZZ+10,+3134+KC+Vlaardingen"
+            target="_blank"
+            rel="noopener noreferrer"
             className={`text-xs flex items-center justify-center ${
               isRTL ? "font-arabic-label text-accent gap-[6px]" : "font-body tracking-[0.25em] uppercase text-accent gap-[7px]"
             }`}
@@ -221,7 +224,7 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
               <circle cx="12" cy="9" r="2.5" fill="#FEFCF7" />
             </svg>
             {t.eventLocation}
-          </p>
+          </a>
         </motion.div>
 
         {/* Quranic Verse — compact card */}

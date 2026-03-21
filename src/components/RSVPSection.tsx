@@ -465,8 +465,8 @@ export default function RSVPSection() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 1.8, duration: 0.8 }}
-                      className={`text-xs sm:text-[13px] font-medium leading-relaxed ${
-                        isRTL ? "font-arabic-label text-text-primary/70" : "font-body text-text-primary/70"
+                      className={`text-sm sm:text-base font-bold leading-relaxed ${
+                        isRTL ? "font-arabic-label text-text-primary/85" : "font-body text-text-primary/85"
                       }`}
                     >
                       {t.cancellationNotice}
