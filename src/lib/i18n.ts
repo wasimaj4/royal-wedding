@@ -163,7 +163,7 @@ export const translations: Record<Locale, Translations> = {
     faqTitle: "FAQ",
     faqItems: [
       { question: "Are children invited?", answer: "We kindly ask that the event remains adults only." },
-      { question: "Is the wedding mixed?", answer: "No, the celebration will be in separate sections." },
+      { question: "Is the wedding separated?", answer: "The celebration will be held in two separate halls — one for men and one for women." },
       { question: "What drinks are available?", answer: "We are offering unlimited hot and cold drinks for you — without alcohol :)" },
     ],
     contactTitle: "Contact",
@@ -252,7 +252,7 @@ export const translations: Record<Locale, Translations> = {
     faqTitle: "الأسئلة الشائعة",
     faqItems: [
       { question: "هل الأطفال مدعوون؟", answer: "نعتذر، الحفل مخصص للبالغين فقط." },
-      { question: "هل الحفل مختلط؟", answer: "لا، الحفل منفصل" },
+      { question: "هل الحفل منفصل؟", answer: "الحفل يقام في قاعتين منفصلتين — واحدة للرجال وواحدة للنساء." },
       { question: "ما هي المشروبات المتوفرة؟", answer: "نقدّم لكم مشروبات ساخنة وباردة بلا حدود — بدون كحول :)" },
     ],
     contactTitle: "تواصل معنا",
