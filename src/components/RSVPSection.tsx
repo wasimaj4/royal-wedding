@@ -362,8 +362,8 @@ export default function RSVPSection() {
 
                 {/* RSVP deadline */}
                 <p
-                  className={`text-center text-xs sm:text-[13px] font-medium leading-relaxed mt-2 ${
-                    isRTL ? "font-arabic-label text-text-primary/70" : "font-body text-text-primary/70"
+                  className={`text-center text-sm sm:text-base font-bold leading-relaxed mt-3 ${
+                    isRTL ? "font-arabic-label text-text-primary/85" : "font-body text-text-primary/85"
                   }`}
                 >
                   {t.rsvpDeadline}

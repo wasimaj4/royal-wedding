@@ -4,8 +4,9 @@ import crypto from "crypto";
 
 /* ─── Module-scope config (read once at cold start) ────── */
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY ?? "";
+const BREVO_API_KEY = process.env.BREVO_API_KEY ?? "";
 const NOTIFICATION_EMAIL = process.env.NOTIFICATION_EMAIL ?? "";
+const SENDER_EMAIL = process.env.SENDER_EMAIL ?? "waseemaj4@gmail.com";
 const QR_SECRET = process.env.QR_SECRET || "wedding-default-secret-change-me";
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
@@ -266,22 +267,87 @@ function signPayload(data: object): string {
     .slice(0, 16); // first 16 hex chars (64-bit security, sufficient for wedding)
 }
 
+/* ─── Cumulative Stats Helper ─────────────────────────────── */
+
+interface CumulativeStats {
+  totalRSVPs: number;
+  attending: number;
+  declined: number;
+  companions: number;
+  totalHeadcount: number;
+  recentSongs: string[];
+  companionNames: string[];
+}
+
+async function getCumulativeStats(): Promise<CumulativeStats> {
+  const empty: CumulativeStats = {
+    totalRSVPs: 0, attending: 0, declined: 0, companions: 0,
+    totalHeadcount: 0, recentSongs: [], companionNames: [],
+  };
+
+  if (!redis) return empty;
+
+  try {
+    const keys = await redis.keys("rsvp:*");
+    const rsvps: RSVPRecord[] = [];
+    for (const key of keys) {
+      const rec = await redis.get<RSVPRecord>(key);
+      if (rec) rsvps.push(rec);
+    }
+
+    const attending = rsvps.filter((r) => r.attendance === "yes");
+    const declined = rsvps.filter((r) => r.attendance === "no");
+    const withCompanion = attending.filter((r) => r.companion === "yes");
+    const songs = rsvps
+      .filter((r) => r.songSuggestion)
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      .slice(0, 5)
+      .map((r) => r.songSuggestion);
+    const companionNames = withCompanion
+      .filter((r) => r.plusOneName)
+      .map((r) => r.plusOneName);
+
+    return {
+      totalRSVPs: rsvps.length,
+      attending: attending.length,
+      declined: declined.length,
+      companions: withCompanion.length,
+      totalHeadcount: attending.length + withCompanion.length,
+      recentSongs: songs,
+      companionNames,
+    };
+  } catch (err) {
+    console.error("Failed to fetch cumulative stats:", err);
+    return empty;
+  }
+}
+
+/* ─── Email Notification ──────────────────────────────────── */
+
 async function sendEmailNotification(data: EmailData): Promise<boolean> {
-  if (!RESEND_API_KEY || !NOTIFICATION_EMAIL) {
+  if (!BREVO_API_KEY || !NOTIFICATION_EMAIL) {
     console.warn(
-      "Email not configured. Set RESEND_API_KEY and NOTIFICATION_EMAIL in .env.local"
+      "Email not configured. Set BREVO_API_KEY and NOTIFICATION_EMAIL in .env.local"
     );
     return false;
   }
 
   const recipients = NOTIFICATION_EMAIL.split(",")
-    .map((email) => email.trim())
+    .map((email) => email.trim().replace(/\\n/g, "").replace(/\n/g, ""))
     .filter(Boolean);
 
   if (recipients.length === 0) {
     console.warn("Email not configured. NOTIFICATION_EMAIL has no valid recipients");
     return false;
   }
+
+  // ── Fetch cumulative stats ────────────────────────────
+  const stats = await getCumulativeStats();
+
+  // ── Wedding countdown ─────────────────────────────────
+  const weddingDate = new Date("2026-05-17T00:00:00+02:00");
+  const now = new Date();
+  const daysLeft = Math.max(0, Math.ceil((weddingDate.getTime() - now.getTime()) / 86400000));
 
   const attendanceText =
     data.attendance === "yes" ? "✅ Will Attend" : "❌ Will Not Attend";
@@ -292,84 +358,206 @@ async function sendEmailNotification(data: EmailData): Promise<boolean> {
         : "Yes (1 companion)"
       : "No companion";
 
-  const extraRows = [
-    data.plusOneName
-      ? `<tr><td style="padding: 8px 0; color: #8B7536;">Companion</td><td style="padding: 8px 0;">${companionText}</td></tr>`
-      : data.attendance === "yes"
-        ? `<tr><td style="padding: 8px 0; color: #8B7536;">Companion</td><td style="padding: 8px 0;">${companionText}</td></tr>`
-        : "",
-    data.songSuggestion
-      ? `<tr><td style="padding: 8px 0; color: #8B7536;">Song</td><td style="padding: 8px 0;">🎵 ${data.songSuggestion}</td></tr>`
+  // ── Capacity warning (set your venue limit here) ──────
+  const VENUE_CAPACITY = 150;
+  const capacityPct = Math.round((stats.totalHeadcount / VENUE_CAPACITY) * 100);
+  const capacityColor = capacityPct >= 90 ? "#D32F2F" : capacityPct >= 70 ? "#F57C00" : "#4CAF50";
+  const capacityWarning = capacityPct >= 90
+    ? `⚠️ <span style="color: #D32F2F; font-weight: bold;">ALERT: ${capacityPct}% venue capacity reached!</span>`
+    : capacityPct >= 70
+      ? `⚡ <span style="color: #F57C00;">Heads up: ${capacityPct}% capacity</span>`
+      : "";
+
+  // ── Guest detail rows ─────────────────────────────────
+  const guestRows = [
+    `<tr>
+      <td style="padding: 10px 12px; color: #8B7536; width: 130px; vertical-align: top;">Guest Name</td>
+      <td style="padding: 10px 12px; font-weight: bold;">${data.fullName}</td>
+    </tr>`,
+    `<tr>
+      <td style="padding: 10px 12px; color: #8B7536;">Attendance</td>
+      <td style="padding: 10px 12px;">${attendanceText}</td>
+    </tr>`,
+    data.attendance === "yes"
+      ? `<tr>
+          <td style="padding: 10px 12px; color: #8B7536;">Companion</td>
+          <td style="padding: 10px 12px;">${companionText}</td>
+        </tr>`
       : "",
+    data.songSuggestion
+      ? `<tr>
+          <td style="padding: 10px 12px; color: #8B7536;">Song Request</td>
+          <td style="padding: 10px 12px;">🎵 ${data.songSuggestion}</td>
+        </tr>`
+      : "",
+    `<tr>
+      <td style="padding: 10px 12px; color: #8B7536;">RSVP ID</td>
+      <td style="padding: 10px 12px; font-family: monospace; font-size: 13px;">${data.rsvpId}</td>
+    </tr>`,
+    `<tr>
+      <td style="padding: 10px 12px; color: #8B7536;">Time</td>
+      <td style="padding: 10px 12px; font-size: 13px;">${new Date(data.timestamp).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}</td>
+    </tr>`,
   ].filter(Boolean).join("\n");
 
-  // data.fullName is already sanitized — safe for HTML embedding
+  // ── Song playlist section ─────────────────────────────
+  const songSection = stats.recentSongs.length > 0
+    ? `<div style="margin-top: 16px; padding: 12px 16px; background: #FFF8E7; border-radius: 8px; border-left: 3px solid #D4AF37;">
+        <p style="margin: 0 0 6px; font-size: 13px; color: #8B7536; font-weight: bold;">🎶 Latest Song Requests</p>
+        ${stats.recentSongs.map((s) => `<p style="margin: 2px 0; font-size: 13px; color: #3E2723;">• ${s}</p>`).join("")}
+      </div>`
+    : "";
+
+  // ── Build full HTML ───────────────────────────────────
   const emailHTML = `
-    <div style="font-family: Georgia, serif; max-width: 500px; margin: 0 auto; padding: 40px 20px; background: #FAF0E6; border: 1px solid #D4AF37;">
-      <div style="text-align: center; border-bottom: 1px solid #D4AF37; padding-bottom: 20px; margin-bottom: 20px;">
-        <h1 style="color: #3E2723; font-size: 24px; margin: 0;">New RSVP Received</h1>
-        <p style="color: #8B7536; font-size: 12px; letter-spacing: 3px; margin-top: 8px;">WASIM & RAYAN WEDDING</p>
+    <div style="font-family: Georgia, serif; max-width: 560px; margin: 0 auto; background: #FAF0E6; border: 1px solid #D4AF37; border-radius: 4px; overflow: hidden;">
+      
+      <!-- Header -->
+      <div style="background: linear-gradient(135deg, #3E2723 0%, #5D4037 100%); padding: 24px 20px; text-align: center;">
+        <h1 style="color: #D4AF37; font-size: 22px; margin: 0; letter-spacing: 1px;">New RSVP Received</h1>
+        <p style="color: #C4A86C; font-size: 11px; letter-spacing: 3px; margin: 6px 0 0;">WASIM & RAYAN WEDDING</p>
+        <p style="color: #FFD54F; font-size: 13px; margin: 8px 0 0;">📅 ${daysLeft} days to go</p>
       </div>
       
-      <table style="width: 100%; font-size: 16px; color: #3E2723;">
-        <tr>
-          <td style="padding: 8px 0; color: #8B7536; width: 130px;">Guest Name</td>
-          <td style="padding: 8px 0; font-weight: bold;">${data.fullName}</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px 0; color: #8B7536;">Attendance</td>
-          <td style="padding: 8px 0;">${attendanceText}</td>
-        </tr>
-        ${extraRows}
-        <tr>
-          <td style="padding: 8px 0; color: #8B7536;">RSVP ID</td>
-          <td style="padding: 8px 0; font-family: monospace; font-size: 14px;">${data.rsvpId}</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px 0; color: #8B7536;">Received</td>
-          <td style="padding: 8px 0; font-size: 14px;">${new Date(data.timestamp).toLocaleString("en-US", { dateStyle: "full", timeStyle: "short" })}</td>
-        </tr>
-      </table>
+      <!-- Guest Details -->
+      <div style="padding: 20px;">
+        <table style="width: 100%; font-size: 15px; color: #3E2723; border-collapse: collapse;">
+          ${guestRows}
+        </table>
+        
+        <div style="text-align: center; margin: 16px 0 0; padding: 10px; background: ${data.attendance === "yes" ? "#E8F5E9" : "#FFEBEE"}; border-radius: 6px;">
+          <p style="margin: 0; font-size: 12px; color: ${data.attendance === "yes" ? "#2E7D32" : "#C62828"};">${
+            data.attendance === "yes"
+              ? "✓ QR code issued for entry verification"
+              : "✗ Guest has declined the invitation"
+          }</p>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div style="height: 1px; background: linear-gradient(90deg, transparent, #D4AF37, transparent); margin: 0 20px;"></div>
       
-      <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #D4AF37;">
-        <p style="color: #8B7536; font-size: 12px; margin: 0;">${
-          data.attendance === "yes"
-            ? "This guest has been issued a unique QR code for entry."
-            : "This guest has declined the invitation."
-        }</p>
+      <!-- Cumulative Dashboard -->
+      <div style="padding: 20px;">
+        <p style="margin: 0 0 14px; font-size: 14px; color: #8B7536; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">📊 Live Dashboard</p>
+        
+        <!-- Stats Grid -->
+        <table style="width: 100%; border-collapse: collapse; text-align: center;">
+          <tr>
+            <td style="padding: 12px 4px; width: 25%;">
+              <div style="background: #FFF8E7; border-radius: 8px; padding: 12px 6px; border: 1px solid #E8D5A3;">
+                <div style="font-size: 28px; font-weight: bold; color: #3E2723;">${stats.totalRSVPs}</div>
+                <div style="font-size: 10px; color: #8B7536; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;">Total RSVPs</div>
+              </div>
+            </td>
+            <td style="padding: 12px 4px; width: 25%;">
+              <div style="background: #E8F5E9; border-radius: 8px; padding: 12px 6px; border: 1px solid #A5D6A7;">
+                <div style="font-size: 28px; font-weight: bold; color: #2E7D32;">${stats.attending}</div>
+                <div style="font-size: 10px; color: #2E7D32; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;">Attending</div>
+              </div>
+            </td>
+            <td style="padding: 12px 4px; width: 25%;">
+              <div style="background: #FFEBEE; border-radius: 8px; padding: 12px 6px; border: 1px solid #EF9A9A;">
+                <div style="font-size: 28px; font-weight: bold; color: #C62828;">${stats.declined}</div>
+                <div style="font-size: 10px; color: #C62828; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;">Declined</div>
+              </div>
+            </td>
+            <td style="padding: 12px 4px; width: 25%;">
+              <div style="background: #E3F2FD; border-radius: 8px; padding: 12px 6px; border: 1px solid #90CAF9;">
+                <div style="font-size: 28px; font-weight: bold; color: #1565C0;">${stats.companions}</div>
+                <div style="font-size: 10px; color: #1565C0; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;">+1 Guests</div>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Total Headcount Highlight -->
+        <div style="margin-top: 14px; padding: 14px 16px; background: linear-gradient(135deg, #3E2723 0%, #5D4037 100%); border-radius: 8px; text-align: center;">
+          <span style="color: #C4A86C; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;">Total Headcount</span>
+          <div style="color: #FFD54F; font-size: 36px; font-weight: bold; margin: 4px 0;">${stats.totalHeadcount}</div>
+          <span style="color: #A1887F; font-size: 12px;">${stats.attending} guests + ${stats.companions} companions</span>
+        </div>
+
+        <!-- Capacity Bar -->
+        <div style="margin-top: 14px;">
+          <div style="display: flex; justify-content: space-between; font-size: 11px; color: #8B7536; margin-bottom: 4px;">
+            <span>Venue Capacity</span>
+            <span style="color: ${capacityColor}; font-weight: bold;">${stats.totalHeadcount} / ${VENUE_CAPACITY} (${capacityPct}%)</span>
+          </div>
+          <div style="background: #E8D5A3; border-radius: 10px; height: 10px; overflow: hidden;">
+            <div style="background: ${capacityColor}; height: 100%; width: ${Math.min(capacityPct, 100)}%; border-radius: 10px; transition: width 0.3s;"></div>
+          </div>
+          ${capacityWarning ? `<p style="margin: 6px 0 0; font-size: 12px;">${capacityWarning}</p>` : ""}
+        </div>
+
+        ${songSection}
+      </div>
+
+      <!-- Divider -->
+      <div style="height: 1px; background: linear-gradient(90deg, transparent, #D4AF37, transparent); margin: 0 20px;"></div>
+
+      <!-- Organiser Quick Tips -->
+      <div style="padding: 16px 20px; background: #F5F0E5;">
+        <p style="margin: 0 0 8px; font-size: 13px; color: #8B7536; font-weight: bold;">💡 Organiser Notes</p>
+        <table style="width: 100%; font-size: 12px; color: #5D4037; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 3px 0;">📅 Wedding date:</td>
+            <td style="padding: 3px 0; text-align: right; font-weight: bold;">17 May 2026 · ${daysLeft} days left</td>
+          </tr>
+          <tr>
+            <td style="padding: 3px 0;">🪑 Seats to prepare:</td>
+            <td style="padding: 3px 0; text-align: right; font-weight: bold;">${stats.totalHeadcount}</td>
+          </tr>
+          <tr>
+            <td style="padding: 3px 0;">🍽️ Meals to order:</td>
+            <td style="padding: 3px 0; text-align: right; font-weight: bold;">${stats.totalHeadcount}</td>
+          </tr>
+          <tr>
+            <td style="padding: 3px 0;">👫 Companion ratio:</td>
+            <td style="padding: 3px 0; text-align: right; font-weight: bold;">${stats.attending > 0 ? Math.round((stats.companions / stats.attending) * 100) : 0}% bringing +1</td>
+          </tr>
+          <tr>
+            <td style="padding: 3px 0;">📩 Acceptance rate:</td>
+            <td style="padding: 3px 0; text-align: right; font-weight: bold; color: ${stats.totalRSVPs > 0 ? (stats.attending / stats.totalRSVPs >= 0.7 ? "#2E7D32" : "#F57C00") : "#8B7536"};">${stats.totalRSVPs > 0 ? Math.round((stats.attending / stats.totalRSVPs) * 100) : 0}%</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding: 16px 20px; text-align: center; background: #3E2723;">
+        <p style="color: #A1887F; font-size: 11px; margin: 0;">Wasim & Rayan Wedding · 17 May 2026 · Vlaardingen</p>
       </div>
     </div>
   `;
 
-  let successCount = 0;
+  const subjectEmoji = data.attendance === "yes" ? "💍" : "📩";
+  const subjectStats = `[${stats.totalHeadcount} guests]`;
 
-  for (const recipient of recipients) {
-    try {
-      const response = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${RESEND_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "Wedding RSVP <onboarding@resend.dev>",
-          to: recipient,
-          subject: `💍 New RSVP: ${data.fullName} — ${attendanceText}`,
-          html: emailHTML,
-        }),
-      });
+  try {
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "api-key": BREVO_API_KEY,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        sender: { name: "Wedding RSVP", email: SENDER_EMAIL },
+        to: recipients.map((email) => ({ email })),
+        subject: `${subjectEmoji} ${subjectStats} ${data.fullName} — ${attendanceText}`,
+        htmlContent: emailHTML,
+      }),
+    });
 
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error(`Resend API error for ${recipient}:`, errorData);
-        continue;
-      }
-
-      successCount += 1;
-    } catch (error) {
-      console.error(`Email send failed for ${recipient}:`, error);
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error("Brevo API error:", response.status, errorData);
+      return false;
     }
-  }
 
-  return successCount > 0;
+    return true;
+  } catch (error) {
+    console.error("Email send failed:", error);
+    return false;
+  }
 }

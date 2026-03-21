@@ -51,7 +51,7 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://royal-wedding-nine.vercel.app"),
+  metadataBase: new URL("https://wasimandrayan.eu"),
   title: "Wasim & Rayan — Wedding Invitation",
   description:
     "Together with our families, and by the grace of Allah, we are honored to invite you to our wedding celebration — 17 May 2026.",

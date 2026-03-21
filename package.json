@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "npx tsx scripts/test-rsvp.ts",
-    "test:prod": "npx tsx scripts/test-rsvp.ts https://wasimenrayan.com",
+    "test:prod": "npx tsx scripts/test-rsvp.ts https://wasimandrayan.eu",
     "db:clean": "npx tsx scripts/clean-db.ts",
     "db:clean:dry": "npx tsx scripts/clean-db.ts --dry-run"
   },

@@ -5,7 +5,7 @@
  * Run:  npx tsx scripts/test-rsvp.ts [BASE_URL]
  *
  * Defaults to http://localhost:3000 if no URL given.
- * For production: npx tsx scripts/test-rsvp.ts https://wasimenrayan.com
+ * For production: npx tsx scripts/test-rsvp.ts https://wasimandrayan.eu
  */
 
 const BASE = process.argv[2] || "http://localhost:3000";
