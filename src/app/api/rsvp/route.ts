@@ -11,6 +11,8 @@ const QR_SECRET = process.env.QR_SECRET || "wedding-default-secret-change-me";
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
   : ["https://wasimandrayan.eu"]; // locked to production domain
+const GUEST_VIEW_KEY = process.env.GUEST_VIEW_KEY || "royal-guests-2026";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://wasimandrayan.eu";
 
 // Rate-limit: max POST requests per IP within window
 const RATE_LIMIT_MAX = 5;       // max 5 RSVP attempts
@@ -573,6 +575,18 @@ async function sendEmailNotification(data: EmailData): Promise<boolean> {
           </tr>
         </table>
       </div>
+
+      <!-- View Full Guest List Button -->
+      <div style="padding: 16px 20px; text-align: center;">
+        <a href="${SITE_URL}/guests?key=${encodeURIComponent(GUEST_VIEW_KEY)}" 
+           style="display: inline-block; background: linear-gradient(135deg, #D4AF37 0%, #C4A86C 100%); color: #3E2723; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-weight: bold; font-size: 14px; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(212,175,55,0.3);">
+          📋 View Full Guest List
+        </a>
+        <p style="margin: 8px 0 0; font-size: 11px; color: #A1887F;">See all RSVPs, stats & song requests in real-time</p>
+      </div>
+
+      <!-- Divider -->
+      <div style="height: 1px; background: linear-gradient(90deg, transparent, #D4AF37, transparent); margin: 0 20px;"></div>
 
       <!-- Footer -->
       <div style="padding: 16px 20px; text-align: center; background: #3E2723;">
