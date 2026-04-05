@@ -9,9 +9,22 @@ if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
   });
 }
 
+interface Companion {
+  name: string;
+}
+
 interface RSVPRecord {
   attendance: string;
   companion: string;
+  plusOneName?: string;
+  companions?: Companion[];
+}
+
+/** Count companions the same way as the guest list API */
+function countCompanions(r: RSVPRecord): number {
+  if (r.companions && r.companions.length > 0) return r.companions.length;
+  if (r.companion === "yes") return 1;
+  return 0;
 }
 
 export const revalidate = 30; // ISR: refresh every 30 seconds
@@ -24,18 +37,18 @@ export async function GET() {
   try {
     const keys = await redis.keys("rsvp:*");
     let attending = 0;
-    let companions = 0;
+    let totalCompanions = 0;
 
     for (const key of keys) {
       const rec = await redis.get<RSVPRecord>(key);
       if (rec && rec.attendance === "yes") {
         attending++;
-        if (rec.companion === "yes") companions++;
+        totalCompanions += countCompanions(rec);
       }
     }
 
     return NextResponse.json(
-      { attending, totalGuests: attending + companions },
+      { attending, totalGuests: attending + totalCompanions },
       {
         headers: {
           "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60",

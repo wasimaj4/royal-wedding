@@ -38,11 +38,7 @@ const parentReveal = {
   }),
 };
 
-interface HeroSectionProps {
-  onNavigateNext: () => void;
-}
-
-export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
+export default function HeroSection() {
   const { t, isRTL } = useLanguage();
 
   return (
@@ -268,7 +264,11 @@ export default function HeroSection({ onNavigateNext }: HeroSectionProps) {
           </p>
 
           <motion.button
-            onClick={onNavigateNext}
+            onClick={() => {
+              const next = document.querySelector("section + main, section ~ div");
+              if (next) next.scrollIntoView({ behavior: "smooth", block: "start" });
+              else window.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+            }}
             className="mx-auto flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-accent/40 text-accent hover:border-accent hover:bg-accent/10 transition-all duration-300"
             animate={{ y: [0, 6, 0] }}
             transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}

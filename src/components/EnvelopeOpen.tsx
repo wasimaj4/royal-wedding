@@ -201,6 +201,16 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
             />
           </motion.div>
 
+          {/* Childhood photo — subtle watermark behind envelope */}
+          <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }}>
+            <img
+              src="/couple-childhood.png"
+              alt=""
+              className="w-full h-full object-cover"
+              style={{ opacity: 0.09, filter: "sepia(0.4) saturate(0.4) brightness(1.1)" }}
+            />
+          </div>
+
           {/* Gold atmospheric glow (during animation) */}
           {(isAfterBreak || phase === "pressed" || phase === "waiting") && (
             <motion.div
@@ -690,8 +700,9 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
                       fontFamily: "var(--font-great-vibes), 'Great Vibes', cursive",
                       fontSize: "140px",
                       fontWeight: 400,
-                      color: "rgba(255,255,255,0.45)",
+                      color: "rgba(212,175,55,0.35)",
                       lineHeight: 1,
+                      textShadow: "0 0 30px rgba(212,175,55,0.2), 0 2px 8px rgba(0,0,0,0.1)",
                     }}
                     animate={
                       phase === "pressed" || phase === "waiting"
@@ -712,8 +723,9 @@ export default function EnvelopeOpen({ onOpen, audioRef }: EnvelopeOpenProps) {
                       fontFamily: "var(--font-great-vibes), 'Great Vibes', cursive",
                       fontSize: "140px",
                       fontWeight: 400,
-                      color: "rgba(255,255,255,0.45)",
+                      color: "rgba(212,175,55,0.35)",
                       lineHeight: 1,
+                      textShadow: "0 0 30px rgba(212,175,55,0.2), 0 2px 8px rgba(0,0,0,0.1)",
                     }}
                     animate={
                       phase === "pressed" || phase === "waiting"

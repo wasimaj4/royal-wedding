@@ -200,11 +200,11 @@ interface ScratchRevealProps {
 export default function ScratchReveal({ onNavigateNext, onNavigateBack }: ScratchRevealProps) {
   const { t, isRTL } = useLanguage();
   const [revealedCount, setRevealedCount] = useState(0);
-  const [countdown, setCountdown] = useState(() => getCountdown("2026-05-17T17:00:00"));
+  const [countdown, setCountdown] = useState(() => getCountdown("2026-05-17T18:00:00"));
   const allRevealed = revealedCount >= 5;
 
   useEffect(() => {
-    const timer = setInterval(() => setCountdown(getCountdown("2026-05-17T17:00:00")), 1000);
+    const timer = setInterval(() => setCountdown(getCountdown("2026-05-17T18:00:00")), 1000);
     return () => clearInterval(timer);
   }, []);
 

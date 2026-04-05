@@ -93,17 +93,6 @@ export default function EventDetails() {
                 3134 KC Vlaardingen
               </p>
             </a>
-            <a
-              href={venueMap}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`inline-flex items-center gap-2 text-accent hover:text-accent-dark transition-colors duration-300 text-sm tracking-wider ${
-                isRTL ? "font-arabic-label" : "font-body"
-              }`}
-            >
-              <MapPinIcon />
-              {t.viewOnMap}
-            </a>
 
             {/* Venue photo */}
             <motion.div
@@ -118,22 +107,31 @@ export default function EventDetails() {
               />
             </motion.div>
 
-            {/* Embedded Google Map */}
+            {/* Open in Maps button */}
             <motion.div
               custom={0.6}
               variants={fadeInUp}
-              className="mt-4 overflow-hidden rounded-lg border border-border/60"
+              className="mt-6"
             >
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3381.5!2d4.3372!3d51.9122!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c44f5a2dbfffff%3A0x0!2sKon.+Wilhelminahaven+ZZ+10%2C+3134+KC+Vlaardingen!5e0!3m2!1sen!2snl!4v1"
-                width="100%"
-                height="250"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Venue location"
-              />
+              <a
+                href={venueMap}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex items-center justify-center gap-3 w-full max-w-xs mx-auto px-6 py-3.5 rounded-full bg-gradient-to-r from-[#C4A265] to-[#B08D57] text-white shadow-[0_4px_20px_rgba(176,141,87,0.3)] hover:shadow-[0_6px_28px_rgba(176,141,87,0.45)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ${
+                  isRTL ? "font-arabic-label text-sm" : "font-body text-xs tracking-[0.2em] uppercase"
+                }`}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                {isRTL ? "افتح في الخريطة" : "Open in Maps"}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+              </a>
             </motion.div>
           </motion.div>
         </motion.div>
@@ -156,7 +154,7 @@ export default function EventDetails() {
           </motion.p>
 
           <motion.div custom={0.3} variants={fadeInUp}>
-            <CountdownTimer targetDate="2026-05-17T17:00:00" />
+            <CountdownTimer targetDate="2026-05-17T18:00:00" />
           </motion.div>
 
           {/* Add to Calendar — English only */}
@@ -173,8 +171,8 @@ export default function EventDetails() {
                     "VERSION:2.0",
                     "PRODID:-//WasimRayan//Wedding//EN",
                     "BEGIN:VEVENT",
-                    "DTSTART:20260517T150000Z",
-                    "DTEND:20260517T210000Z",
+                    "DTSTART:20260517T160000Z",
+                    "DTEND:20260517T220000Z",
                     "SUMMARY:Wasim & Rayan's Wedding",
                     "DESCRIPTION:Wedding celebration of Wasim & Rayan. We look forward to celebrating with you!",
                     "LOCATION:Kon. Wilhelminahaven ZZ 10\\, 3134 KC Vlaardingen\\, The Netherlands",

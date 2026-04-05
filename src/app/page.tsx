@@ -36,8 +36,6 @@ function ScrollSpy({ containerId, targetId, onVisible, onHidden }: {
 function WeddingApp() {
   const { locale, isRTL } = useLanguage();
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
-  const page2Ref = useRef<HTMLDivElement>(null);
   const [showFloatingRsvp, setShowFloatingRsvp] = useState(true);
   const hideRsvpBtn = useCallback(() => setShowFloatingRsvp(false), []);
   const showRsvpBtn = useCallback(() => setShowFloatingRsvp(true), []);
@@ -63,38 +61,31 @@ function WeddingApp() {
     document.documentElement.dir = isRTL ? "rtl" : "ltr";
   }, [locale, isRTL]);
 
-  useEffect(() => {
-    if (currentPage === 1 && page2Ref.current) {
-      page2Ref.current.scrollTop = 0;
-    }
-  }, [currentPage]);
-
   return (
     <div className="h-screen overflow-hidden relative">
       {/* Background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[#FDFAF5]" />
-        {/* Soft radial warmth — top center */}
         <div className="absolute inset-0" style={{
           background: "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(196,162,101,0.06) 0%, transparent 65%)",
           pointerEvents: "none",
         }} />
       </div>
 
-      {/* Envelope opening — shown once before the invitation */}
+      {/* Envelope opening */}
       <AnimatePresence mode="wait">
         {!envelopeOpened && (
           <EnvelopeOpen onOpen={handleEnvelopeOpen} audioRef={audioRef} />
         )}
       </AnimatePresence>
 
-      {/* Fixed UI controls — only mount after envelope opens */}
+      {/* Fixed UI controls */}
       {envelopeOpened && (
         <>
           <LanguageSwitcher />
           <MusicPlayer audioRef={audioRef} />
 
-          {/* Floating RSVP button — visible on all pages, hides when RSVP section in view */}
+          {/* Floating RSVP button */}
           <AnimatePresence>
             {showFloatingRsvp && (
               <motion.button
@@ -103,16 +94,8 @@ function WeddingApp() {
                 exit={{ opacity: 0, y: 10, scale: 0.9 }}
                 transition={{ duration: 0.4, ease: "easeOut", delay: 1.2 }}
                 onClick={() => {
-                  if (currentPage === 0) {
-                    setCurrentPage(1);
-                    setTimeout(() => {
-                      const el = document.getElementById("rsvp");
-                      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-                    }, 1200);
-                  } else {
-                    const el = document.getElementById("rsvp");
-                    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-                  }
+                  const el = document.getElementById("rsvp");
+                  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
                 className={`fixed bottom-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-[#C4A265] to-[#B08D57] text-white shadow-[0_4px_24px_rgba(176,141,87,0.35)] hover:shadow-[0_6px_32px_rgba(176,141,87,0.5)] hover:scale-105 transition-all duration-300 ${
                   isRTL ? "right-6" : "left-6"
@@ -137,83 +120,44 @@ function WeddingApp() {
         </>
       )}
 
-      {/* Main wedding content — pre-rendered hidden, revealed after envelope opens */}
+      {/* Main wedding content — single scrollable page */}
       <motion.div
         initial={false}
         animate={{ opacity: envelopeOpened ? 1 : 0 }}
         transition={{ duration: 1.0, ease: "easeOut" }}
         style={{ pointerEvents: envelopeOpened ? "auto" : "none", position: envelopeOpened ? undefined : "fixed", visibility: envelopeOpened ? undefined : "hidden" }}
+        className="relative z-10 h-screen overflow-y-auto"
+        id="main-scroll"
       >
+        <ScrollSpy containerId="main-scroll" targetId="rsvp" onVisible={hideRsvpBtn} onHidden={showRsvpBtn} />
 
-          {/* Page content with transitions */}
-          <AnimatePresence mode="wait">
-            {currentPage === 0 && (
-              <motion.div
-                key="page-invitation"
-                initial={{ opacity: 0, y: 48 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -48 }}
-                transition={{ duration: 1.1, ease: [0.22, 0.61, 0.36, 1] }}
-                className="relative z-10 h-screen"
-              >
-                <HeroSection onNavigateNext={() => setCurrentPage(1)} />
-              </motion.div>
-            )}
+        <HeroSection />
 
-            {currentPage === 1 && (
-              <motion.div
-                key="page-details"
-                ref={page2Ref}
-                initial={{ opacity: 0, y: 48 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -48 }}
-                transition={{ duration: 1.1, ease: [0.22, 0.61, 0.36, 1] }}
-                className="relative z-10 h-screen overflow-y-auto"
-                id="page-details"
-              >
-                {/* Back arrow */}
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                  onClick={() => setCurrentPage(0)}
-                  className="fixed top-4 left-4 z-40 w-10 h-10 flex items-center justify-center rounded-full border border-border bg-white/70 backdrop-blur-md text-accent hover:border-accent hover:shadow-[0_2px_16px_rgba(176,141,87,0.18)] transition-all duration-500"
-                  aria-label="Back"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 15l-6-6-6 6" />
-                  </svg>
-                </motion.button>
+        <main className="max-w-2xl mx-auto">
+          <EventDetails />
+          <div className="section-divider" />
+          <ProgramTimeline />
+          {!isRTL && (
+            <>
+              <div className="section-divider" />
+              <DressCode />
+            </>
+          )}
+          <div className="section-divider" />
+          <FAQ />
+          <div className="section-divider" />
+          <RSVPSection />
+          <div className="section-divider" />
+          <ContactSection />
 
-                <ScrollSpy containerId="page-details" targetId="rsvp" onVisible={hideRsvpBtn} onHidden={showRsvpBtn} />
-                <main className="max-w-2xl mx-auto">
-                  <EventDetails />
-                  <div className="section-divider" />
-                  <ProgramTimeline />
-                  {!isRTL && (
-                    <>
-                      <div className="section-divider" />
-                      <DressCode />
-                    </>
-                  )}
-                  <div className="section-divider" />
-                  <FAQ />
-                  <div className="section-divider" />
-                  <RSVPSection />
-                  <div className="section-divider" />
-                  <ContactSection />
-
-                  {/* Footer */}
-                  <footer className="text-center py-16 sm:py-20 px-6">
-                    <p className={`text-[11px] tracking-[0.25em] uppercase ${isRTL ? "font-arabic-label text-text-muted" : "font-body text-text-muted"}`}>
-                      {isRTL ? "وسيم و ريّان \u2014 ٢٠٢٦" : "Wasim & Rayan \u2014 2026"}
-                    </p>
-                  </footer>
-                </main>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
+          {/* Footer */}
+          <footer className="text-center py-16 sm:py-20 px-6">
+            <p className={`text-[11px] tracking-[0.25em] uppercase ${isRTL ? "font-arabic-label text-text-muted" : "font-body text-text-muted"}`}>
+              {isRTL ? "وسيم و ريّان \u2014 ٢٠٢٦" : "Wasim & Rayan \u2014 2026"}
+            </p>
+          </footer>
+        </main>
+      </motion.div>
     </div>
   );
 }
