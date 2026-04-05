@@ -12,7 +12,7 @@ interface MusicPlayerProps {
 }
 
 export default function MusicPlayer({ audioRef }: MusicPlayerProps) {
-  const { t } = useLanguage();
+  const { t, isRTL } = useLanguage();
   const [isPlaying, setIsPlaying] = useState(false);
 
   /* Sync state with the audio element that page.tsx already started */
@@ -49,7 +49,7 @@ export default function MusicPlayer({ audioRef }: MusicPlayerProps) {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 1.5, duration: 0.6 }}
-      className="fixed bottom-6 right-6 z-50"
+      className={`fixed bottom-6 z-50 ${isRTL ? "left-6" : "right-6"}`}
     >
       <button
         onClick={togglePlay}

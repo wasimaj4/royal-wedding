@@ -158,6 +158,45 @@ export default function EventDetails() {
           <motion.div custom={0.3} variants={fadeInUp}>
             <CountdownTimer targetDate="2026-05-17T17:00:00" />
           </motion.div>
+
+          {/* Add to Calendar — English only */}
+          {!isRTL && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
+              className="text-center mt-8"
+            >              <a
+                href={(() => {
+                  const ics = [
+                    "BEGIN:VCALENDAR",
+                    "VERSION:2.0",
+                    "PRODID:-//WasimRayan//Wedding//EN",
+                    "BEGIN:VEVENT",
+                    "DTSTART:20260517T150000Z",
+                    "DTEND:20260517T210000Z",
+                    "SUMMARY:Wasim & Rayan's Wedding",
+                    "DESCRIPTION:Wedding celebration of Wasim & Rayan. We look forward to celebrating with you!",
+                    "LOCATION:Kon. Wilhelminahaven ZZ 10\\, 3134 KC Vlaardingen\\, The Netherlands",
+                    "URL:https://wasimandrayan.eu",
+                    "END:VEVENT",
+                    "END:VCALENDAR",
+                  ].join("\r\n");
+                  return "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+                })()}
+                download="wasim-rayan-wedding.ics"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-accent/40 bg-white/70 backdrop-blur-sm text-accent-dark hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 text-xs font-body tracking-wider uppercase"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Add to Calendar
+              </a>
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Countdown — removed from here, moved above Timeline */}

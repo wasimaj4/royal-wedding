@@ -78,6 +78,12 @@ export interface Translations {
   contactTitle: string;
   contactCall: string;
   contactWhatsApp: string;
+  whatsappQuickTitle: string;
+  whatsappQuickDesc: string;
+  whatsappQuickBtn: string;
+  whatsappQuickOr: string;
+  guestCounterJoining: string;
+  guestCounterGuests: string;
 }
 
 export const translations: Record<Locale, Translations> = {
@@ -153,7 +159,7 @@ export const translations: Record<Locale, Translations> = {
     metaDescription: "You are cordially invited to the wedding celebration of Wasim & Rayan on 17 May 2026.",
     tapToOpen: "Tap to open the invitation",
     dressCodeTitle: "Dress Code",
-    dressCodeText: "We kindly invite our guests to wear elegant attire suitable for the occasion.\nThere will be one celebration only, so the same outfit can be worn throughout the evening.",
+    dressCodeText: "Formal or semi-formal attire.\nThink elegant & celebratory \u2014 suits, dresses, or anything that makes you feel your best.\nThere is one celebration throughout the evening, so one outfit is all you need.",
     foodDrinksTitle: "Food & Drinks",
     foodIntro: "Traditional dishes will be served including:",
     foodItems: ["Rice", "Bulgur", "Meat", "Chicken", "Mixed nuts", "Fruits"],
@@ -170,6 +176,12 @@ export const translations: Record<Locale, Translations> = {
     contactTitle: "Contact",
     contactCall: "Call",
     contactWhatsApp: "WhatsApp",
+    whatsappQuickTitle: "Not a fan of forms?",
+    whatsappQuickDesc: "Send us a quick WhatsApp instead",
+    whatsappQuickBtn: "Open WhatsApp",
+    whatsappQuickOr: "or fill out the form below",
+    guestCounterJoining: "guests joining so far",
+    guestCounterGuests: "guests",
   },
   ar: {
     youAreInvited: "نتشرف بدعوتكم لحضور حفل زفاف",
@@ -243,7 +255,7 @@ export const translations: Record<Locale, Translations> = {
     metaDescription: "\u064A\u0633\u0639\u062F\u0646\u0627 \u062F\u0639\u0648\u062A\u0643\u0645 \u0644\u062D\u0636\u0648\u0631 \u062D\u0641\u0644 \u0632\u0641\u0627\u0641 \u0648\u0633\u064A\u0645 \u0648\u0631\u064A\u0627\u0646 \u0628\u062A\u0627\u0631\u064A\u062E \u0661\u0667 \u0623\u064A\u0627\u0631 \u0662\u0660\u0662\u0666",
     tapToOpen: "اضغط لفتح الدعوة",
     dressCodeTitle: "لباس الحفل",
-    dressCodeText: "نرحب بكم في حفل زفافنا وندعوكم لارتداء لباس أنيق يليق بالمناسبة.\nسيكون هناك احتفال واحد فقط خلال الأمسية لذلك سيكون لباس واحد طوال الحفل.",
+    dressCodeText: "لباس رسمي أو شبه رسمي.\nاختاروا إطلالة أنيقة تليق بالمناسبة — المهم تكونوا مرتاحين ومبسوطين.\nالحفل فعالية واحدة طوال الأمسية، فإطلالة واحدة تكفي.",
     foodDrinksTitle: "الطعام والمشروبات",
     foodIntro: "سيتم تقديم مأكولات شرقية تتضمن:",
     foodItems: ["رز", "برغل", "لحم", "دجاج", "بعض المكسرات", "فواكه"],
@@ -260,6 +272,12 @@ export const translations: Record<Locale, Translations> = {
     contactTitle: "تواصل معنا",
     contactCall: "اتصل بنا",
     contactWhatsApp: "واتساب",
+    whatsappQuickTitle: "تقدروا تراسلونا واتساب بكل بساطة",
+    whatsappQuickDesc: "إذا بتحبوا تأكدوا حضوركم بشكل أسرع",
+    whatsappQuickBtn: "راسلنا عالواتساب",
+    whatsappQuickOr: "أو سجّلوا من خلال النموذج أدناه",
+    guestCounterJoining: "ضيف سجّلوا حضورهم",
+    guestCounterGuests: "ضيف",
   },
 };
 
