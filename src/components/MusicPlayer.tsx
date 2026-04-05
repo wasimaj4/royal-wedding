@@ -31,6 +31,28 @@ export default function MusicPlayer({ audioRef }: MusicPlayerProps) {
     };
   }, [audioRef]);
 
+  /* Pause when tab/browser goes to background, resume when visible */
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    let wasPlayingBeforeHidden = false;
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        wasPlayingBeforeHidden = !audio.paused;
+        if (!audio.paused) audio.pause();
+      } else {
+        if (wasPlayingBeforeHidden) {
+          audio.play().catch(() => {});
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, [audioRef]);
+
   const togglePlay = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
