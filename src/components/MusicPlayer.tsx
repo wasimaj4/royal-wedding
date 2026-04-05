@@ -31,26 +31,57 @@ export default function MusicPlayer({ audioRef }: MusicPlayerProps) {
     };
   }, [audioRef]);
 
-  /* Pause when tab/browser goes to background, resume when visible */
+  /* Pause when tab/browser goes to background, resume when visible.
+     Mobile Safari doesn't reliably fire "visibilitychange" when the user
+     switches apps or locks the screen, so we also listen to pagehide/
+     pageshow (Safari-preferred) and window blur/focus as a fallback. */
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     let wasPlayingBeforeHidden = false;
 
-    const handleVisibility = () => {
-      if (document.hidden) {
-        wasPlayingBeforeHidden = !audio.paused;
-        if (!audio.paused) audio.pause();
-      } else {
-        if (wasPlayingBeforeHidden) {
-          audio.play().catch(() => {});
-        }
+    const pause = () => {
+      if (!audio.paused) {
+        wasPlayingBeforeHidden = true;
+        audio.pause();
       }
     };
 
+    const resume = () => {
+      if (wasPlayingBeforeHidden) {
+        wasPlayingBeforeHidden = false;
+        audio.play().catch(() => {});
+      }
+    };
+
+    // Desktop & Android Chrome
+    const handleVisibility = () => {
+      if (document.hidden) pause();
+      else resume();
+    };
+
+    // iOS Safari fires these more reliably when switching apps / locking
+    const handlePageHide = () => pause();
+    const handlePageShow = () => resume();
+
+    // Extra fallback: window blur/focus (covers some PWA & in-app browsers)
+    const handleBlur = () => pause();
+    const handleFocus = () => resume();
+
     document.addEventListener("visibilitychange", handleVisibility);
-    return () => document.removeEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("pagehide", handlePageHide);
+    window.addEventListener("pageshow", handlePageShow);
+    window.addEventListener("blur", handleBlur);
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("pagehide", handlePageHide);
+      window.removeEventListener("pageshow", handlePageShow);
+      window.removeEventListener("blur", handleBlur);
+      window.removeEventListener("focus", handleFocus);
+    };
   }, [audioRef]);
 
   const togglePlay = useCallback(() => {
