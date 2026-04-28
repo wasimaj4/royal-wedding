@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 import crypto from "crypto";
+import { detectGender, Gender } from "@/lib/gender-detect";
 
 /* ─── Module-scope config (read once at cold start) ────── */
 
@@ -39,6 +40,9 @@ interface RSVPRecord {
   timestamp: string;
   emailSent: boolean;
   signature: string;
+  gender?: Gender;
+  plusOneGender?: Gender;
+  companions?: Array<{ name: string; gender: Gender }>;
 }
 
 interface EmailData {
@@ -323,19 +327,39 @@ function signPayload(data: object): string {
 /* ─── Cumulative Stats Helper ─────────────────────────────── */
 
 interface CumulativeStats {
-  totalRSVPs: number;
+  total: number;
   attending: number;
   declined: number;
   companions: number;
   totalHeadcount: number;
+  men: number;
+  women: number;
+  unknownGender: number;
   recentSongs: string[];
-  companionNames: string[];
+}
+
+function getCompanions(record: RSVPRecord): Array<{ name: string; gender: Gender }> {
+  if (record.companions && record.companions.length > 0) return record.companions;
+  if (record.companion === "yes" && record.plusOneName) {
+    return [{ name: record.plusOneName, gender: record.plusOneGender || detectGender(record.plusOneName) }];
+  }
+  if (record.companion === "yes") {
+    return [{ name: "Unnamed", gender: "unknown" }];
+  }
+  return [];
 }
 
 async function getCumulativeStats(): Promise<CumulativeStats> {
   const empty: CumulativeStats = {
-    totalRSVPs: 0, attending: 0, declined: 0, companions: 0,
-    totalHeadcount: 0, recentSongs: [], companionNames: [],
+    total: 0,
+    attending: 0,
+    declined: 0,
+    companions: 0,
+    totalHeadcount: 0,
+    men: 0,
+    women: 0,
+    unknownGender: 0,
+    recentSongs: [],
   };
 
   if (!redis) return empty;
@@ -350,24 +374,43 @@ async function getCumulativeStats(): Promise<CumulativeStats> {
 
     const attending = rsvps.filter((r) => r.attendance === "yes");
     const declined = rsvps.filter((r) => r.attendance === "no");
-    const withCompanion = attending.filter((r) => r.companion === "yes");
+    let totalCompanions = 0;
+    let men = 0;
+    let women = 0;
+    let unknownGender = 0;
+
+    for (const record of attending) {
+      const guestGender = record.gender || detectGender(record.fullName);
+      if (guestGender === "male") men++;
+      else if (guestGender === "female") women++;
+      else unknownGender++;
+
+      const companions = getCompanions(record);
+      totalCompanions += companions.length;
+      for (const companion of companions) {
+        const companionGender = companion.gender || detectGender(companion.name);
+        if (companionGender === "male") men++;
+        else if (companionGender === "female") women++;
+        else unknownGender++;
+      }
+    }
+
     const songs = rsvps
       .filter((r) => r.songSuggestion)
       .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
       .slice(0, 5)
       .map((r) => r.songSuggestion);
-    const companionNames = withCompanion
-      .filter((r) => r.plusOneName)
-      .map((r) => r.plusOneName);
 
     return {
-      totalRSVPs: rsvps.length,
+      total: rsvps.length,
       attending: attending.length,
       declined: declined.length,
-      companions: withCompanion.length,
-      totalHeadcount: attending.length + withCompanion.length,
+      companions: totalCompanions,
+      totalHeadcount: attending.length + totalCompanions,
+      men,
+      women,
+      unknownGender,
       recentSongs: songs,
-      companionNames,
     };
   } catch (err) {
     console.error("Failed to fetch cumulative stats:", err);
@@ -407,9 +450,16 @@ async function sendEmailNotification(data: EmailData): Promise<boolean> {
   const companionText =
     data.companion === "yes"
       ? data.plusOneName
-        ? `Yes — ${data.plusOneName}`
-        : "Yes (1 companion)"
-      : "No companion";
+        ? `1 — ${data.plusOneName}`
+        : "1"
+      : "0";
+  const acceptanceRate = stats.total > 0 ? Math.round((stats.attending / stats.total) * 100) : 0;
+  const declineRate = stats.total > 0 ? Math.round((stats.declined / stats.total) * 100) : 0;
+  const companionRatio = stats.attending > 0 ? Math.round((stats.companions / stats.attending) * 100) : 0;
+  const issuedAtText = new Date(data.timestamp).toLocaleString("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
 
   // ── Capacity warning (set your venue limit here) ──────
   const VENUE_CAPACITY = 150;
@@ -424,65 +474,87 @@ async function sendEmailNotification(data: EmailData): Promise<boolean> {
   // ── Guest detail rows ─────────────────────────────────
   const guestRows = [
     `<tr>
-      <td style="padding: 10px 12px; color: #8B7536; width: 130px; vertical-align: top;">Guest Name</td>
-      <td style="padding: 10px 12px; font-weight: bold;">${data.fullName}</td>
+      <td style="padding: 11px 12px; color: #8B7536; width: 138px; vertical-align: top; font-size: 12px; letter-spacing: 0.6px; text-transform: uppercase; border-bottom: 1px solid #EADCB6;">Guest Name</td>
+      <td style="padding: 11px 12px; font-weight: bold; color: #2B1D18; border-bottom: 1px solid #EADCB6;">${data.fullName}</td>
     </tr>`,
     `<tr>
-      <td style="padding: 10px 12px; color: #8B7536;">Attendance</td>
-      <td style="padding: 10px 12px;">${attendanceText}</td>
+      <td style="padding: 11px 12px; color: #8B7536; font-size: 12px; letter-spacing: 0.6px; text-transform: uppercase; border-bottom: 1px solid #EADCB6;">Attendance</td>
+      <td style="padding: 11px 12px; color: #3E2723; border-bottom: 1px solid #EADCB6;">${attendanceText}</td>
     </tr>`,
     data.attendance === "yes"
       ? `<tr>
-          <td style="padding: 10px 12px; color: #8B7536;">Companion</td>
-          <td style="padding: 10px 12px;">${companionText}</td>
+          <td style="padding: 11px 12px; color: #8B7536; font-size: 12px; letter-spacing: 0.6px; text-transform: uppercase; border-bottom: 1px solid #EADCB6;">Companions</td>
+          <td style="padding: 11px 12px; color: #3E2723; border-bottom: 1px solid #EADCB6;">${companionText}</td>
         </tr>`
       : "",
     data.songSuggestion
       ? `<tr>
-          <td style="padding: 10px 12px; color: #8B7536;">Song Request</td>
-          <td style="padding: 10px 12px;">🎵 ${data.songSuggestion}</td>
+          <td style="padding: 11px 12px; color: #8B7536; font-size: 12px; letter-spacing: 0.6px; text-transform: uppercase; border-bottom: 1px solid #EADCB6;">Song Request</td>
+          <td style="padding: 11px 12px; color: #3E2723; border-bottom: 1px solid #EADCB6;">🎵 ${data.songSuggestion}</td>
         </tr>`
       : "",
     `<tr>
-      <td style="padding: 10px 12px; color: #8B7536;">RSVP ID</td>
-      <td style="padding: 10px 12px; font-family: monospace; font-size: 13px;">${data.rsvpId}</td>
+      <td style="padding: 11px 12px; color: #8B7536; font-size: 12px; letter-spacing: 0.6px; text-transform: uppercase; border-bottom: 1px solid #EADCB6;">RSVP ID</td>
+      <td style="padding: 11px 12px; font-family: monospace; font-size: 13px; color: #3E2723; border-bottom: 1px solid #EADCB6;">${data.rsvpId}</td>
     </tr>`,
     `<tr>
-      <td style="padding: 10px 12px; color: #8B7536;">Time</td>
-      <td style="padding: 10px 12px; font-size: 13px;">${new Date(data.timestamp).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}</td>
+      <td style="padding: 11px 12px; color: #8B7536; font-size: 12px; letter-spacing: 0.6px; text-transform: uppercase;">Submitted</td>
+      <td style="padding: 11px 12px; font-size: 13px; color: #5D4037;">${issuedAtText}</td>
     </tr>`,
   ].filter(Boolean).join("\n");
 
   // ── Song playlist section ─────────────────────────────
   const songSection = stats.recentSongs.length > 0
-    ? `<div style="margin-top: 16px; padding: 12px 16px; background: #FFF8E7; border-radius: 8px; border-left: 3px solid #D4AF37;">
-        <p style="margin: 0 0 6px; font-size: 13px; color: #8B7536; font-weight: bold;">🎶 Latest Song Requests</p>
-        ${stats.recentSongs.map((s) => `<p style="margin: 2px 0; font-size: 13px; color: #3E2723;">• ${s}</p>`).join("")}
+    ? `<div style="margin-top: 14px; padding: 14px 16px; background: #FFF8E7; border-radius: 10px; border: 1px solid #E8D5A3;">
+        <p style="margin: 0 0 8px; font-size: 12px; color: #8B7536; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">🎶 Latest Song Requests</p>
+        ${stats.recentSongs.map((s) => `<p style="margin: 3px 0; font-size: 13px; color: #3E2723; line-height: 1.4;">• ${s}</p>`).join("")}
       </div>`
-    : "";
+    : `<div style="margin-top: 14px; padding: 14px 16px; background: #FCF7EC; border-radius: 10px; border: 1px dashed #E2CC95; text-align: center;">
+        <p style="margin: 0; font-size: 12px; color: #9C8752;">No song requests yet</p>
+      </div>`;
 
   // ── Build full HTML ───────────────────────────────────
   const emailHTML = `
-    <div style="font-family: Georgia, serif; max-width: 560px; margin: 0 auto; background: #FAF0E6; border: 1px solid #D4AF37; border-radius: 4px; overflow: hidden;">
+    <div style="font-family: Georgia, serif; max-width: 580px; margin: 0 auto; background: #FAF0E6; border: 1px solid #D4AF37; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 24px rgba(62,39,35,0.12);">
       
       <!-- Header -->
-      <div style="background: linear-gradient(135deg, #3E2723 0%, #5D4037 100%); padding: 24px 20px; text-align: center;">
-        <h1 style="color: #D4AF37; font-size: 22px; margin: 0; letter-spacing: 1px;">New RSVP Received</h1>
-        <p style="color: #C4A86C; font-size: 11px; letter-spacing: 3px; margin: 6px 0 0;">WASIM & RAYAN WEDDING</p>
-        <p style="color: #FFD54F; font-size: 13px; margin: 8px 0 0;">📅 ${daysLeft} days to go</p>
+      <div style="background: linear-gradient(135deg, #3E2723 0%, #5D4037 100%); padding: 24px 20px 18px; text-align: center;">
+        <h1 style="color: #D4AF37; font-size: 24px; margin: 0; letter-spacing: 1px;">New RSVP Received</h1>
+        <p style="color: #C4A86C; font-size: 11px; letter-spacing: 3px; margin: 7px 0 0;">WASIM & RAYAN WEDDING</p>
+        <p style="color: #FFD54F; font-size: 13px; margin: 9px 0 0;">📅 ${daysLeft} days to go</p>
+        <div style="margin-top: 12px; display: inline-block; padding: 5px 12px; border-radius: 999px; background: rgba(255, 213, 79, 0.16); color: #FFD54F; font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase;">
+          RSVP Command Center
+        </div>
+      </div>
+
+      <!-- Snapshot strip -->
+      <div style="display: flex; border-top: 1px solid rgba(212,175,55,0.25); border-bottom: 1px solid #E8D5A3; background: #FFF8E7;">
+        <div style="flex: 1; text-align: center; padding: 10px 6px; border-right: 1px solid #E8D5A3;">
+          <div style="font-size: 11px; color: #8B7536; letter-spacing: 0.7px; text-transform: uppercase;">Headcount</div>
+          <div style="font-size: 23px; color: #3E2723; font-weight: bold; margin-top: 2px;">${stats.totalHeadcount}</div>
+        </div>
+        <div style="flex: 1; text-align: center; padding: 10px 6px; border-right: 1px solid #E8D5A3;">
+          <div style="font-size: 11px; color: #8B7536; letter-spacing: 0.7px; text-transform: uppercase;">Acceptance</div>
+          <div style="font-size: 23px; color: #2E7D32; font-weight: bold; margin-top: 2px;">${acceptanceRate}%</div>
+        </div>
+        <div style="flex: 1; text-align: center; padding: 10px 6px;">
+          <div style="font-size: 11px; color: #8B7536; letter-spacing: 0.7px; text-transform: uppercase;">Companion Ratio</div>
+          <div style="font-size: 23px; color: #1565C0; font-weight: bold; margin-top: 2px;">${companionRatio}%</div>
+        </div>
       </div>
       
       <!-- Guest Details -->
       <div style="padding: 20px;">
-        <table style="width: 100%; font-size: 15px; color: #3E2723; border-collapse: collapse;">
+        <p style="margin: 0 0 10px; font-size: 12px; color: #8B7536; letter-spacing: 1px; text-transform: uppercase; font-weight: bold;">Guest Submission</p>
+        <table style="width: 100%; font-size: 15px; color: #3E2723; border-collapse: separate; border-spacing: 0; background: #FFFCF4; border: 1px solid #E8D5A3; border-radius: 10px; overflow: hidden;">
           ${guestRows}
         </table>
         
-        <div style="text-align: center; margin: 16px 0 0; padding: 10px; background: ${data.attendance === "yes" ? "#E8F5E9" : "#FFEBEE"}; border-radius: 6px;">
-          <p style="margin: 0; font-size: 12px; color: ${data.attendance === "yes" ? "#2E7D32" : "#C62828"};">${
+        <div style="text-align: center; margin: 14px 0 0; padding: 10px; background: ${data.attendance === "yes" ? "#E8F5E9" : "#FFEBEE"}; border-radius: 8px; border: 1px solid ${data.attendance === "yes" ? "#A5D6A7" : "#EF9A9A"};">
+          <p style="margin: 0; font-size: 12px; color: ${data.attendance === "yes" ? "#2E7D32" : "#C62828"}; font-weight: bold; letter-spacing: 0.2px;">${
             data.attendance === "yes"
-              ? "✓ QR code issued for entry verification"
-              : "✗ Guest has declined the invitation"
+              ? "✓ QR code issued and guest marked as attending"
+              : "✗ Guest declined the invitation"
           }</p>
         </div>
       </div>
@@ -499,7 +571,7 @@ async function sendEmailNotification(data: EmailData): Promise<boolean> {
           <tr>
             <td style="padding: 12px 4px; width: 25%;">
               <div style="background: #FFF8E7; border-radius: 8px; padding: 12px 6px; border: 1px solid #E8D5A3;">
-                <div style="font-size: 28px; font-weight: bold; color: #3E2723;">${stats.totalRSVPs}</div>
+                <div style="font-size: 28px; font-weight: bold; color: #3E2723;">${stats.total}</div>
                 <div style="font-size: 10px; color: #8B7536; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;">Total RSVPs</div>
               </div>
             </td>
@@ -518,21 +590,45 @@ async function sendEmailNotification(data: EmailData): Promise<boolean> {
             <td style="padding: 12px 4px; width: 25%;">
               <div style="background: #E3F2FD; border-radius: 8px; padding: 12px 6px; border: 1px solid #90CAF9;">
                 <div style="font-size: 28px; font-weight: bold; color: #1565C0;">${stats.companions}</div>
-                <div style="font-size: 10px; color: #1565C0; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;">+1 Guests</div>
+                <div style="font-size: 10px; color: #1565C0; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;">Companions</div>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Gender Breakdown (aligned with guest list dashboard) -->
+        <table style="width: 100%; border-collapse: collapse; text-align: center; margin-top: 10px;">
+          <tr>
+            <td style="padding: 6px 4px; width: 33.33%;">
+              <div style="background: #E3F2FD; border-radius: 8px; padding: 10px 6px; border: 1px solid #90CAF9;">
+                <div style="font-size: 22px; font-weight: bold; color: #1565C0;">👨 ${stats.men}</div>
+                <div style="font-size: 10px; color: #1565C0; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;">Men</div>
+              </div>
+            </td>
+            <td style="padding: 6px 4px; width: 33.33%;">
+              <div style="background: #FCE4EC; border-radius: 8px; padding: 10px 6px; border: 1px solid #F48FB1;">
+                <div style="font-size: 22px; font-weight: bold; color: #C2185B;">👩 ${stats.women}</div>
+                <div style="font-size: 10px; color: #C2185B; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;">Women</div>
+              </div>
+            </td>
+            <td style="padding: 6px 4px; width: 33.33%;">
+              <div style="background: #FFF8E1; border-radius: 8px; padding: 10px 6px; border: 1px solid #FFD54F;">
+                <div style="font-size: 22px; font-weight: bold; color: #F57F17;">❓ ${stats.unknownGender}</div>
+                <div style="font-size: 10px; color: #F57F17; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;">Unverified</div>
               </div>
             </td>
           </tr>
         </table>
 
         <!-- Total Headcount Highlight -->
-        <div style="margin-top: 14px; padding: 14px 16px; background: linear-gradient(135deg, #3E2723 0%, #5D4037 100%); border-radius: 8px; text-align: center;">
+        <div style="margin-top: 14px; padding: 14px 16px; background: linear-gradient(135deg, #3E2723 0%, #5D4037 100%); border-radius: 10px; text-align: center; box-shadow: inset 0 0 0 1px rgba(212,175,55,0.2);">
           <span style="color: #C4A86C; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;">Total Headcount</span>
           <div style="color: #FFD54F; font-size: 36px; font-weight: bold; margin: 4px 0;">${stats.totalHeadcount}</div>
-          <span style="color: #A1887F; font-size: 12px;">${stats.attending} guests + ${stats.companions} companions</span>
+          <span style="color: #D7C5B5; font-size: 12px;">${stats.attending} attending + ${stats.companions} companions</span>
         </div>
 
         <!-- Capacity Bar -->
-        <div style="margin-top: 14px;">
+        <div style="margin-top: 14px; background: #FFFCF4; border: 1px solid #E8D5A3; border-radius: 10px; padding: 10px 12px;">
           <div style="display: flex; justify-content: space-between; font-size: 11px; color: #8B7536; margin-bottom: 4px;">
             <span>Venue Capacity</span>
             <span style="color: ${capacityColor}; font-weight: bold;">${stats.totalHeadcount} / ${VENUE_CAPACITY} (${capacityPct}%)</span>
@@ -551,7 +647,7 @@ async function sendEmailNotification(data: EmailData): Promise<boolean> {
 
       <!-- Organiser Quick Tips -->
       <div style="padding: 16px 20px; background: #F5F0E5;">
-        <p style="margin: 0 0 8px; font-size: 13px; color: #8B7536; font-weight: bold;">💡 Organiser Notes</p>
+        <p style="margin: 0 0 8px; font-size: 13px; color: #8B7536; font-weight: bold; letter-spacing: 0.6px; text-transform: uppercase;">💡 Organiser Notes</p>
         <table style="width: 100%; font-size: 12px; color: #5D4037; border-collapse: collapse;">
           <tr>
             <td style="padding: 3px 0;">📅 Wedding date:</td>
@@ -570,19 +666,23 @@ async function sendEmailNotification(data: EmailData): Promise<boolean> {
             <td style="padding: 3px 0; text-align: right; font-weight: bold;">${stats.attending > 0 ? Math.round((stats.companions / stats.attending) * 100) : 0}% bringing +1</td>
           </tr>
           <tr>
+            <td style="padding: 3px 0;">📉 Decline rate:</td>
+            <td style="padding: 3px 0; text-align: right; font-weight: bold; color: ${declineRate >= 30 ? "#C62828" : "#8B7536"};">${declineRate}%</td>
+          </tr>
+          <tr>
             <td style="padding: 3px 0;">📩 Acceptance rate:</td>
-            <td style="padding: 3px 0; text-align: right; font-weight: bold; color: ${stats.totalRSVPs > 0 ? (stats.attending / stats.totalRSVPs >= 0.7 ? "#2E7D32" : "#F57C00") : "#8B7536"};">${stats.totalRSVPs > 0 ? Math.round((stats.attending / stats.totalRSVPs) * 100) : 0}%</td>
+            <td style="padding: 3px 0; text-align: right; font-weight: bold; color: ${stats.total > 0 ? (stats.attending / stats.total >= 0.7 ? "#2E7D32" : "#F57C00") : "#8B7536"};">${stats.total > 0 ? Math.round((stats.attending / stats.total) * 100) : 0}%</td>
           </tr>
         </table>
       </div>
 
       <!-- View Full Guest List Button -->
-      <div style="padding: 16px 20px; text-align: center;">
+      <div style="padding: 16px 20px; text-align: center; background: #FFF8E7;">
         <a href="${SITE_URL}/guests?key=${encodeURIComponent(GUEST_VIEW_KEY)}" 
-           style="display: inline-block; background: linear-gradient(135deg, #D4AF37 0%, #C4A86C 100%); color: #3E2723; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-weight: bold; font-size: 14px; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(212,175,55,0.3);">
+           style="display: inline-block; background: linear-gradient(135deg, #D4AF37 0%, #C4A86C 100%); color: #3E2723; text-decoration: none; padding: 12px 28px; border-radius: 999px; font-weight: bold; font-size: 14px; letter-spacing: 0.5px; box-shadow: 0 2px 10px rgba(212,175,55,0.35);">
           📋 View Full Guest List
         </a>
-        <p style="margin: 8px 0 0; font-size: 11px; color: #A1887F;">See all RSVPs, stats & song requests in real-time</p>
+        <p style="margin: 8px 0 0; font-size: 11px; color: #A1887F;">Open the live board for full guest details, edits, and real-time stats</p>
       </div>
 
       <!-- Divider -->
@@ -596,7 +696,7 @@ async function sendEmailNotification(data: EmailData): Promise<boolean> {
   `;
 
   const subjectEmoji = data.attendance === "yes" ? "💍" : "📩";
-  const subjectStats = `[${stats.totalHeadcount} guests]`;
+  const subjectStats = `[${stats.totalHeadcount} headcount | ${stats.attending} attending | ${stats.companions} companions]`;
 
   try {
     const response = await fetch("https://api.brevo.com/v3/smtp/email", {

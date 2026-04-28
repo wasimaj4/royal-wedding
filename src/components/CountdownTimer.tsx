@@ -15,50 +15,85 @@ interface TimeLeft {
   seconds: number;
 }
 
+function getTargetTime(targetDate: string): number {
+  const parsed = Date.parse(targetDate);
+  if (!Number.isNaN(parsed)) return parsed;
+
+  const match = targetDate.match(
+    /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/
+  );
+  if (!match) return NaN;
+
+  const [, y, m, d, h, min, s] = match;
+  return new Date(
+    Number(y),
+    Number(m) - 1,
+    Number(d),
+    Number(h),
+    Number(min),
+    Number(s ?? "0")
+  ).getTime();
+}
+
+function calculateTimeLeft(targetDate: string): TimeLeft {
+  const targetTime = getTargetTime(targetDate);
+  if (Number.isNaN(targetTime)) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
+
+  const diff = targetTime - Date.now();
+  if (diff <= 0) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
+
+  return {
+    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((diff / 1000 / 60) % 60),
+    seconds: Math.floor((diff / 1000) % 60),
+  };
+}
+
 export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
   const { t, isRTL } = useLanguage();
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => {
-    const difference = new Date(targetDate).getTime() - Date.now();
-    if (difference > 0) {
-      return {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-      };
-    }
-    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-  });
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => calculateTimeLeft(targetDate));
 
   useEffect(() => {
-    const calc = () => {
-      const diff = new Date(targetDate).getTime() - Date.now();
-      if (diff > 0) {
-        return {
-          days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((diff / 1000 / 60) % 60),
-          seconds: Math.floor((diff / 1000) % 60),
-        };
-      }
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    let timeoutId: number | null = null;
+
+    const tick = () => {
+      setTimeLeft(calculateTimeLeft(targetDate));
+      timeoutId = window.setTimeout(tick, 1000);
     };
-    setTimeLeft(calc());
-    const timer = setInterval(() => setTimeLeft(calc()), 1000);
-    return () => clearInterval(timer);
+
+    const refreshNow = () => setTimeLeft(calculateTimeLeft(targetDate));
+
+    refreshNow();
+    timeoutId = window.setTimeout(tick, 1000);
+
+    document.addEventListener("visibilitychange", refreshNow);
+    window.addEventListener("pageshow", refreshNow);
+    window.addEventListener("focus", refreshNow);
+
+    return () => {
+      if (timeoutId !== null) window.clearTimeout(timeoutId);
+      document.removeEventListener("visibilitychange", refreshNow);
+      window.removeEventListener("pageshow", refreshNow);
+      window.removeEventListener("focus", refreshNow);
+    };
   }, [targetDate]);
 
   const units = [
-    { value: timeLeft.days, label: t.days },
-    { value: timeLeft.hours, label: t.hours },
-    { value: timeLeft.minutes, label: t.minutes },
-    { value: timeLeft.seconds, label: t.seconds },
+    { id: "days", value: timeLeft.days, label: t.days },
+    { id: "hours", value: timeLeft.hours, label: t.hours },
+    { id: "minutes", value: timeLeft.minutes, label: t.minutes },
+    { id: "seconds", value: timeLeft.seconds, label: t.seconds },
   ];
 
   return (
     <div className={`flex justify-center gap-3 sm:gap-5 ${isRTL ? "flex-row-reverse" : ""}`}>
       {units.map((unit, index) => (
-        <div key={unit.label} className="text-center">
+        <div key={unit.id} className="text-center">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
