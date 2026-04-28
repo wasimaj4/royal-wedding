@@ -5,10 +5,9 @@ import {
   Cormorant_Garamond,
   Amiri,
   Aref_Ruqaa,
+  Cairo,
 } from "next/font/google";
 import "./globals.css";
-
-/* ── Self-hosted Google Fonts (no render-blocking @import) ─ */
 
 const greatVibes = Great_Vibes({
   weight: "400",
@@ -44,15 +43,22 @@ const arefRuqaa = Aref_Ruqaa({
   display: "swap",
 });
 
+const cairo = Cairo({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-cairo",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://royal-wedding-nine.vercel.app"),
+  metadataBase: new URL("https://wasimandrayan.eu"),
   title: "Wasim & Rayan — Wedding Invitation",
   description:
-    "You are cordially invited to the wedding celebration of Wasim & Rayan on 17 May 2026.",
+    "Together with our families, and by the grace of Allah, we are honored to invite you to our wedding celebration — 17 May 2026.",
   openGraph: {
     title: "Wasim & Rayan — Wedding Invitation",
     description:
-      "You are cordially invited to the wedding celebration of Wasim & Rayan on 17 May 2026.",
+      "Together with our families, and by the grace of Allah, we are honored to invite you to our wedding — 17 May 2026.",
     type: "website",
     locale: "en_US",
     alternateLocale: "ar_SA",
@@ -70,13 +76,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Wasim & Rayan — Wedding Invitation",
     description:
-      "You are cordially invited to the wedding celebration of Wasim & Rayan on 17 May 2026.",
+      "You are honored to attend our wedding celebration — 17 May 2026.",
     images: ["/api/og"],
-  },
-  other: {
-    "whatsapp:title": "Wasim & Rayan — Wedding Invitation 💍",
-    "whatsapp:description":
-      "You are cordially invited to our wedding on 17 May 2026",
   },
 };
 
@@ -89,15 +90,15 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
-        <meta name="theme-color" content="#F5E6C8" />
+        <meta name="theme-color" content="#FDFBF7" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
           name="apple-mobile-web-app-status-bar-style"
-          content="black-translucent"
+          content="default"
         />
       </head>
       <body
-        className={`antialiased ${greatVibes.variable} ${playfairDisplay.variable} ${cormorantGaramond.variable} ${amiri.variable} ${arefRuqaa.variable}`}
+        className={`antialiased ${greatVibes.variable} ${playfairDisplay.variable} ${cormorantGaramond.variable} ${amiri.variable} ${arefRuqaa.variable} ${cairo.variable}`}
       >
         {children}
       </body>

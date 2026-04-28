@@ -17,9 +17,22 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 function getInitialLocale(): Locale {
   if (typeof window !== "undefined") {
+    // 1. Saved preference takes priority
     const saved = localStorage.getItem(LOCALE_STORAGE_KEY);
     if (saved === "en" || saved === "ar") return saved;
+
+    // 2. Browser language detection — check top 3 preferences
+    // (mobiles set OS language as #1; laptops often have English as #1 but Arabic as #2-3)
+    try {
+      const langs = navigator.languages?.length
+        ? navigator.languages
+        : [navigator.language];
+      if (langs.slice(0, 3).some((l) => l?.startsWith("ar"))) return "ar";
+    } catch {
+      // ignore — SSR or restricted environment
+    }
   }
+  // 3. Fallback
   return "en";
 }
 

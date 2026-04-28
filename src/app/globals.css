@@ -3,363 +3,440 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════════
-   ROYAL WEDDING — Global Styles
-   Victorian · Luxurious · Ceremonial
+   WASIM & RAYAN WEDDING — Aleppo Dark Elegance
+   Dark Background · Gold Accents · Syrian Heritage
    ═══════════════════════════════════════════════════════════ */
 
-/* Fonts are loaded via next/font in layout.tsx (self-hosted, no render-blocking) */
-
 :root {
-  --antique-white: #FAF0E6;
-  --parchment: #F5E6C8;
-  --parchment-dark: #E8D5A8;
-  --gold: #D4AF37;
-  --gold-light: #F5E6A8;
-  --gold-dark: #8B7536;
-  --gold-metallic: #CFB53B;
-  --candlelight: #FFD700;
-  --warm-glow: #FFF8DC;
-  --deep-brown: #3E2723;
-  --rich-black: #1A1A1A;
+  --bg-primary: rgba(253, 250, 245, 0.9);
+  --bg-secondary: rgba(240, 235, 225, 0.7);
+  --bg-dark: #FDFAF5;
+  --text-primary: #1A1612;
+  --text-secondary: #4A4540;
+  --text-muted: #8A8278;
+  --accent: #B08D57;
+  --accent-light: #DFC89A;
+  --accent-dark: #8B6F3A;
+  --damascus-rose: #C4706A;
+  --olive: #7A8E68;
+  --border: rgba(176, 141, 87, 0.25);
 }
-
-/* ── Base Styles ────────────────────────────────────────── */
 
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  font-family: 'Cormorant Garamond', serif;
-  background-color: var(--parchment);
-  color: var(--deep-brown);
+  font-family: var(--font-cormorant), 'Georgia', serif;
+  background-color: #FDFAF5;
+  color: var(--text-primary);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ── Parchment Background Texture ───────────────────────── */
-
-.parchment-bg {
-  background-color: var(--parchment);
-  background-image:
-    radial-gradient(ellipse at 20% 50%, rgba(139, 117, 54, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(139, 117, 54, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 40% 80%, rgba(139, 117, 54, 0.03) 0%, transparent 50%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+/* Ambient warm glow — very subtle, centered */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 20%, rgba(196,162,101,0.055) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 85%, rgba(196,162,101,0.035) 0%, transparent 65%);
 }
 
-/* ── Gold Ornamental Frame ──────────────────────────────── */
+::selection {
+  background: rgba(176, 141, 87, 0.25);
+  color: var(--text-primary);
+}
 
-.gold-frame {
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #FDFAF5; }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-dark); }
+
+/* ── Background overlay for page backgrounds ─────────────────────── */
+.bg-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(253, 250, 245, 0.55) 0%,
+    rgba(253, 250, 245, 0.65) 30%,
+    rgba(253, 250, 245, 0.72) 60%,
+    rgba(253, 250, 245, 0.80) 100%
+  );
+}
+
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(196, 162, 101, 0.18), rgba(196, 162, 101, 0.50), rgba(196, 162, 101, 0.18), transparent);
+  max-width: 200px;
+  margin: 0 auto;
+  box-shadow: 0 0 8px rgba(196, 162, 101, 0.12);
+}
+
+.accent-line {
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+  margin: 0 auto;
+  box-shadow: 0 0 6px rgba(176, 141, 87, 0.35);
+}
+
+.text-accent-gradient {
+  background: linear-gradient(135deg, var(--accent), var(--accent-light), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, #DFC89A 0%, #C4A86C 28%, #B08D57 50%, #C4A86C 72%, #DFC89A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.verse-card {
+  background: rgba(248, 245, 240, 0.72);
+  border: 1px solid rgba(176, 141, 87, 0.12);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   position: relative;
-  border: 2px solid var(--gold);
-  padding: 3rem;
+  border-radius: 14px;
 }
 
-.gold-frame::before,
-.gold-frame::after {
-  content: '';
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  border-color: var(--gold);
-  border-style: solid;
-}
-
-.gold-frame::before {
-  top: 8px;
-  left: 8px;
-  border-width: 2px 0 0 2px;
-}
-
-.gold-frame::after {
-  bottom: 8px;
-  right: 8px;
-  border-width: 0 2px 2px 0;
-}
-
-.gold-frame-inner::before,
-.gold-frame-inner::after {
-  content: '';
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  border-color: var(--gold);
-  border-style: solid;
-}
-
-.gold-frame-inner::before {
-  top: 8px;
-  right: 8px;
-  border-width: 2px 2px 0 0;
-}
-
-.gold-frame-inner::after {
-  bottom: 8px;
-  left: 8px;
-  border-width: 0 0 2px 2px;
-}
-
-/* ── Gold Divider ───────────────────────────────────────── */
-
-.gold-divider {
+/* FAQ Accordion */
+.faq-accordion-btn {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 1rem;
-  margin: 2rem 0;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(176, 141, 87, 0.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--text-primary);
+  transition: all 0.5s ease;
+  cursor: pointer;
+  width: 100%;
 }
 
-.gold-divider::before,
-.gold-divider::after {
-  content: '';
-  flex: 1;
-  max-width: 120px;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--gold),
-    transparent
-  );
+.faq-accordion-btn:hover,
+.faq-accordion-btn.active {
+  border-color: rgba(176, 141, 87, 0.55);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 2px 18px rgba(176, 141, 87, 0.10);
 }
 
-.gold-divider-simple {
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--gold),
-    var(--gold),
-    transparent
-  );
-  margin: 1.5rem auto;
-  max-width: 300px;
+.faq-answer {
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.38);
+  border-left: 1px solid rgba(176, 141, 87, 0.12);
+  border-right: 1px solid rgba(176, 141, 87, 0.12);
+  border-bottom: 1px solid rgba(176, 141, 87, 0.12);
 }
 
-/* ── Ornamental Diamond ─────────────────────────────────── */
-
-.ornament-diamond {
-  width: 10px;
-  height: 10px;
-  background: var(--gold);
-  transform: rotate(45deg);
-  flex-shrink: 0;
+.rsvp-card {
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(176, 141, 87, 0.14);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 6px 40px rgba(176, 141, 87, 0.08), 0 2px 10px rgba(0,0,0,0.04);
+  border-radius: 2px;
 }
 
-/* ── Candle Glow Effects ────────────────────────────────── */
-
-.candle-glow {
-  position: relative;
+.form-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(176, 141, 87, 0.18);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.45s ease;
+  border-radius: 1px;
 }
 
-.candle-glow::after {
-  content: '';
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 60px;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(255, 215, 0, 0.6) 0%,
-    rgba(255, 215, 0, 0.2) 40%,
-    transparent 70%
-  );
+.form-input:focus {
+  outline: none;
+  border-color: rgba(176, 141, 87, 0.65);
+  box-shadow: 0 0 0 3px rgba(176, 141, 87, 0.08), 0 2px 12px rgba(176, 141, 87, 0.07);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.btn-primary {
+  padding: 0.9rem 2.5rem;
+  border: 1px solid rgba(176, 141, 87, 0.7);
+  color: var(--accent-dark);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: transparent;
+  transition: all 0.5s ease;
+  cursor: pointer;
+  border-radius: 1px;
+}
+
+.btn-primary:hover {
+  background: var(--accent);
+  color: #FDFAF5;
+  border-color: var(--accent);
+  box-shadow: 0 6px 28px rgba(176, 141, 87, 0.28), 0 2px 8px rgba(176, 141, 87, 0.15);
+}
+
+.btn-primary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn-primary:disabled:hover {
+  background: transparent;
+  color: var(--accent-dark);
+  box-shadow: none;
+}
+
+.music-btn {
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  animation: candleFlicker 3s ease-in-out infinite;
-  pointer-events: none;
-}
-
-/* ── Wax Seal ───────────────────────────────────────────── */
-
-.wax-seal {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 35% 35%, rgba(255,255,255,0.15) 0%, transparent 40%),
-    radial-gradient(circle at 65% 65%, rgba(0,0,0,0.15) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, #C0392B 0%, #A93226 25%, #922B21 50%, #7B241C 75%, #641E16 100%);
-  box-shadow:
-    0 8px 30px rgba(0, 0, 0, 0.4),
-    0 2px 8px rgba(0, 0, 0, 0.3),
-    inset 0 2px 4px rgba(255, 255, 255, 0.2),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.35),
-    inset 0 0 20px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(176, 141, 87, 0.22);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  transition: all 0.45s ease;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07), 0 0 0 0 rgba(176,141,87,0);
 }
 
-/* Wax texture overlay */
-.wax-seal::before {
-  content: '';
-  position: absolute;
-  inset: 0;
+.music-btn:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 22px rgba(196, 162, 101, 0.22), 0 0 12px rgba(196,162,101,0.1);
+}
+
+.music-btn.playing {
+  border-color: var(--accent);
+  background: rgba(196, 162, 101, 0.10);
+  box-shadow: 0 2px 16px rgba(196, 162, 101, 0.18);
+}
+
+.sound-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 16px;
+}
+
+.sound-bar {
+  width: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+  animation: soundWave 0.8s ease-in-out infinite;
+}
+
+.sound-bar:nth-child(1) { height: 6px; animation-delay: 0s; }
+.sound-bar:nth-child(2) { height: 10px; animation-delay: 0.15s; }
+.sound-bar:nth-child(3) { height: 14px; animation-delay: 0.3s; }
+.sound-bar:nth-child(4) { height: 8px; animation-delay: 0.45s; }
+
+.paused .sound-bar {
+  animation-play-state: paused;
+}
+
+[dir="rtl"] .section-divider {
+  background: linear-gradient(270deg, transparent, rgba(196, 162, 101, 0.3), rgba(196, 162, 101, 0.5), rgba(196, 162, 101, 0.3), transparent);
+}
+
+[dir="rtl"] .faq-accordion-btn {
+  flex-direction: row-reverse;
+}
+
+@media (max-width: 640px) {
+  .faq-accordion-btn,
+  .faq-answer {
+    padding: 0.875rem 1rem;
+  }
+  .faq-accordion-btn {
+    min-height: 48px;
+  }
+}
+
+@keyframes soundWave {
+  0%, 100% { transform: scaleY(0.5); }
+  50% { transform: scaleY(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .verse-card { padding: 1.5rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCRATCH REVEAL PAGE
+   ═══════════════════════════════════════════════════════════ */
+
+.scratch-page {
+  background: transparent;
+  color: #3D2B1F;
+}
+
+.scratch-title {
+  font-size: 2.8rem;
+  color: #3D2B1F;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.scratch-subtitle {
+  font-size: 1rem;
+  color: #6B5B4F;
+  text-align: center;
+  white-space: pre-line;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.scratch-hand-icon {
+  color: #8B6F5E;
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+
+.scratch-instruction {
+  font-size: 1.15rem;
+  color: #9B6B5A;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.scratch-circles-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Individual scratch circle wrapper */
+.scratch-circle-wrapper {
+  position: relative;
   border-radius: 50%;
-  background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.scratch-circle-wrapper:active {
+  cursor: grabbing;
+}
+
+.scratch-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 3px solid rgba(220, 215, 205, 0.8);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   pointer-events: none;
 }
 
-/* Irregular wax edge */
-.wax-seal::after {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, transparent 46%, rgba(122,36,28,0.5) 47%, rgba(122,36,28,0.8) 49%, transparent 51%);
-  pointer-events: none;
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpath d='M100 4C98 4 80 3 75 6C68 10 65 5 58 8C50 12 48 7 42 12C36 17 33 13 28 19C23 25 19 22 16 29C13 36 8 35 7 42C6 49 2 50 2 57C2 64 0 68 2 75C4 82 1 85 5 91C9 97 7 101 12 106C17 111 16 116 22 119C28 122 29 128 35 129C41 130 44 136 50 135C56 134 61 139 67 136C73 133 78 137 83 133C88 129 93 133 98 128C100 126 100 126 102 128C107 133 112 129 117 133C122 137 127 133 133 136C139 139 144 134 150 135C156 136 159 130 165 129C171 128 172 122 178 119C184 116 183 111 188 106C193 101 191 97 195 91C199 85 196 82 198 75C200 68 198 64 198 57C198 50 194 49 193 42C192 35 187 36 184 29C181 22 177 25 172 19C167 13 164 17 158 12C152 7 150 12 142 8C135 5 132 10 125 6C120 3 102 4 100 4Z' fill='white'/%3E%3C/svg%3E");
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpath d='M100 4C98 4 80 3 75 6C68 10 65 5 58 8C50 12 48 7 42 12C36 17 33 13 28 19C23 25 19 22 16 29C13 36 8 35 7 42C6 49 2 50 2 57C2 64 0 68 2 75C4 82 1 85 5 91C9 97 7 101 12 106C17 111 16 116 22 119C28 122 29 128 35 129C41 130 44 136 50 135C56 134 61 139 67 136C73 133 78 137 83 133C88 129 93 133 98 128C100 126 100 126 102 128C107 133 112 129 117 133C122 137 127 133 133 136C139 139 144 134 150 135C156 136 159 130 165 129C171 128 172 122 178 119C184 116 183 111 188 106C193 101 191 97 195 91C199 85 196 82 198 75C200 68 198 64 198 57C198 50 194 49 193 42C192 35 187 36 184 29C181 22 177 25 172 19C167 13 164 17 158 12C152 7 150 12 142 8C135 5 132 10 125 6C120 3 102 4 100 4Z' fill='white'/%3E%3C/svg%3E");
-  mask-size: cover;
-  -webkit-mask-size: cover;
-}
-
-.wax-seal:hover {
-  transform: scale(1.06);
-  box-shadow:
-    0 10px 35px rgba(0, 0, 0, 0.45),
-    0 2px 10px rgba(0, 0, 0, 0.3),
-    inset 0 2px 4px rgba(255, 255, 255, 0.2),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.35);
-}
-
-/* ── Envelope ───────────────────────────────────────────── */
-
-.envelope {
-  position: relative;
-  width: min(380px, 85vw);
-  height: min(280px, 65vw);
-  background: linear-gradient(
-    145deg,
-    #E8D5A8 0%,
-    #F5E6C8 30%,
-    #E8D5A8 60%,
-    #DCC699 100%
-  );
-  border-radius: 4px;
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.15),
-    0 5px 20px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  border: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-.envelope-flap {
+.scratch-canvas {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(
-    to bottom,
-    #DCC699,
-    #E8D5A8
-  );
-  clip-path: polygon(0 0, 50% 100%, 100% 0);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-  transform-origin: top center;
+  border-radius: 50%;
   z-index: 2;
+  transition: opacity 0.5s ease;
 }
 
-.envelope-flap.opening {
-  animation: envelopeOpen 1.5s ease-in-out forwards;
+.scratch-canvas.revealed {
+  opacity: 0;
+  pointer-events: none;
 }
 
-/* ── Typography ─────────────────────────────────────────── */
-
-.text-gold-gradient {
-  background: linear-gradient(135deg, #D4AF37, #F5E6A8, #D4AF37);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 4s ease-in-out infinite;
+.scratch-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FDF8F0, #F5EDE3);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  padding: 0.5rem;
 }
 
-.text-shadow-gold {
-  text-shadow:
-    0 0 10px rgba(212, 175, 55, 0.3),
-    0 0 20px rgba(212, 175, 55, 0.1);
+.scratch-content.visible {
+  opacity: 1;
 }
 
-/* ── Candle SVG Flame ───────────────────────────────────── */
-
-.flame-container {
-  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6))
-          drop-shadow(0 0 20px rgba(255, 165, 0, 0.3));
+.scratch-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #9B8B7A;
+  margin-bottom: 0.15rem;
 }
 
-/* ── Scrollbar Styling ──────────────────────────────────── */
-
-::-webkit-scrollbar {
-  width: 6px;
+.scratch-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #3D2B1F;
+  text-align: center;
+  line-height: 1.2;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--parchment);
+.scratch-continue-btn {
+  margin-top: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  border: 1.5px solid #C4A265;
+  color: #C4A265;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.4s ease;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--gold);
-  border-radius: 3px;
+.scratch-continue-btn:hover {
+  background: #C4A265;
+  color: #FDF8F0;
+  box-shadow: 0 4px 20px rgba(196, 162, 101, 0.3);
 }
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--gold-dark);
-}
-
-/* ── Selection Color ────────────────────────────────────── */
-
-::selection {
-  background: rgba(212, 175, 55, 0.3);
-  color: var(--deep-brown);
-}
-
-/* ── RTL Support ────────────────────────────────────────── */
-
-[dir="rtl"] .gold-divider::before {
-  background: linear-gradient(270deg, transparent, var(--gold), transparent);
-}
-
-[dir="rtl"] .gold-divider::after {
-  background: linear-gradient(270deg, transparent, var(--gold), transparent);
-}
-
-/* ── Animations (CSS-only — Tailwind keyframes are in tailwind.config.js) ── */
-
-/* This variant includes translateX(-50%) for the .candle-glow pseudo-element */
-@keyframes candleFlicker {
-  0%, 100% { opacity: 1; transform: translateX(-50%) scaleY(1); }
-  25% { opacity: 0.8; transform: translateX(-50%) scaleY(0.95); }
-  50% { opacity: 1; transform: translateX(-50%) scaleY(1.02); }
-  75% { opacity: 0.9; transform: translateX(-50%) scaleY(0.98); }
-}
-
-/* Used by .envelope-flap.opening CSS class */
-@keyframes envelopeOpen {
-  0% { transform: rotateX(0deg); }
-  100% { transform: rotateX(-180deg); }
-}
-
-/* ── Responsive ─────────────────────────────────────────── */
 
 @media (max-width: 640px) {
-  .gold-frame {
-    padding: 1.5rem;
-  }
-
-  .gold-frame::before,
-  .gold-frame::after,
-  .gold-frame-inner::before,
-  .gold-frame-inner::after {
-    width: 30px;
-    height: 30px;
-  }
+  .scratch-title { font-size: 2rem; }
+  .scratch-subtitle { font-size: 0.875rem; }
+  .scratch-instruction { font-size: 0.9rem; margin-bottom: 1.25rem; }
+  .scratch-circles-row { gap: 0.6rem; }
+  .scratch-label { font-size: 0.5rem; }
+  .scratch-value { font-size: 1.1rem; }
+  .scratch-continue-btn { padding: 0.625rem 1.5rem; font-size: 0.7rem; }
 }

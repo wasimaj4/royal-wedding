@@ -15,75 +15,105 @@ interface TimeLeft {
   seconds: number;
 }
 
+function getTargetTime(targetDate: string): number {
+  const parsed = Date.parse(targetDate);
+  if (!Number.isNaN(parsed)) return parsed;
+
+  const match = targetDate.match(
+    /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/
+  );
+  if (!match) return NaN;
+
+  const [, y, m, d, h, min, s] = match;
+  return new Date(
+    Number(y),
+    Number(m) - 1,
+    Number(d),
+    Number(h),
+    Number(min),
+    Number(s ?? "0")
+  ).getTime();
+}
+
+function calculateTimeLeft(targetDate: string): TimeLeft {
+  const targetTime = getTargetTime(targetDate);
+  if (Number.isNaN(targetTime)) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
+
+  const diff = targetTime - Date.now();
+  if (diff <= 0) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
+
+  return {
+    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((diff / 1000 / 60) % 60),
+    seconds: Math.floor((diff / 1000) % 60),
+  };
+}
+
 export default function CountdownTimer({ targetDate }: CountdownTimerProps) {
   const { t, isRTL } = useLanguage();
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => {
-    // Calculate immediately to avoid flash of "--"
-    const difference = new Date(targetDate).getTime() - Date.now();
-    if (difference > 0) {
-      return {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-      };
-    }
-    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-  });
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => calculateTimeLeft(targetDate));
 
   useEffect(() => {
-    const calculateTimeLeft = () => {
-      const difference = new Date(targetDate).getTime() - Date.now();
-      if (difference > 0) {
-        return {
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        };
-      }
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    let timeoutId: number | null = null;
+
+    const tick = () => {
+      setTimeLeft(calculateTimeLeft(targetDate));
+      timeoutId = window.setTimeout(tick, 1000);
     };
 
-    setTimeLeft(calculateTimeLeft());
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
+    const refreshNow = () => setTimeLeft(calculateTimeLeft(targetDate));
 
-    return () => clearInterval(timer);
+    refreshNow();
+    timeoutId = window.setTimeout(tick, 1000);
+
+    document.addEventListener("visibilitychange", refreshNow);
+    window.addEventListener("pageshow", refreshNow);
+    window.addEventListener("focus", refreshNow);
+
+    return () => {
+      if (timeoutId !== null) window.clearTimeout(timeoutId);
+      document.removeEventListener("visibilitychange", refreshNow);
+      window.removeEventListener("pageshow", refreshNow);
+      window.removeEventListener("focus", refreshNow);
+    };
   }, [targetDate]);
 
   const units = [
-    { value: timeLeft.days, label: t.days },
-    { value: timeLeft.hours, label: t.hours },
-    { value: timeLeft.minutes, label: t.minutes },
-    { value: timeLeft.seconds, label: t.seconds },
+    { id: "days", value: timeLeft.days, label: t.days },
+    { id: "hours", value: timeLeft.hours, label: t.hours },
+    { id: "minutes", value: timeLeft.minutes, label: t.minutes },
+    { id: "seconds", value: timeLeft.seconds, label: t.seconds },
   ];
 
   return (
-    <div className={`flex justify-center gap-4 sm:gap-8 ${isRTL ? "flex-row-reverse" : ""}`}>
+    <div className={`flex justify-center gap-3 sm:gap-5 ${isRTL ? "flex-row-reverse" : ""}`}>
       {units.map((unit, index) => (
-        <div key={unit.label} className="text-center">
+        <div key={unit.id} className="text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: index * 0.1 }}
-            className="w-16 sm:w-20 h-16 sm:h-20 flex items-center justify-center border border-gold/30 bg-parchment-dark/20 relative overflow-hidden"
+            transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
+            className="w-16 sm:w-20 h-16 sm:h-20 flex items-center justify-center border border-border/60 bg-white/40 backdrop-blur-sm"
           >
-            {/* Subtle shimmer */}
-            <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent" />
             <motion.span
               key={unit.value}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="text-2xl sm:text-3xl font-serif text-gold-dark relative z-10"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
+              className="text-2xl sm:text-3xl font-serif text-text-primary"
               suppressHydrationWarning
             >
               {String(unit.value).padStart(2, "0")}
             </motion.span>
           </motion.div>
-          <span className={`text-xs tracking-[0.2em] uppercase text-gold-dark/50 mt-2 block ${isRTL ? "font-arabic" : "font-body"}`}>
+          <span
+            className={`text-[10px] tracking-[0.2em] uppercase mt-2 block ${isRTL ? "font-arabic-label text-text-muted" : "font-body text-text-muted"}`}
+          >
             {unit.label}
           </span>
         </div>
